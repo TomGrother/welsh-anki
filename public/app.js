@@ -84,6 +84,8 @@ function onAuthSuccess(data) {
 // --- Dashboard ---
 async function loadDashboard() {
   document.getElementById('dash-username').textContent = state.user.username;
+  document.getElementById('settings-new-cards').value = state.user.new_cards_per_day ?? 10;
+  document.getElementById('settings-active-level').value = state.user.active_level || 'Beginner';
   try {
     const stats = await api('/study/stats');
     document.getElementById('stat-streak').textContent = stats.current_streak;
@@ -131,6 +133,26 @@ async function loadDashboard() {
   } catch (err) {
     if (err.message.includes('expired') || err.message.includes('authenticated')) logout();
   }
+}
+
+async function saveSettings(e) {
+  e.preventDefault();
+  const new_cards_per_day = parseInt(document.getElementById('settings-new-cards').value);
+  const active_level = document.getElementById('settings-active-level').value;
+  const result = document.getElementById('settings-result');
+  try {
+    const data = await api('/study/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day, active_level }) });
+    state.user = data.user;
+    localStorage.setItem('user', JSON.stringify(state.user));
+    result.style.color = '';
+    result.textContent = 'Saved!';
+    await loadDashboard();
+    setTimeout(() => { result.textContent = ''; }, 2000);
+  } catch (err) {
+    result.style.color = 'red';
+    result.textContent = err.message;
+  }
+  return false;
 }
 
 // --- Study ---

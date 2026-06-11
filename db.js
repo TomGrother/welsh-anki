@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS users (
   current_streak INTEGER NOT NULL DEFAULT 0,
   longest_streak INTEGER NOT NULL DEFAULT 0,
   last_study_date TEXT,
+  new_cards_per_day INTEGER NOT NULL DEFAULT 10,
+  active_level TEXT NOT NULL DEFAULT 'Beginner',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -77,6 +79,15 @@ if (!deckColumns.includes('level')) {
 const userCardColumns = db.prepare("PRAGMA table_info(user_cards)").all().map(c => c.name);
 if (!userCardColumns.includes('first_seen')) {
   db.exec("ALTER TABLE user_cards ADD COLUMN first_seen TEXT NOT NULL DEFAULT '1970-01-01'");
+}
+
+// Migration: add 'new_cards_per_day' and 'active_level' columns to users if upgrading
+const userColumns = db.prepare("PRAGMA table_info(users)").all().map(c => c.name);
+if (!userColumns.includes('new_cards_per_day')) {
+  db.exec("ALTER TABLE users ADD COLUMN new_cards_per_day INTEGER NOT NULL DEFAULT 10");
+}
+if (!userColumns.includes('active_level')) {
+  db.exec("ALTER TABLE users ADD COLUMN active_level TEXT NOT NULL DEFAULT 'Beginner'");
 }
 
 module.exports = db;
