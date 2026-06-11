@@ -215,6 +215,7 @@ function formatDay(dateStr) {
 
 // --- Study ---
 async function startStudy(deckId, extra) {
+  state.lastDeckId = deckId || null;
   const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${extra ? '&extra=1' : ''}`);
   if (cards.length === 0) {
     showView('complete');
@@ -223,21 +224,14 @@ async function startStudy(deckId, extra) {
     if (extra) {
       note.textContent = "You've completed every card in this deck — nice work!";
       continueBtn.classList.add('hidden');
-    } else if (deckId) {
-      state.lastDeckId = deckId;
-      note.textContent = '';
-      continueBtn.classList.remove('hidden');
     } else {
       note.textContent = '';
-      continueBtn.classList.add('hidden');
+      continueBtn.classList.toggle('hidden', !state.lastDeckId);
     }
     return;
   }
   state.queue = cards;
   state.queueIndex = 0;
-  // Remember the deck of the last card so "Keep Studying" works even when
-  // the session was started from the general "Due Now" queue.
-  state.lastDeckId = deckId || cards[cards.length - 1].deck_id;
   showView('study');
   renderCard();
 }
@@ -286,6 +280,8 @@ async function submitReview(quality) {
   if (state.queueIndex >= state.queue.length) {
     document.getElementById('study-progress').style.width = '100%';
     showView('complete');
+    document.getElementById('complete-note').textContent = '';
+    document.getElementById('btn-continue-study').classList.toggle('hidden', !state.lastDeckId);
   } else {
     renderCard();
   }
