@@ -129,7 +129,7 @@ async function loadDashboard() {
               ${levelDecks.map(d => `
                 <div class="deck-item">
                   <div>
-                    <div class="deck-name">${escapeHtml(d.name)}</div>
+                    <div class="deck-name">${escapeHtml(d.name)} ${d.in_progress ? '<span class="in-progress-badge">In Progress</span>' : ''}</div>
                     <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
                   </div>
                   <div class="flex-row">

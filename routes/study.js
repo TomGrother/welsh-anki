@@ -35,10 +35,13 @@ router.get('/decks', (req, res) => {
          WHERE c.deck_id = d.id AND uc.due_date <= datetime('now')) AS due_review,
       (SELECT COUNT(*) FROM cards c
          LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-         WHERE c.deck_id = d.id AND uc.id IS NULL) AS new_total
+         WHERE c.deck_id = d.id AND uc.id IS NULL) AS new_total,
+      (SELECT COUNT(*) FROM cards c
+         JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+         WHERE c.deck_id = d.id) AS started_cards
     FROM decks d
     ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 ELSE 2 END, d.id
-  `).all(req.user.id, req.user.id);
+  `).all(req.user.id, req.user.id, req.user.id);
 
   let newAllowed = Math.max(0, settings.new_cards_per_day - newCardsIntroducedToday(req.user.id));
 
@@ -50,8 +53,10 @@ router.get('/decks', (req, res) => {
       newAllowed -= newAvailable;
     }
     deck.due_cards = deck.due_review + newAvailable;
+    deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
     delete deck.due_review;
     delete deck.new_total;
+    delete deck.started_cards;
   }
 
   res.json({ decks });
