@@ -14,11 +14,14 @@ router.get('/decks', (req, res) => {
   res.json({ decks });
 });
 
+const VALID_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+
 router.post('/decks', (req, res) => {
-  const { name, description } = req.body || {};
+  const { name, description, level } = req.body || {};
   if (!name) return res.status(400).json({ error: 'Deck name is required' });
+  const lvl = VALID_LEVELS.includes(level) ? level : 'Beginner';
   try {
-    const result = db.prepare('INSERT INTO decks (name, description) VALUES (?, ?)').run(name, description || '');
+    const result = db.prepare('INSERT INTO decks (name, description, level) VALUES (?, ?, ?)').run(name, description || '', lvl);
     res.json({ id: result.lastInsertRowid });
   } catch (e) {
     res.status(409).json({ error: 'A deck with that name already exists' });
@@ -26,9 +29,12 @@ router.post('/decks', (req, res) => {
 });
 
 router.put('/decks/:id', (req, res) => {
-  const { name, description } = req.body || {};
-  db.prepare('UPDATE decks SET name = COALESCE(?, name), description = COALESCE(?, description) WHERE id = ?')
-    .run(name, description, req.params.id);
+  const { name, description, level } = req.body || {};
+  if (level && !VALID_LEVELS.includes(level)) {
+    return res.status(400).json({ error: 'level must be Beginner, Intermediate or Advanced' });
+  }
+  db.prepare('UPDATE decks SET name = COALESCE(?, name), description = COALESCE(?, description), level = COALESCE(?, level) WHERE id = ?')
+    .run(name, description, level, req.params.id);
   res.json({ ok: true });
 });
 

@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS decks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT UNIQUE NOT NULL,
-  description TEXT
+  description TEXT,
+  level TEXT NOT NULL DEFAULT 'Beginner'
 );
 
 CREATE TABLE IF NOT EXISTS cards (
@@ -64,5 +65,11 @@ CREATE TABLE IF NOT EXISTS review_log (
 CREATE INDEX IF NOT EXISTS idx_user_cards_due ON user_cards(user_id, due_date);
 CREATE INDEX IF NOT EXISTS idx_cards_deck ON cards(deck_id);
 `);
+
+// Migration: add 'level' column to decks if upgrading from an older schema
+const deckColumns = db.prepare("PRAGMA table_info(decks)").all().map(c => c.name);
+if (!deckColumns.includes('level')) {
+  db.exec("ALTER TABLE decks ADD COLUMN level TEXT NOT NULL DEFAULT 'Beginner'");
+}
 
 module.exports = db;

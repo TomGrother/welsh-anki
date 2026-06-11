@@ -9,12 +9,13 @@ router.use(requireAuth);
 // List decks with total card count, and how many are due now for this user.
 router.get('/decks', (req, res) => {
   const decks = db.prepare(`
-    SELECT d.id, d.name, d.description,
+    SELECT d.id, d.name, d.description, d.level,
       (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
       (SELECT COUNT(*) FROM cards c
          LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
          WHERE c.deck_id = d.id AND (uc.due_date IS NULL OR uc.due_date <= datetime('now'))) AS due_cards
-    FROM decks d ORDER BY d.id
+    FROM decks d
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 ELSE 2 END, d.id
   `).all(req.user.id);
   res.json({ decks });
 });

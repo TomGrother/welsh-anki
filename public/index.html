@@ -17,12 +17,48 @@
   <!-- HOME / LANDING -->
   <section id="view-home" class="hidden">
     <div class="hero">
+      <div class="hero-badge">🐉 Welsh, the smart way</div>
       <h1>Dysgu Cymraeg</h1>
-      <p>Learn Welsh the smart way — spaced repetition flashcards, daily streaks, and a growing vocabulary database.</p>
+      <p>Master Welsh vocabulary and grammar with spaced repetition flashcards, daily streaks, and a vocabulary database covering everything from "Bore da" to full verb conjugations.</p>
       <div class="flex-row" style="justify-content:center">
-        <button class="btn" onclick="showView('register')">Get Started</button>
+        <button class="btn" onclick="showView('register')">Get Started — It's Free</button>
         <button class="btn btn-secondary" onclick="showView('login')">Log In</button>
       </div>
+    </div>
+
+    <div class="landing-stats">
+      <div class="landing-stat"><div class="value">1,500+</div><div class="label">Flashcards</div></div>
+      <div class="landing-stat"><div class="value">60+</div><div class="label">Topic Decks</div></div>
+      <div class="landing-stat"><div class="value">3</div><div class="label">Levels</div></div>
+      <div class="landing-stat"><div class="value">100%</div><div class="label">Free</div></div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Spaced Repetition</h3>
+        <p class="muted">Our SM-2 algorithm shows you words right before you'd forget them — the same proven method used by Anki.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <h3>Daily Streaks</h3>
+        <p class="muted">Build a study habit that sticks. Track your current and longest streaks as you progress.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Beginner to Advanced</h3>
+        <p class="muted">From everyday greetings to mutations, conjugations, and idioms — structured by level so you always know what's next.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏴󠁧󠁢󠁷󠁬󠁳󠁿</div>
+        <h3>Authentic Welsh Culture</h3>
+        <p class="muted">Learn real expressions, regional dialect differences, idioms, and the culture behind the language.</p>
+      </div>
+    </div>
+
+    <div class="hero" style="padding-top:1rem">
+      <h2 style="margin-bottom:0.75rem">Parod i ddechrau? <span class="muted" style="font-weight:400;font-size:1rem">(Ready to start?)</span></h2>
+      <button class="btn" onclick="showView('register')">Create Your Free Account</button>
     </div>
   </section>
 
@@ -121,9 +157,15 @@
       <form onsubmit="return adminAddDeck(event)" style="margin-top:1rem">
         <label>Name</label><input type="text" id="deck-name" required>
         <label>Description</label><input type="text" id="deck-desc">
+        <label>Level</label>
+        <select id="deck-level">
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
         <button class="btn" type="submit">Add Deck</button>
       </form>
-      <table id="decks-table"><thead><tr><th>Name</th><th>Description</th><th>Cards</th><th></th></tr></thead><tbody></tbody></table>
+      <table id="decks-table"><thead><tr><th>Name</th><th>Description</th><th>Level</th><th>Cards</th><th></th></tr></thead><tbody></tbody></table>
     </div>
 
     <div id="admin-cards" class="card-panel hidden">

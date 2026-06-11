@@ -95,18 +95,39 @@ async function loadDashboard() {
     const { decks } = await api('/study/decks');
     state.decks = decks;
     const list = document.getElementById('deck-list');
-    list.innerHTML = decks.map(d => `
-      <div class="deck-item">
-        <div>
-          <div class="deck-name">${escapeHtml(d.name)}</div>
-          <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
-        </div>
-        <div class="flex-row">
-          ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
-          <button class="btn" onclick="startStudy(${d.id})">Study</button>
-        </div>
-      </div>
-    `).join('') || '<p class="muted">No decks yet.</p>';
+    const levels = ['Beginner', 'Intermediate', 'Advanced'];
+    const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳' };
+
+    if (decks.length === 0) {
+      list.innerHTML = '<p class="muted">No decks yet.</p>';
+    } else {
+      list.innerHTML = levels.map(level => {
+        const levelDecks = decks.filter(d => (d.level || 'Beginner') === level);
+        if (levelDecks.length === 0) return '';
+        return `
+          <div class="level-section">
+            <div class="level-heading">
+              <h3>${icons[level]} ${level}</h3>
+              <span class="level-pill ${level}">${levelDecks.length} decks</span>
+            </div>
+            <div class="deck-list">
+              ${levelDecks.map(d => `
+                <div class="deck-item">
+                  <div>
+                    <div class="deck-name">${escapeHtml(d.name)}</div>
+                    <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
+                  </div>
+                  <div class="flex-row">
+                    ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
+                    <button class="btn" onclick="startStudy(${d.id})">Study</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
   } catch (err) {
     if (err.message.includes('expired') || err.message.includes('authenticated')) logout();
   }
@@ -181,11 +202,17 @@ function adminTab(name) {
 async function loadAdminDecks() {
   const { decks } = await api('/admin/decks');
   state.decks = decks;
+  const levels = ['Beginner', 'Intermediate', 'Advanced'];
   const tbody = document.querySelector('#decks-table tbody');
   tbody.innerHTML = decks.map(d => `
     <tr>
       <td>${escapeHtml(d.name)}</td>
       <td>${escapeHtml(d.description || '')}</td>
+      <td>
+        <select onchange="adminSetDeckLevel(${d.id}, this.value)">
+          ${levels.map(l => `<option value="${l}" ${d.level === l ? 'selected' : ''}>${l}</option>`).join('')}
+        </select>
+      </td>
       <td>${d.card_count}</td>
       <td><button class="btn-danger" onclick="adminDeleteDeck(${d.id})">Delete</button></td>
     </tr>
@@ -201,12 +228,17 @@ async function adminAddDeck(e) {
   e.preventDefault();
   const name = document.getElementById('deck-name').value.trim();
   const description = document.getElementById('deck-desc').value.trim();
-  await api('/admin/decks', { method: 'POST', body: JSON.stringify({ name, description }) });
+  const level = document.getElementById('deck-level').value;
+  await api('/admin/decks', { method: 'POST', body: JSON.stringify({ name, description, level }) });
   document.getElementById('deck-name').value = '';
   document.getElementById('deck-desc').value = '';
   await loadAdminDecks();
   await loadAdminCards();
   return false;
+}
+
+async function adminSetDeckLevel(id, level) {
+  await api('/admin/decks/' + id, { method: 'PUT', body: JSON.stringify({ level }) });
 }
 
 async function adminDeleteDeck(id) {
