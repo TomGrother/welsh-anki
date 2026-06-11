@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS user_cards (
   repetitions INTEGER NOT NULL DEFAULT 0,
   due_date TEXT NOT NULL DEFAULT (datetime('now')),
   last_reviewed TEXT,
+  first_seen TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE(user_id, card_id)
 );
 
@@ -70,6 +71,12 @@ CREATE INDEX IF NOT EXISTS idx_cards_deck ON cards(deck_id);
 const deckColumns = db.prepare("PRAGMA table_info(decks)").all().map(c => c.name);
 if (!deckColumns.includes('level')) {
   db.exec("ALTER TABLE decks ADD COLUMN level TEXT NOT NULL DEFAULT 'Beginner'");
+}
+
+// Migration: add 'first_seen' column to user_cards if upgrading from an older schema
+const userCardColumns = db.prepare("PRAGMA table_info(user_cards)").all().map(c => c.name);
+if (!userCardColumns.includes('first_seen')) {
+  db.exec("ALTER TABLE user_cards ADD COLUMN first_seen TEXT NOT NULL DEFAULT '1970-01-01'");
 }
 
 module.exports = db;
