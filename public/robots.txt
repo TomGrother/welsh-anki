@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://welsh-anki-production.up.railway.app/sitemap.xml

@@ -1,0 +1,11 @@
+{
+  "name": "Dysgu Cymraeg — Learn Welsh",
+  "short_name": "Dysgu Cymraeg",
+  "description": "Learn Welsh online with free flashcards, spaced repetition and daily streaks.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#00a656",
+  "lang": "en-GB",
+  "icons": []
+}
