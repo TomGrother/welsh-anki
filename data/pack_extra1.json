@@ -1,0 +1,3428 @@
+﻿{
+    "decks":  [
+                  {
+                      "name":  "Food \u0026 Drink (More)",
+                      "description":  "Common food and drink vocabulary",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "bara",
+                                        "bread"
+                                    ],
+                                    [
+                                        "caws",
+                                        "cheese"
+                                    ],
+                                    [
+                                        "llaeth / llefrith",
+                                        "milk"
+                                    ],
+                                    [
+                                        "te",
+                                        "tea"
+                                    ],
+                                    [
+                                        "coffi",
+                                        "coffee"
+                                    ],
+                                    [
+                                        "dŵr",
+                                        "water"
+                                    ],
+                                    [
+                                        "wy",
+                                        "egg"
+                                    ],
+                                    [
+                                        "cig",
+                                        "meat"
+                                    ],
+                                    [
+                                        "pysgod",
+                                        "fish"
+                                    ],
+                                    [
+                                        "llysiau",
+                                        "vegetables"
+                                    ],
+                                    [
+                                        "ffrwythau",
+                                        "fruit"
+                                    ],
+                                    [
+                                        "afal",
+                                        "apple"
+                                    ],
+                                    [
+                                        "banana",
+                                        "banana"
+                                    ],
+                                    [
+                                        "oren",
+                                        "orange"
+                                    ],
+                                    [
+                                        "tatws",
+                                        "potatoes"
+                                    ],
+                                    [
+                                        "bara menyn",
+                                        "bread and butter"
+                                    ],
+                                    [
+                                        "cawl",
+                                        "soup / broth"
+                                    ],
+                                    [
+                                        "cinio",
+                                        "lunch / dinner"
+                                    ],
+                                    [
+                                        "brecwast",
+                                        "breakfast"
+                                    ],
+                                    [
+                                        "swper",
+                                        "supper"
+                                    ],
+                                    [
+                                        "siwgr",
+                                        "sugar"
+                                    ],
+                                    [
+                                        "halen",
+                                        "salt"
+                                    ],
+                                    [
+                                        "pupur",
+                                        "pepper"
+                                    ],
+                                    [
+                                        "gwin",
+                                        "wine"
+                                    ],
+                                    [
+                                        "cwrw",
+                                        "beer"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Cooking \u0026 Kitchen",
+                      "description":  "Vocabulary for cooking and the kitchen",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "coginio",
+                                        "to cook"
+                                    ],
+                                    [
+                                        "berwi",
+                                        "to boil"
+                                    ],
+                                    [
+                                        "ffrio",
+                                        "to fry"
+                                    ],
+                                    [
+                                        "pobi",
+                                        "to bake"
+                                    ],
+                                    [
+                                        "torri",
+                                        "to cut"
+                                    ],
+                                    [
+                                        "cymysgu",
+                                        "to mix"
+                                    ],
+                                    [
+                                        "sosban",
+                                        "saucepan"
+                                    ],
+                                    [
+                                        "padell ffrio",
+                                        "frying pan"
+                                    ],
+                                    [
+                                        "popty",
+                                        "oven"
+                                    ],
+                                    [
+                                        "microdon",
+                                        "microwave"
+                                    ],
+                                    [
+                                        "cyllell",
+                                        "knife"
+                                    ],
+                                    [
+                                        "fforc",
+                                        "fork"
+                                    ],
+                                    [
+                                        "llwy",
+                                        "spoon"
+                                    ],
+                                    [
+                                        "plât",
+                                        "plate"
+                                    ],
+                                    [
+                                        "powlen",
+                                        "bowl"
+                                    ],
+                                    [
+                                        "cwpan",
+                                        "cup"
+                                    ],
+                                    [
+                                        "gwydr",
+                                        "glass"
+                                    ],
+                                    [
+                                        "oergell",
+                                        "fridge"
+                                    ],
+                                    [
+                                        "rysáit",
+                                        "recipe"
+                                    ],
+                                    [
+                                        "cynhwysion",
+                                        "ingredients"
+                                    ],
+                                    [
+                                        "blasu",
+                                        "to taste"
+                                    ],
+                                    [
+                                        "arllwys",
+                                        "to pour"
+                                    ],
+                                    [
+                                        "sychu llestri",
+                                        "to dry dishes"
+                                    ],
+                                    [
+                                        "golchi llestri",
+                                        "to wash dishes"
+                                    ],
+                                    [
+                                        "bwrdd cegin",
+                                        "kitchen table"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Shopping \u0026 Money (More)",
+                      "description":  "Vocabulary for shops, money and prices",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "siop",
+                                        "shop"
+                                    ],
+                                    [
+                                        "arian",
+                                        "money"
+                                    ],
+                                    [
+                                        "pris",
+                                        "price"
+                                    ],
+                                    [
+                                        "rhad",
+                                        "cheap"
+                                    ],
+                                    [
+                                        "drud",
+                                        "expensive"
+                                    ],
+                                    [
+                                        "talu",
+                                        "to pay"
+                                    ],
+                                    [
+                                        "prynu",
+                                        "to buy"
+                                    ],
+                                    [
+                                        "gwerthu",
+                                        "to sell"
+                                    ],
+                                    [
+                                        "derbynneb",
+                                        "receipt"
+                                    ],
+                                    [
+                                        "punt",
+                                        "pound (£)"
+                                    ],
+                                    [
+                                        "ceiniog",
+                                        "penny"
+                                    ],
+                                    [
+                                        "cerdyn credyd",
+                                        "credit card"
+                                    ],
+                                    [
+                                        "arian parod",
+                                        "cash"
+                                    ],
+                                    [
+                                        "sêl",
+                                        "sale"
+                                    ],
+                                    [
+                                        "disgownt",
+                                        "discount"
+                                    ],
+                                    [
+                                        "basged siopa",
+                                        "shopping basket"
+                                    ],
+                                    [
+                                        "troli",
+                                        "trolley"
+                                    ],
+                                    [
+                                        "ciw",
+                                        "queue"
+                                    ],
+                                    [
+                                        "agored",
+                                        "open"
+                                    ],
+                                    [
+                                        "ar gau",
+                                        "closed"
+                                    ],
+                                    [
+                                        "maint",
+                                        "size"
+                                    ],
+                                    [
+                                        "lliw",
+                                        "colour"
+                                    ],
+                                    [
+                                        "newid",
+                                        "change (money)"
+                                    ],
+                                    [
+                                        "faint yw e?",
+                                        "how much is it?"
+                                    ],
+                                    [
+                                        "dim diolch",
+                                        "no thank you"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Clothes \u0026 Appearance",
+                      "description":  "Clothing items and describing appearance",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "dillad",
+                                        "clothes"
+                                    ],
+                                    [
+                                        "crys",
+                                        "shirt"
+                                    ],
+                                    [
+                                        "trowsus",
+                                        "trousers"
+                                    ],
+                                    [
+                                        "sgert",
+                                        "skirt"
+                                    ],
+                                    [
+                                        "ffrog",
+                                        "dress"
+                                    ],
+                                    [
+                                        "siwmper",
+                                        "jumper"
+                                    ],
+                                    [
+                                        "cot",
+                                        "coat"
+                                    ],
+                                    [
+                                        "esgidiau",
+                                        "shoes"
+                                    ],
+                                    [
+                                        "sanau",
+                                        "socks"
+                                    ],
+                                    [
+                                        "het",
+                                        "hat"
+                                    ],
+                                    [
+                                        "maneg / menig",
+                                        "glove / gloves"
+                                    ],
+                                    [
+                                        "sgarff",
+                                        "scarf"
+                                    ],
+                                    [
+                                        "gwisgo",
+                                        "to wear / to dress"
+                                    ],
+                                    [
+                                        "tynnu",
+                                        "to take off"
+                                    ],
+                                    [
+                                        "pyjamas",
+                                        "pyjamas"
+                                    ],
+                                    [
+                                        "bag",
+                                        "bag"
+                                    ],
+                                    [
+                                        "modrwy",
+                                        "ring"
+                                    ],
+                                    [
+                                        "clustdlysau",
+                                        "earrings"
+                                    ],
+                                    [
+                                        "wats",
+                                        "watch"
+                                    ],
+                                    [
+                                        "tal",
+                                        "tall"
+                                    ],
+                                    [
+                                        "byr",
+                                        "short"
+                                    ],
+                                    [
+                                        "ifanc",
+                                        "young"
+                                    ],
+                                    [
+                                        "hen",
+                                        "old"
+                                    ],
+                                    [
+                                        "pert / del",
+                                        "pretty"
+                                    ],
+                                    [
+                                        "golygus",
+                                        "handsome"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "House \u0026 Home (More)",
+                      "description":  "Rooms, furniture and household items",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "tŷ",
+                                        "house"
+                                    ],
+                                    [
+                                        "fflat",
+                                        "flat"
+                                    ],
+                                    [
+                                        "ystafell wely",
+                                        "bedroom"
+                                    ],
+                                    [
+                                        "ystafell ymolchi",
+                                        "bathroom"
+                                    ],
+                                    [
+                                        "lolfa",
+                                        "living room"
+                                    ],
+                                    [
+                                        "cegin",
+                                        "kitchen"
+                                    ],
+                                    [
+                                        "gardd",
+                                        "garden"
+                                    ],
+                                    [
+                                        "drws",
+                                        "door"
+                                    ],
+                                    [
+                                        "ffenestr",
+                                        "window"
+                                    ],
+                                    [
+                                        "llawr",
+                                        "floor"
+                                    ],
+                                    [
+                                        "nenfwd",
+                                        "ceiling"
+                                    ],
+                                    [
+                                        "wal",
+                                        "wall"
+                                    ],
+                                    [
+                                        "gwely",
+                                        "bed"
+                                    ],
+                                    [
+                                        "cadair",
+                                        "chair"
+                                    ],
+                                    [
+                                        "soffa",
+                                        "sofa"
+                                    ],
+                                    [
+                                        "bwrdd",
+                                        "table"
+                                    ],
+                                    [
+                                        "cwpwrdd",
+                                        "cupboard"
+                                    ],
+                                    [
+                                        "drych",
+                                        "mirror"
+                                    ],
+                                    [
+                                        "lamp",
+                                        "lamp"
+                                    ],
+                                    [
+                                        "carped",
+                                        "carpet"
+                                    ],
+                                    [
+                                        "allwedd",
+                                        "key"
+                                    ],
+                                    [
+                                        "to",
+                                        "roof"
+                                    ],
+                                    [
+                                        "grisiau",
+                                        "stairs"
+                                    ],
+                                    [
+                                        "garej",
+                                        "garage"
+                                    ],
+                                    [
+                                        "landin",
+                                        "landing"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Body Parts (More)",
+                      "description":  "Parts of the body",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "pen",
+                                        "head"
+                                    ],
+                                    [
+                                        "gwallt",
+                                        "hair"
+                                    ],
+                                    [
+                                        "wyneb",
+                                        "face"
+                                    ],
+                                    [
+                                        "llygad / llygaid",
+                                        "eye / eyes"
+                                    ],
+                                    [
+                                        "clust / clustiau",
+                                        "ear / ears"
+                                    ],
+                                    [
+                                        "trwyn",
+                                        "nose"
+                                    ],
+                                    [
+                                        "ceg",
+                                        "mouth"
+                                    ],
+                                    [
+                                        "dant / dannedd",
+                                        "tooth / teeth"
+                                    ],
+                                    [
+                                        "gwddf",
+                                        "neck"
+                                    ],
+                                    [
+                                        "ysgwydd",
+                                        "shoulder"
+                                    ],
+                                    [
+                                        "braich / breichiau",
+                                        "arm / arms"
+                                    ],
+                                    [
+                                        "llaw / dwylo",
+                                        "hand / hands"
+                                    ],
+                                    [
+                                        "bys / bysedd",
+                                        "finger / fingers"
+                                    ],
+                                    [
+                                        "coes / coesau",
+                                        "leg / legs"
+                                    ],
+                                    [
+                                        "troed / traed",
+                                        "foot / feet"
+                                    ],
+                                    [
+                                        "bol / bola",
+                                        "stomach / belly"
+                                    ],
+                                    [
+                                        "cefn",
+                                        "back"
+                                    ],
+                                    [
+                                        "calon",
+                                        "heart"
+                                    ],
+                                    [
+                                        "croen",
+                                        "skin"
+                                    ],
+                                    [
+                                        "asgwrn",
+                                        "bone"
+                                    ],
+                                    [
+                                        "pen-glin",
+                                        "knee"
+                                    ],
+                                    [
+                                        "penelin",
+                                        "elbow"
+                                    ],
+                                    [
+                                        "gwefus / gwefusau",
+                                        "lip / lips"
+                                    ],
+                                    [
+                                        "tafod",
+                                        "tongue"
+                                    ],
+                                    [
+                                        "ewin / ewinedd",
+                                        "nail / nails"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Health \u0026 Illness",
+                      "description":  "Talking about health and going to the doctor",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "sâl",
+                                        "ill / sick"
+                                    ],
+                                    [
+                                        "iach",
+                                        "healthy"
+                                    ],
+                                    [
+                                        "doctor",
+                                        "doctor"
+                                    ],
+                                    [
+                                        "nyrs",
+                                        "nurse"
+                                    ],
+                                    [
+                                        "ysbyty",
+                                        "hospital"
+                                    ],
+                                    [
+                                        "fferyllfa",
+                                        "pharmacy"
+                                    ],
+                                    [
+                                        "meddyginiaeth",
+                                        "medicine"
+                                    ],
+                                    [
+                                        "pen tost",
+                                        "headache"
+                                    ],
+                                    [
+                                        "bola tost",
+                                        "stomach ache"
+                                    ],
+                                    [
+                                        "annwyd",
+                                        "a cold"
+                                    ],
+                                    [
+                                        "peswch",
+                                        "cough"
+                                    ],
+                                    [
+                                        "twymyn / gwres",
+                                        "fever"
+                                    ],
+                                    [
+                                        "poen",
+                                        "pain"
+                                    ],
+                                    [
+                                        "torri asgwrn",
+                                        "to break a bone"
+                                    ],
+                                    [
+                                        "brifo",
+                                        "to hurt"
+                                    ],
+                                    [
+                                        "apwyntiad",
+                                        "appointment"
+                                    ],
+                                    [
+                                        "presgripsiwn",
+                                        "prescription"
+                                    ],
+                                    [
+                                        "alergedd",
+                                        "allergy"
+                                    ],
+                                    [
+                                        "pigiad",
+                                        "injection"
+                                    ],
+                                    [
+                                        "gorffwys",
+                                        "to rest"
+                                    ],
+                                    [
+                                        "gwella",
+                                        "to get better"
+                                    ],
+                                    [
+                                        "clwyf",
+                                        "wound"
+                                    ],
+                                    [
+                                        "plastr",
+                                        "plaster"
+                                    ],
+                                    [
+                                        "deintydd",
+                                        "dentist"
+                                    ],
+                                    [
+                                        "sbectol",
+                                        "glasses"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Family - Extended",
+                      "description":  "More family relationship vocabulary",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "ewythr",
+                                        "uncle"
+                                    ],
+                                    [
+                                        "modryb",
+                                        "aunt"
+                                    ],
+                                    [
+                                        "cefnder",
+                                        "male cousin"
+                                    ],
+                                    [
+                                        "cyfnither",
+                                        "female cousin"
+                                    ],
+                                    [
+                                        "nai",
+                                        "nephew"
+                                    ],
+                                    [
+                                        "nith",
+                                        "niece"
+                                    ],
+                                    [
+                                        "mab-yng-nghyfraith",
+                                        "son-in-law"
+                                    ],
+                                    [
+                                        "merch-yng-nghyfraith",
+                                        "daughter-in-law"
+                                    ],
+                                    [
+                                        "tad-yng-nghyfraith",
+                                        "father-in-law"
+                                    ],
+                                    [
+                                        "mam-yng-nghyfraith",
+                                        "mother-in-law"
+                                    ],
+                                    [
+                                        "llysfam",
+                                        "stepmother"
+                                    ],
+                                    [
+                                        "llystad",
+                                        "stepfather"
+                                    ],
+                                    [
+                                        "llysfrawd",
+                                        "stepbrother"
+                                    ],
+                                    [
+                                        "llyschwaer",
+                                        "stepsister"
+                                    ],
+                                    [
+                                        "gŵr",
+                                        "husband"
+                                    ],
+                                    [
+                                        "gwraig",
+                                        "wife"
+                                    ],
+                                    [
+                                        "priod",
+                                        "spouse / married"
+                                    ],
+                                    [
+                                        "sengl",
+                                        "single"
+                                    ],
+                                    [
+                                        "ysgaru",
+                                        "to divorce"
+                                    ],
+                                    [
+                                        "geni",
+                                        "to be born"
+                                    ],
+                                    [
+                                        "marw",
+                                        "to die"
+                                    ],
+                                    [
+                                        "teulu agos",
+                                        "close family"
+                                    ],
+                                    [
+                                        "perthynas",
+                                        "relative / relationship"
+                                    ],
+                                    [
+                                        "efeilliaid",
+                                        "twins"
+                                    ],
+                                    [
+                                        "plentyn / plant",
+                                        "child / children"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Jobs \u0026 Professions",
+                      "description":  "Occupations and professions",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "athro / athrawes",
+                                        "teacher (m/f)"
+                                    ],
+                                    [
+                                        "meddyg",
+                                        "doctor"
+                                    ],
+                                    [
+                                        "plismon",
+                                        "policeman"
+                                    ],
+                                    [
+                                        "plismones",
+                                        "policewoman"
+                                    ],
+                                    [
+                                        "cogydd",
+                                        "chef / cook"
+                                    ],
+                                    [
+                                        "gyrrwr",
+                                        "driver"
+                                    ],
+                                    [
+                                        "ffermwr",
+                                        "farmer"
+                                    ],
+                                    [
+                                        "peiriannydd",
+                                        "engineer"
+                                    ],
+                                    [
+                                        "cyfreithiwr",
+                                        "lawyer"
+                                    ],
+                                    [
+                                        "cyfrifydd",
+                                        "accountant"
+                                    ],
+                                    [
+                                        "adeiladwr",
+                                        "builder"
+                                    ],
+                                    [
+                                        "trydanwr",
+                                        "electrician"
+                                    ],
+                                    [
+                                        "plymwr",
+                                        "plumber"
+                                    ],
+                                    [
+                                        "gwerthwr",
+                                        "salesperson"
+                                    ],
+                                    [
+                                        "ysgrifennydd",
+                                        "secretary"
+                                    ],
+                                    [
+                                        "rheolwr",
+                                        "manager"
+                                    ],
+                                    [
+                                        "perchennog",
+                                        "owner"
+                                    ],
+                                    [
+                                        "milfeddyg",
+                                        "vet"
+                                    ],
+                                    [
+                                        "pobydd",
+                                        "baker"
+                                    ],
+                                    [
+                                        "cigydd",
+                                        "butcher"
+                                    ],
+                                    [
+                                        "gwyddonydd",
+                                        "scientist"
+                                    ],
+                                    [
+                                        "actor / actores",
+                                        "actor / actress"
+                                    ],
+                                    [
+                                        "cerddor",
+                                        "musician"
+                                    ],
+                                    [
+                                        "arlunydd",
+                                        "artist"
+                                    ],
+                                    [
+                                        "awdur",
+                                        "author"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Work \u0026 Office",
+                      "description":  "Workplace and office vocabulary",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "gwaith",
+                                        "work / job"
+                                    ],
+                                    [
+                                        "swyddfa",
+                                        "office"
+                                    ],
+                                    [
+                                        "cyfarfod",
+                                        "meeting"
+                                    ],
+                                    [
+                                        "cyflog",
+                                        "salary / wage"
+                                    ],
+                                    [
+                                        "cydweithiwr",
+                                        "colleague"
+                                    ],
+                                    [
+                                        "bos",
+                                        "boss"
+                                    ],
+                                    [
+                                        "cwsmer",
+                                        "customer"
+                                    ],
+                                    [
+                                        "adroddiad",
+                                        "report"
+                                    ],
+                                    [
+                                        "e-bost",
+                                        "email"
+                                    ],
+                                    [
+                                        "ffôn",
+                                        "phone"
+                                    ],
+                                    [
+                                        "argraffydd",
+                                        "printer"
+                                    ],
+                                    [
+                                        "cyfrifiadur",
+                                        "computer"
+                                    ],
+                                    [
+                                        "llinell",
+                                        "line"
+                                    ],
+                                    [
+                                        "cytundeb",
+                                        "contract"
+                                    ],
+                                    [
+                                        "amserlen",
+                                        "schedule / timetable"
+                                    ],
+                                    [
+                                        "gwyliau",
+                                        "holidays / leave"
+                                    ],
+                                    [
+                                        "ymddeol",
+                                        "to retire"
+                                    ],
+                                    [
+                                        "cyfweliad",
+                                        "interview"
+                                    ],
+                                    [
+                                        "recriwtio",
+                                        "to recruit"
+                                    ],
+                                    [
+                                        "swydd wag",
+                                        "vacancy / job vacancy"
+                                    ],
+                                    [
+                                        "hyfforddiant",
+                                        "training"
+                                    ],
+                                    [
+                                        "targed",
+                                        "target"
+                                    ],
+                                    [
+                                        "cyllideb",
+                                        "budget"
+                                    ],
+                                    [
+                                        "adran",
+                                        "department"
+                                    ],
+                                    [
+                                        "pencadlys",
+                                        "headquarters"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Technology \u0026 Internet",
+                      "description":  "Modern technology and internet vocabulary",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "cyfrifiadur",
+                                        "computer"
+                                    ],
+                                    [
+                                        "gliniadur",
+                                        "laptop"
+                                    ],
+                                    [
+                                        "ffôn clyfar",
+                                        "smartphone"
+                                    ],
+                                    [
+                                        "tabled",
+                                        "tablet"
+                                    ],
+                                    [
+                                        "rhyngrwyd",
+                                        "internet"
+                                    ],
+                                    [
+                                        "gwefan",
+                                        "website"
+                                    ],
+                                    [
+                                        "cyfrinair",
+                                        "password"
+                                    ],
+                                    [
+                                        "e-bost",
+                                        "email"
+                                    ],
+                                    [
+                                        "neges destun",
+                                        "text message"
+                                    ],
+                                    [
+                                        "cymdeithasol",
+                                        "social"
+                                    ],
+                                    [
+                                        "cyfryngau cymdeithasol",
+                                        "social media"
+                                    ],
+                                    [
+                                        "llwytho i lawr",
+                                        "to download"
+                                    ],
+                                    [
+                                        "llwytho i fyny",
+                                        "to upload"
+                                    ],
+                                    [
+                                        "cadw",
+                                        "to save"
+                                    ],
+                                    [
+                                        "dileu",
+                                        "to delete"
+                                    ],
+                                    [
+                                        "sgrin",
+                                        "screen"
+                                    ],
+                                    [
+                                        "bysellfwrdd",
+                                        "keyboard"
+                                    ],
+                                    [
+                                        "llygoden",
+                                        "mouse"
+                                    ],
+                                    [
+                                        "meddalwedd",
+                                        "software"
+                                    ],
+                                    [
+                                        "caledwedd",
+                                        "hardware"
+                                    ],
+                                    [
+                                        "cwmwl",
+                                        "the cloud"
+                                    ],
+                                    [
+                                        "wi-fi",
+                                        "wi-fi"
+                                    ],
+                                    [
+                                        "batri",
+                                        "battery"
+                                    ],
+                                    [
+                                        "gwefru",
+                                        "to charge (battery)"
+                                    ],
+                                    [
+                                        "ap / rhaglen",
+                                        "app / program"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Transport \u0026 Travel",
+                      "description":  "Getting around — transport vocabulary",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "car",
+                                        "car"
+                                    ],
+                                    [
+                                        "bws",
+                                        "bus"
+                                    ],
+                                    [
+                                        "trên",
+                                        "train"
+                                    ],
+                                    [
+                                        "awyren",
+                                        "aeroplane"
+                                    ],
+                                    [
+                                        "beic",
+                                        "bicycle"
+                                    ],
+                                    [
+                                        "llong",
+                                        "ship"
+                                    ],
+                                    [
+                                        "tacsi",
+                                        "taxi"
+                                    ],
+                                    [
+                                        "gorsaf",
+                                        "station"
+                                    ],
+                                    [
+                                        "maes awyr",
+                                        "airport"
+                                    ],
+                                    [
+                                        "tocyn",
+                                        "ticket"
+                                    ],
+                                    [
+                                        "taith",
+                                        "journey / trip"
+                                    ],
+                                    [
+                                        "cyrraedd",
+                                        "to arrive"
+                                    ],
+                                    [
+                                        "gadael",
+                                        "to leave"
+                                    ],
+                                    [
+                                        "dychwelyd",
+                                        "to return"
+                                    ],
+                                    [
+                                        "map",
+                                        "map"
+                                    ],
+                                    [
+                                        "cyfeiriad",
+                                        "address / direction"
+                                    ],
+                                    [
+                                        "i\u0027r dde",
+                                        "to the right"
+                                    ],
+                                    [
+                                        "i\u0027r chwith",
+                                        "to the left"
+                                    ],
+                                    [
+                                        "yn syth ymlaen",
+                                        "straight ahead"
+                                    ],
+                                    [
+                                        "traffig",
+                                        "traffic"
+                                    ],
+                                    [
+                                        "goleuadau traffig",
+                                        "traffic lights"
+                                    ],
+                                    [
+                                        "pasbort",
+                                        "passport"
+                                    ],
+                                    [
+                                        "bagiau",
+                                        "luggage"
+                                    ],
+                                    [
+                                        "llogi car",
+                                        "to hire a car"
+                                    ],
+                                    [
+                                        "llwybr",
+                                        "path / route"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Weather - Extended",
+                      "description":  "More weather vocabulary and phrases",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "tymheredd",
+                                        "temperature"
+                                    ],
+                                    [
+                                        "gwasgedd",
+                                        "pressure"
+                                    ],
+                                    [
+                                        "niwl",
+                                        "fog"
+                                    ],
+                                    [
+                                        "barrug",
+                                        "frost"
+                                    ],
+                                    [
+                                        "iâ",
+                                        "ice"
+                                    ],
+                                    [
+                                        "mellt",
+                                        "lightning"
+                                    ],
+                                    [
+                                        "taranau",
+                                        "thunder"
+                                    ],
+                                    [
+                                        "storm",
+                                        "storm"
+                                    ],
+                                    [
+                                        "gwyntog",
+                                        "windy"
+                                    ],
+                                    [
+                                        "cymylog",
+                                        "cloudy"
+                                    ],
+                                    [
+                                        "heulog",
+                                        "sunny"
+                                    ],
+                                    [
+                                        "glawog",
+                                        "rainy"
+                                    ],
+                                    [
+                                        "bod yn boeth",
+                                        "to be hot"
+                                    ],
+                                    [
+                                        "bod yn oer",
+                                        "to be cold"
+                                    ],
+                                    [
+                                        "rhewi",
+                                        "to freeze"
+                                    ],
+                                    [
+                                        "dadmer",
+                                        "to thaw"
+                                    ],
+                                    [
+                                        "tywydd braf",
+                                        "fine/lovely weather"
+                                    ],
+                                    [
+                                        "tywydd garw",
+                                        "rough/bad weather"
+                                    ],
+                                    [
+                                        "enfys",
+                                        "rainbow"
+                                    ],
+                                    [
+                                        "awyr las",
+                                        "blue sky"
+                                    ],
+                                    [
+                                        "gwlith",
+                                        "dew"
+                                    ],
+                                    [
+                                        "chwythu",
+                                        "to blow (wind)"
+                                    ],
+                                    [
+                                        "disgleirio",
+                                        "to shine"
+                                    ],
+                                    [
+                                        "rhagolygon tywydd",
+                                        "weather forecast"
+                                    ],
+                                    [
+                                        "tymor",
+                                        "season"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Nature \u0026 Environment",
+                      "description":  "Nature, landscape and environment",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "mynydd",
+                                        "mountain"
+                                    ],
+                                    [
+                                        "afon",
+                                        "river"
+                                    ],
+                                    [
+                                        "môr",
+                                        "sea"
+                                    ],
+                                    [
+                                        "coedwig",
+                                        "forest"
+                                    ],
+                                    [
+                                        "coeden",
+                                        "tree"
+                                    ],
+                                    [
+                                        "blodyn / blodau",
+                                        "flower / flowers"
+                                    ],
+                                    [
+                                        "glaswellt",
+                                        "grass"
+                                    ],
+                                    [
+                                        "dyffryn",
+                                        "valley"
+                                    ],
+                                    [
+                                        "bryn",
+                                        "hill"
+                                    ],
+                                    [
+                                        "traeth",
+                                        "beach"
+                                    ],
+                                    [
+                                        "clogwyn",
+                                        "cliff"
+                                    ],
+                                    [
+                                        "llyn",
+                                        "lake"
+                                    ],
+                                    [
+                                        "ynys",
+                                        "island"
+                                    ],
+                                    [
+                                        "awyr",
+                                        "sky"
+                                    ],
+                                    [
+                                        "haul",
+                                        "sun"
+                                    ],
+                                    [
+                                        "lleuad",
+                                        "moon"
+                                    ],
+                                    [
+                                        "seren / sêr",
+                                        "star / stars"
+                                    ],
+                                    [
+                                        "pridd",
+                                        "soil"
+                                    ],
+                                    [
+                                        "carreg / cerrig",
+                                        "stone / stones"
+                                    ],
+                                    [
+                                        "amgylchedd",
+                                        "environment"
+                                    ],
+                                    [
+                                        "llygredd",
+                                        "pollution"
+                                    ],
+                                    [
+                                        "ailgylchu",
+                                        "to recycle"
+                                    ],
+                                    [
+                                        "egni adnewyddadwy",
+                                        "renewable energy"
+                                    ],
+                                    [
+                                        "newid hinsawdd",
+                                        "climate change"
+                                    ],
+                                    [
+                                        "cadwraeth",
+                                        "conservation"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Animals \u0026 Wildlife",
+                      "description":  "Animals, pets and wildlife",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "ci",
+                                        "dog"
+                                    ],
+                                    [
+                                        "cath",
+                                        "cat"
+                                    ],
+                                    [
+                                        "ceffyl",
+                                        "horse"
+                                    ],
+                                    [
+                                        "dafad",
+                                        "sheep"
+                                    ],
+                                    [
+                                        "mochyn",
+                                        "pig"
+                                    ],
+                                    [
+                                        "buwch",
+                                        "cow"
+                                    ],
+                                    [
+                                        "iâr",
+                                        "hen"
+                                    ],
+                                    [
+                                        "ceiliog",
+                                        "rooster"
+                                    ],
+                                    [
+                                        "cwningen",
+                                        "rabbit"
+                                    ],
+                                    [
+                                        "llygoden",
+                                        "mouse"
+                                    ],
+                                    [
+                                        "llwynog",
+                                        "fox"
+                                    ],
+                                    [
+                                        "aderyn / adar",
+                                        "bird / birds"
+                                    ],
+                                    [
+                                        "pysgodyn",
+                                        "fish (animal)"
+                                    ],
+                                    [
+                                        "neidr",
+                                        "snake"
+                                    ],
+                                    [
+                                        "broga",
+                                        "frog"
+                                    ],
+                                    [
+                                        "gwenynen",
+                                        "bee"
+                                    ],
+                                    [
+                                        "pry / pryfed",
+                                        "insect / insects"
+                                    ],
+                                    [
+                                        "llew",
+                                        "lion"
+                                    ],
+                                    [
+                                        "eliffant",
+                                        "elephant"
+                                    ],
+                                    [
+                                        "arth",
+                                        "bear"
+                                    ],
+                                    [
+                                        "mochyn daear",
+                                        "badger"
+                                    ],
+                                    [
+                                        "wiwer",
+                                        "squirrel"
+                                    ],
+                                    [
+                                        "dylluan",
+                                        "owl"
+                                    ],
+                                    [
+                                        "alarch",
+                                        "swan"
+                                    ],
+                                    [
+                                        "draig",
+                                        "dragon"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Sports \u0026 Hobbies (More)",
+                      "description":  "Sports, games and hobbies",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "chwaraeon",
+                                        "sports"
+                                    ],
+                                    [
+                                        "pêl-droed",
+                                        "football"
+                                    ],
+                                    [
+                                        "rygbi",
+                                        "rugby"
+                                    ],
+                                    [
+                                        "nofio",
+                                        "swimming"
+                                    ],
+                                    [
+                                        "rhedeg",
+                                        "running"
+                                    ],
+                                    [
+                                        "beicio",
+                                        "cycling"
+                                    ],
+                                    [
+                                        "dringo",
+                                        "climbing"
+                                    ],
+                                    [
+                                        "cerdded",
+                                        "walking"
+                                    ],
+                                    [
+                                        "dawnsio",
+                                        "dancing"
+                                    ],
+                                    [
+                                        "canu",
+                                        "to sing"
+                                    ],
+                                    [
+                                        "darllen",
+                                        "to read"
+                                    ],
+                                    [
+                                        "ysgrifennu",
+                                        "to write"
+                                    ],
+                                    [
+                                        "tynnu llun",
+                                        "to draw / take a photo"
+                                    ],
+                                    [
+                                        "paentio",
+                                        "to paint"
+                                    ],
+                                    [
+                                        "chwarae gemau",
+                                        "to play games"
+                                    ],
+                                    [
+                                        "pysgota",
+                                        "fishing"
+                                    ],
+                                    [
+                                        "garddio",
+                                        "gardening"
+                                    ],
+                                    [
+                                        "coginio",
+                                        "cooking (hobby)"
+                                    ],
+                                    [
+                                        "gwylio teledu",
+                                        "watching TV"
+                                    ],
+                                    [
+                                        "criced",
+                                        "cricket"
+                                    ],
+                                    [
+                                        "tennis",
+                                        "tennis"
+                                    ],
+                                    [
+                                        "golff",
+                                        "golf"
+                                    ],
+                                    [
+                                        "pencampwriaeth",
+                                        "championship"
+                                    ],
+                                    [
+                                        "tîm",
+                                        "team"
+                                    ],
+                                    [
+                                        "cystadleuaeth",
+                                        "competition"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Music \u0026 Entertainment",
+                      "description":  "Music, films and entertainment vocabulary",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "cerddoriaeth",
+                                        "music"
+                                    ],
+                                    [
+                                        "cân / caneuon",
+                                        "song / songs"
+                                    ],
+                                    [
+                                        "band",
+                                        "band"
+                                    ],
+                                    [
+                                        "offeryn",
+                                        "instrument"
+                                    ],
+                                    [
+                                        "gitâr",
+                                        "guitar"
+                                    ],
+                                    [
+                                        "piano",
+                                        "piano"
+                                    ],
+                                    [
+                                        "drwm",
+                                        "drum"
+                                    ],
+                                    [
+                                        "ffilm",
+                                        "film"
+                                    ],
+                                    [
+                                        "sinema",
+                                        "cinema"
+                                    ],
+                                    [
+                                        "theatr",
+                                        "theatre"
+                                    ],
+                                    [
+                                        "actor",
+                                        "actor"
+                                    ],
+                                    [
+                                        "cyngerdd",
+                                        "concert"
+                                    ],
+                                    [
+                                        "eisteddfod",
+                                        "eisteddfod (festival)"
+                                    ],
+                                    [
+                                        "llwyfan",
+                                        "stage"
+                                    ],
+                                    [
+                                        "cynulleidfa",
+                                        "audience"
+                                    ],
+                                    [
+                                        "clyweliad",
+                                        "audition"
+                                    ],
+                                    [
+                                        "albwm",
+                                        "album"
+                                    ],
+                                    [
+                                        "cordiau",
+                                        "chords"
+                                    ],
+                                    [
+                                        "rhythm",
+                                        "rhythm"
+                                    ],
+                                    [
+                                        "dawns",
+                                        "dance"
+                                    ],
+                                    [
+                                        "côr",
+                                        "choir"
+                                    ],
+                                    [
+                                        "sioe",
+                                        "show"
+                                    ],
+                                    [
+                                        "adloniant",
+                                        "entertainment"
+                                    ],
+                                    [
+                                        "gwobr",
+                                        "award / prize"
+                                    ],
+                                    [
+                                        "perfformiad",
+                                        "performance"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Emotions - Extended",
+                      "description":  "More feelings and emotions vocabulary",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "cyffrous",
+                                        "excited"
+                                    ],
+                                    [
+                                        "nerfus",
+                                        "nervous"
+                                    ],
+                                    [
+                                        "cenfigennus",
+                                        "jealous"
+                                    ],
+                                    [
+                                        "balch",
+                                        "proud"
+                                    ],
+                                    [
+                                        "siomedig",
+                                        "disappointed"
+                                    ],
+                                    [
+                                        "embaras",
+                                        "embarrassed"
+                                    ],
+                                    [
+                                        "rhwystredig",
+                                        "frustrated"
+                                    ],
+                                    [
+                                        "digalon",
+                                        "disheartened / sad"
+                                    ],
+                                    [
+                                        "bodlon",
+                                        "content / satisfied"
+                                    ],
+                                    [
+                                        "pryderus",
+                                        "anxious"
+                                    ],
+                                    [
+                                        "cyfforddus",
+                                        "comfortable"
+                                    ],
+                                    [
+                                        "anghyfforddus",
+                                        "uncomfortable"
+                                    ],
+                                    [
+                                        "unig",
+                                        "lonely"
+                                    ],
+                                    [
+                                        "ofnus",
+                                        "afraid / fearful"
+                                    ],
+                                    [
+                                        "dewr",
+                                        "brave"
+                                    ],
+                                    [
+                                        "amyneddgar",
+                                        "patient"
+                                    ],
+                                    [
+                                        "diamynedd",
+                                        "impatient"
+                                    ],
+                                    [
+                                        "chwilfrydig",
+                                        "curious"
+                                    ],
+                                    [
+                                        "diolchgar",
+                                        "grateful"
+                                    ],
+                                    [
+                                        "hyderus",
+                                        "confident"
+                                    ],
+                                    [
+                                        "swil",
+                                        "shy"
+                                    ],
+                                    [
+                                        "styfnig",
+                                        "stubborn"
+                                    ],
+                                    [
+                                        "caredig",
+                                        "kind"
+                                    ],
+                                    [
+                                        "cas",
+                                        "nasty / horrible"
+                                    ],
+                                    [
+                                        "gofalus",
+                                        "careful"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "School \u0026 Education (More)",
+                      "description":  "School, education and learning vocabulary",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "ysgol",
+                                        "school"
+                                    ],
+                                    [
+                                        "coleg",
+                                        "college"
+                                    ],
+                                    [
+                                        "prifysgol",
+                                        "university"
+                                    ],
+                                    [
+                                        "dosbarth",
+                                        "class / classroom"
+                                    ],
+                                    [
+                                        "athro / athrawes",
+                                        "teacher"
+                                    ],
+                                    [
+                                        "disgybl",
+                                        "pupil"
+                                    ],
+                                    [
+                                        "myfyriwr",
+                                        "student"
+                                    ],
+                                    [
+                                        "gwers",
+                                        "lesson"
+                                    ],
+                                    [
+                                        "gwaith cartref",
+                                        "homework"
+                                    ],
+                                    [
+                                        "arholiad",
+                                        "exam"
+                                    ],
+                                    [
+                                        "llyfr",
+                                        "book"
+                                    ],
+                                    [
+                                        "pensil",
+                                        "pencil"
+                                    ],
+                                    [
+                                        "beiro",
+                                        "pen"
+                                    ],
+                                    [
+                                        "papur",
+                                        "paper"
+                                    ],
+                                    [
+                                        "bag ysgol",
+                                        "school bag"
+                                    ],
+                                    [
+                                        "amserlen",
+                                        "timetable"
+                                    ],
+                                    [
+                                        "cwrs",
+                                        "course"
+                                    ],
+                                    [
+                                        "pwnc",
+                                        "subject"
+                                    ],
+                                    [
+                                        "mathemateg",
+                                        "maths"
+                                    ],
+                                    [
+                                        "gwyddoniaeth",
+                                        "science"
+                                    ],
+                                    [
+                                        "hanes",
+                                        "history"
+                                    ],
+                                    [
+                                        "daearyddiaeth",
+                                        "geography"
+                                    ],
+                                    [
+                                        "llenyddiaeth",
+                                        "literature"
+                                    ],
+                                    [
+                                        "graddio",
+                                        "to graduate"
+                                    ],
+                                    [
+                                        "llwyddo",
+                                        "to succeed / pass"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Time Expressions",
+                      "description":  "Talking about time, dates and routines",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "heddiw",
+                                        "today"
+                                    ],
+                                    [
+                                        "yfory",
+                                        "tomorrow"
+                                    ],
+                                    [
+                                        "ddoe",
+                                        "yesterday"
+                                    ],
+                                    [
+                                        "wythnos",
+                                        "week"
+                                    ],
+                                    [
+                                        "mis",
+                                        "month"
+                                    ],
+                                    [
+                                        "blwyddyn",
+                                        "year"
+                                    ],
+                                    [
+                                        "bore",
+                                        "morning"
+                                    ],
+                                    [
+                                        "prynhawn",
+                                        "afternoon"
+                                    ],
+                                    [
+                                        "nos",
+                                        "night"
+                                    ],
+                                    [
+                                        "munud",
+                                        "minute"
+                                    ],
+                                    [
+                                        "awr",
+                                        "hour"
+                                    ],
+                                    [
+                                        "eiliad",
+                                        "second"
+                                    ],
+                                    [
+                                        "nawr",
+                                        "now"
+                                    ],
+                                    [
+                                        "wedyn",
+                                        "afterwards / then"
+                                    ],
+                                    [
+                                        "cyn hir",
+                                        "soon"
+                                    ],
+                                    [
+                                        "yn ddiweddarach",
+                                        "later"
+                                    ],
+                                    [
+                                        "bob dydd",
+                                        "every day"
+                                    ],
+                                    [
+                                        "weithiau",
+                                        "sometimes"
+                                    ],
+                                    [
+                                        "byth",
+                                        "never / ever"
+                                    ],
+                                    [
+                                        "bob amser",
+                                        "always"
+                                    ],
+                                    [
+                                        "yn gynnar",
+                                        "early"
+                                    ],
+                                    [
+                                        "yn hwyr",
+                                        "late"
+                                    ],
+                                    [
+                                        "penwythnos",
+                                        "weekend"
+                                    ],
+                                    [
+                                        "wythnos diwethaf",
+                                        "last week"
+                                    ],
+                                    [
+                                        "wythnos nesaf",
+                                        "next week"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Town \u0026 City Places",
+                      "description":  "Places you find in a town or city",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "tref",
+                                        "town"
+                                    ],
+                                    [
+                                        "dinas",
+                                        "city"
+                                    ],
+                                    [
+                                        "pentref",
+                                        "village"
+                                    ],
+                                    [
+                                        "banc",
+                                        "bank"
+                                    ],
+                                    [
+                                        "llyfrgell",
+                                        "library"
+                                    ],
+                                    [
+                                        "amgueddfa",
+                                        "museum"
+                                    ],
+                                    [
+                                        "eglwys",
+                                        "church"
+                                    ],
+                                    [
+                                        "capel",
+                                        "chapel"
+                                    ],
+                                    [
+                                        "castell",
+                                        "castle"
+                                    ],
+                                    [
+                                        "parc",
+                                        "park"
+                                    ],
+                                    [
+                                        "sgwâr",
+                                        "square"
+                                    ],
+                                    [
+                                        "pont",
+                                        "bridge"
+                                    ],
+                                    [
+                                        "heol / stryd",
+                                        "road / street"
+                                    ],
+                                    [
+                                        "maes parcio",
+                                        "car park"
+                                    ],
+                                    [
+                                        "canol y dref",
+                                        "town centre"
+                                    ],
+                                    [
+                                        "swyddfa bost",
+                                        "post office"
+                                    ],
+                                    [
+                                        "gorsaf heddlu",
+                                        "police station"
+                                    ],
+                                    [
+                                        "clinig",
+                                        "clinic"
+                                    ],
+                                    [
+                                        "pwll nofio",
+                                        "swimming pool"
+                                    ],
+                                    [
+                                        "llety",
+                                        "accommodation"
+                                    ],
+                                    [
+                                        "gwesty",
+                                        "hotel"
+                                    ],
+                                    [
+                                        "bwyty",
+                                        "restaurant"
+                                    ],
+                                    [
+                                        "caffi",
+                                        "cafe"
+                                    ],
+                                    [
+                                        "tafarn",
+                                        "pub"
+                                    ],
+                                    [
+                                        "marchnad",
+                                        "market"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Countries \u0026 Nationalities",
+                      "description":  "Countries, nationalities and languages",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "Cymru",
+                                        "Wales"
+                                    ],
+                                    [
+                                        "Lloegr",
+                                        "England"
+                                    ],
+                                    [
+                                        "Yr Alban",
+                                        "Scotland"
+                                    ],
+                                    [
+                                        "Iwerddon",
+                                        "Ireland"
+                                    ],
+                                    [
+                                        "Ffrainc",
+                                        "France"
+                                    ],
+                                    [
+                                        "Sbaen",
+                                        "Spain"
+                                    ],
+                                    [
+                                        "Yr Almaen",
+                                        "Germany"
+                                    ],
+                                    [
+                                        "Yr Eidal",
+                                        "Italy"
+                                    ],
+                                    [
+                                        "Portiwgal",
+                                        "Portugal"
+                                    ],
+                                    [
+                                        "Yr Unol Daleithiau",
+                                        "The United States"
+                                    ],
+                                    [
+                                        "Cymro / Cymraes",
+                                        "Welshman / Welshwoman"
+                                    ],
+                                    [
+                                        "Sais / Saesnes",
+                                        "Englishman / Englishwoman"
+                                    ],
+                                    [
+                                        "Ffrancwr",
+                                        "Frenchman"
+                                    ],
+                                    [
+                                        "Almaenwr",
+                                        "German (person)"
+                                    ],
+                                    [
+                                        "Cymraeg",
+                                        "Welsh (language)"
+                                    ],
+                                    [
+                                        "Saesneg",
+                                        "English (language)"
+                                    ],
+                                    [
+                                        "Ffrangeg",
+                                        "French (language)"
+                                    ],
+                                    [
+                                        "Sbaeneg",
+                                        "Spanish (language)"
+                                    ],
+                                    [
+                                        "iaith / ieithoedd",
+                                        "language / languages"
+                                    ],
+                                    [
+                                        "gwlad / gwledydd",
+                                        "country / countries"
+                                    ],
+                                    [
+                                        "dinasyddiaeth",
+                                        "citizenship"
+                                    ],
+                                    [
+                                        "o ble wyt ti\u0027n dod?",
+                                        "where do you come from?"
+                                    ],
+                                    [
+                                        "dw i\u0027n dod o Gymru",
+                                        "I come from Wales"
+                                    ],
+                                    [
+                                        "tramor",
+                                        "abroad / overseas"
+                                    ],
+                                    [
+                                        "cenedl",
+                                        "nation"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Colours \u0026 Shapes",
+                      "description":  "Colours, shapes and basic descriptions",
+                      "level":  "Beginner",
+                      "cards":  [
+                                    [
+                                        "coch",
+                                        "red"
+                                    ],
+                                    [
+                                        "gwyrdd",
+                                        "green"
+                                    ],
+                                    [
+                                        "glas",
+                                        "blue"
+                                    ],
+                                    [
+                                        "melyn",
+                                        "yellow"
+                                    ],
+                                    [
+                                        "du",
+                                        "black"
+                                    ],
+                                    [
+                                        "gwyn",
+                                        "white"
+                                    ],
+                                    [
+                                        "llwyd",
+                                        "grey"
+                                    ],
+                                    [
+                                        "porffor",
+                                        "purple"
+                                    ],
+                                    [
+                                        "pinc",
+                                        "pink"
+                                    ],
+                                    [
+                                        "oren",
+                                        "orange (colour)"
+                                    ],
+                                    [
+                                        "brown",
+                                        "brown"
+                                    ],
+                                    [
+                                        "cylch",
+                                        "circle"
+                                    ],
+                                    [
+                                        "sgwâr",
+                                        "square (shape)"
+                                    ],
+                                    [
+                                        "triongl",
+                                        "triangle"
+                                    ],
+                                    [
+                                        "hirsgwar",
+                                        "rectangle"
+                                    ],
+                                    [
+                                        "seren",
+                                        "star (shape)"
+                                    ],
+                                    [
+                                        "calon",
+                                        "heart (shape)"
+                                    ],
+                                    [
+                                        "mawr",
+                                        "big"
+                                    ],
+                                    [
+                                        "bach",
+                                        "small"
+                                    ],
+                                    [
+                                        "crwn",
+                                        "round"
+                                    ],
+                                    [
+                                        "sgwâr (ansoddair)",
+                                        "square (adjective)"
+                                    ],
+                                    [
+                                        "llydan",
+                                        "wide"
+                                    ],
+                                    [
+                                        "cul",
+                                        "narrow"
+                                    ],
+                                    [
+                                        "trwchus",
+                                        "thick"
+                                    ],
+                                    [
+                                        "tenau",
+                                        "thin"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Idioms \u0026 Sayings (More)",
+                      "description":  "Common Welsh idioms and sayings",
+                      "level":  "Advanced",
+                      "cards":  [
+                                    [
+                                        "mae hi\u0027n bwrw hen wragedd a ffyn",
+                                        "it\u0027s raining very heavily (lit. raining old women and sticks)"
+                                    ],
+                                    [
+                                        "torri\u0027r garw",
+                                        "to break the ice"
+                                    ],
+                                    [
+                                        "cael traed oer",
+                                        "to get cold feet"
+                                    ],
+                                    [
+                                        "o dan y don",
+                                        "feeling unwell (lit. under the wave)"
+                                    ],
+                                    [
+                                        "mynd o ddrwg i waeth",
+                                        "to go from bad to worse"
+                                    ],
+                                    [
+                                        "taro deuddeg",
+                                        "to hit the nail on the head (lit. strike twelve)"
+                                    ],
+                                    [
+                                        "rhoi\u0027r gorau iddi",
+                                        "to give up"
+                                    ],
+                                    [
+                                        "yn ei sang",
+                                        "packed full / heaving"
+                                    ],
+                                    [
+                                        "ar bigau\u0027r drain",
+                                        "on tenterhooks"
+                                    ],
+                                    [
+                                        "cadw dy ben uwch dy ddŵr",
+                                        "keep your head above water"
+                                    ],
+                                    [
+                                        "mynd i\u0027r wal",
+                                        "to go bust / fail"
+                                    ],
+                                    [
+                                        "dal ati",
+                                        "keep going / persevere"
+                                    ],
+                                    [
+                                        "bod â\u0027ch llaw yn eich poced",
+                                        "to be generous (lit. hand in pocket)"
+                                    ],
+                                    [
+                                        "chwarae\u0027n troi\u0027n chwerw",
+                                        "play turns sour"
+                                    ],
+                                    [
+                                        "gwneud môr a mynydd o rywbeth",
+                                        "to make a mountain out of a molehill"
+                                    ],
+                                    [
+                                        "cau dy geg",
+                                        "shut your mouth (informal)"
+                                    ],
+                                    [
+                                        "dod i ben",
+                                        "to manage / cope / finish"
+                                    ],
+                                    [
+                                        "mynd â\u0027ch bryd",
+                                        "to take your fancy"
+                                    ],
+                                    [
+                                        "bod ar ben eich digon",
+                                        "to be over the moon"
+                                    ],
+                                    [
+                                        "rhoi\u0027r ffidil yn y to",
+                                        "to give up entirely"
+                                    ],
+                                    [
+                                        "yn y bôn",
+                                        "basically / fundamentally"
+                                    ],
+                                    [
+                                        "o bell ffordd",
+                                        "by far"
+                                    ],
+                                    [
+                                        "ar y cyfan",
+                                        "on the whole / overall"
+                                    ],
+                                    [
+                                        "er gwaethaf",
+                                        "despite / in spite of"
+                                    ],
+                                    [
+                                        "o leiaf",
+                                        "at least"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Personality Traits",
+                      "description":  "Describing people\u0027s personalities",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "clyfar",
+                                        "clever"
+                                    ],
+                                    [
+                                        "doniol",
+                                        "funny"
+                                    ],
+                                    [
+                                        "difrifol",
+                                        "serious"
+                                    ],
+                                    [
+                                        "diog",
+                                        "lazy"
+                                    ],
+                                    [
+                                        "gweithgar",
+                                        "hardworking"
+                                    ],
+                                    [
+                                        "hael",
+                                        "generous"
+                                    ],
+                                    [
+                                        "cybyddlyd",
+                                        "stingy / mean"
+                                    ],
+                                    [
+                                        "onest",
+                                        "honest"
+                                    ],
+                                    [
+                                        "anonest",
+                                        "dishonest"
+                                    ],
+                                    [
+                                        "cyfeillgar",
+                                        "friendly"
+                                    ],
+                                    [
+                                        "cwrtais",
+                                        "polite"
+                                    ],
+                                    [
+                                        "digywilydd",
+                                        "rude"
+                                    ],
+                                    [
+                                        "creadigol",
+                                        "creative"
+                                    ],
+                                    [
+                                        "uchelgeisiol",
+                                        "ambitious"
+                                    ],
+                                    [
+                                        "ystyfnig",
+                                        "stubborn"
+                                    ],
+                                    [
+                                        "agored",
+                                        "open(-minded)"
+                                    ],
+                                    [
+                                        "preifat",
+                                        "private"
+                                    ],
+                                    [
+                                        "sensitif",
+                                        "sensitive"
+                                    ],
+                                    [
+                                        "cyson",
+                                        "consistent / reliable"
+                                    ],
+                                    [
+                                        "dibynadwy",
+                                        "dependable"
+                                    ],
+                                    [
+                                        "hyblyg",
+                                        "flexible"
+                                    ],
+                                    [
+                                        "trefnus",
+                                        "organised"
+                                    ],
+                                    [
+                                        "anhrefnus",
+                                        "disorganised"
+                                    ],
+                                    [
+                                        "optimistaidd",
+                                        "optimistic"
+                                    ],
+                                    [
+                                        "pesimistaidd",
+                                        "pessimistic"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Numbers - Higher \u0026 Ordinals",
+                      "description":  "Larger numbers and ordinal numbers",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "ugain",
+                                        "twenty"
+                                    ],
+                                    [
+                                        "deg ar hugain",
+                                        "thirty"
+                                    ],
+                                    [
+                                        "pedwar deg",
+                                        "forty"
+                                    ],
+                                    [
+                                        "hanner cant",
+                                        "fifty"
+                                    ],
+                                    [
+                                        "chwe deg",
+                                        "sixty"
+                                    ],
+                                    [
+                                        "saith deg",
+                                        "seventy"
+                                    ],
+                                    [
+                                        "wyth deg",
+                                        "eighty"
+                                    ],
+                                    [
+                                        "naw deg",
+                                        "ninety"
+                                    ],
+                                    [
+                                        "cant",
+                                        "one hundred"
+                                    ],
+                                    [
+                                        "mil",
+                                        "one thousand"
+                                    ],
+                                    [
+                                        "miliwn",
+                                        "one million"
+                                    ],
+                                    [
+                                        "cyntaf",
+                                        "first"
+                                    ],
+                                    [
+                                        "ail",
+                                        "second"
+                                    ],
+                                    [
+                                        "trydydd",
+                                        "third"
+                                    ],
+                                    [
+                                        "pedwerydd",
+                                        "fourth"
+                                    ],
+                                    [
+                                        "pumed",
+                                        "fifth"
+                                    ],
+                                    [
+                                        "chweched",
+                                        "sixth"
+                                    ],
+                                    [
+                                        "seithfed",
+                                        "seventh"
+                                    ],
+                                    [
+                                        "wythfed",
+                                        "eighth"
+                                    ],
+                                    [
+                                        "nawfed",
+                                        "ninth"
+                                    ],
+                                    [
+                                        "degfed",
+                                        "tenth"
+                                    ],
+                                    [
+                                        "unfed ar ddeg",
+                                        "eleventh"
+                                    ],
+                                    [
+                                        "olaf",
+                                        "last"
+                                    ],
+                                    [
+                                        "hanner",
+                                        "half"
+                                    ],
+                                    [
+                                        "chwarter",
+                                        "quarter"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Grammar: Possession (Genitive)",
+                      "description":  "Showing possession in Welsh",
+                      "level":  "Advanced",
+                      "cards":  [
+                                    [
+                                        "car Siân",
+                                        "Siân\u0027s car"
+                                    ],
+                                    [
+                                        "tŷ fy mrawd",
+                                        "my brother\u0027s house"
+                                    ],
+                                    [
+                                        "ci\u0027r dyn",
+                                        "the man\u0027s dog"
+                                    ],
+                                    [
+                                        "llyfr y plentyn",
+                                        "the child\u0027s book"
+                                    ],
+                                    [
+                                        "enw\u0027r ysgol",
+                                        "the school\u0027s name"
+                                    ],
+                                    [
+                                        "gardd y gymdogion",
+                                        "the neighbours\u0027 garden"
+                                    ],
+                                    [
+                                        "fy un i",
+                                        "mine"
+                                    ],
+                                    [
+                                        "dy un di",
+                                        "yours (informal)"
+                                    ],
+                                    [
+                                        "ei un e",
+                                        "his"
+                                    ],
+                                    [
+                                        "ei un hi",
+                                        "hers"
+                                    ],
+                                    [
+                                        "ein un ni",
+                                        "ours"
+                                    ],
+                                    [
+                                        "eu un nhw",
+                                        "theirs"
+                                    ],
+                                    [
+                                        "o eiddo",
+                                        "belonging to"
+                                    ],
+                                    [
+                                        "perthyn i",
+                                        "to belong to"
+                                    ],
+                                    [
+                                        "mae\u0027r car yn perthyn i fi",
+                                        "the car belongs to me"
+                                    ],
+                                    [
+                                        "pwy biau hwn?",
+                                        "whose is this?"
+                                    ],
+                                    [
+                                        "fi biau fe",
+                                        "it\u0027s mine (lit. I own it)"
+                                    ],
+                                    [
+                                        "ti biau fe",
+                                        "it\u0027s yours"
+                                    ],
+                                    [
+                                        "fy llyfrau i",
+                                        "my books"
+                                    ],
+                                    [
+                                        "dy gar di",
+                                        "your car"
+                                    ],
+                                    [
+                                        "ei thŷ hi",
+                                        "her house"
+                                    ],
+                                    [
+                                        "ein cartref ni",
+                                        "our home"
+                                    ],
+                                    [
+                                        "eich enwau chi",
+                                        "your names (formal/plural)"
+                                    ],
+                                    [
+                                        "eu plant nhw",
+                                        "their children"
+                                    ],
+                                    [
+                                        "yr eiddo",
+                                        "the property/belongings"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Grammar: Comparatives \u0026 Superlatives (More)",
+                      "description":  "Comparing things in Welsh",
+                      "level":  "Advanced",
+                      "cards":  [
+                                    [
+                                        "mwy",
+                                        "more / bigger"
+                                    ],
+                                    [
+                                        "llai",
+                                        "less / smaller"
+                                    ],
+                                    [
+                                        "mwyaf",
+                                        "most / biggest"
+                                    ],
+                                    [
+                                        "lleiaf",
+                                        "least / smallest"
+                                    ],
+                                    [
+                                        "mor...â",
+                                        "as...as"
+                                    ],
+                                    [
+                                        "yn fwy na",
+                                        "bigger than"
+                                    ],
+                                    [
+                                        "yn llai na",
+                                        "smaller than"
+                                    ],
+                                    [
+                                        "cynt",
+                                        "earlier / faster (comparative)"
+                                    ],
+                                    [
+                                        "cyflymach",
+                                        "faster"
+                                    ],
+                                    [
+                                        "arafach",
+                                        "slower"
+                                    ],
+                                    [
+                                        "gwell",
+                                        "better"
+                                    ],
+                                    [
+                                        "gwaeth",
+                                        "worse"
+                                    ],
+                                    [
+                                        "gorau",
+                                        "best"
+                                    ],
+                                    [
+                                        "gwaethaf",
+                                        "worst"
+                                    ],
+                                    [
+                                        "hŷn",
+                                        "older"
+                                    ],
+                                    [
+                                        "ifancach",
+                                        "younger"
+                                    ],
+                                    [
+                                        "tebycach",
+                                        "more similar"
+                                    ],
+                                    [
+                                        "uwch",
+                                        "higher"
+                                    ],
+                                    [
+                                        "is",
+                                        "lower"
+                                    ],
+                                    [
+                                        "pellach",
+                                        "further"
+                                    ],
+                                    [
+                                        "agosach",
+                                        "nearer / closer"
+                                    ],
+                                    [
+                                        "y mwyaf diddorol",
+                                        "the most interesting"
+                                    ],
+                                    [
+                                        "y lleiaf drud",
+                                        "the least expensive"
+                                    ],
+                                    [
+                                        "cystal â",
+                                        "as good as"
+                                    ],
+                                    [
+                                        "cymaint â",
+                                        "as much/many as"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Grammar: Questions \u0026 Negatives",
+                      "description":  "Forming questions and negative sentences",
+                      "level":  "Advanced",
+                      "cards":  [
+                                    [
+                                        "ydy?",
+                                        "is/are? (yes/no question)"
+                                    ],
+                                    [
+                                        "nac ydy",
+                                        "no (it isn\u0027t)"
+                                    ],
+                                    [
+                                        "ydw",
+                                        "yes (I am)"
+                                    ],
+                                    [
+                                        "nac ydw",
+                                        "no (I\u0027m not)"
+                                    ],
+                                    [
+                                        "pwy?",
+                                        "who?"
+                                    ],
+                                    [
+                                        "beth?",
+                                        "what?"
+                                    ],
+                                    [
+                                        "pam?",
+                                        "why?"
+                                    ],
+                                    [
+                                        "sut?",
+                                        "how?"
+                                    ],
+                                    [
+                                        "pryd?",
+                                        "when?"
+                                    ],
+                                    [
+                                        "ble? / lle?",
+                                        "where?"
+                                    ],
+                                    [
+                                        "faint?",
+                                        "how much/many?"
+                                    ],
+                                    [
+                                        "pa un?",
+                                        "which one?"
+                                    ],
+                                    [
+                                        "dydw i ddim",
+                                        "I am not"
+                                    ],
+                                    [
+                                        "dydy e ddim",
+                                        "he is not"
+                                    ],
+                                    [
+                                        "dydyn ni ddim",
+                                        "we are not"
+                                    ],
+                                    [
+                                        "wnes i ddim",
+                                        "I did not"
+                                    ],
+                                    [
+                                        "does dim",
+                                        "there isn\u0027t/aren\u0027t"
+                                    ],
+                                    [
+                                        "does neb",
+                                        "there is no one"
+                                    ],
+                                    [
+                                        "does dim byd",
+                                        "there is nothing"
+                                    ],
+                                    [
+                                        "chi ddim yn...",
+                                        "you are not..."
+                                    ],
+                                    [
+                                        "a wyt ti...?",
+                                        "are you...? (literary)"
+                                    ],
+                                    [
+                                        "onid yw e?",
+                                        "isn\u0027t it?"
+                                    ],
+                                    [
+                                        "ai ti sy \u0027na?",
+                                        "is it you?"
+                                    ],
+                                    [
+                                        "pwy sy \u0027na?",
+                                        "who\u0027s there?"
+                                    ],
+                                    [
+                                        "does dim ots",
+                                        "it doesn\u0027t matter"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "At the Doctor\u0027s \u0026 Pharmacy",
+                      "description":  "Practical phrases for healthcare visits",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "dw i ddim yn teimlo\u0027n dda",
+                                        "I don\u0027t feel well"
+                                    ],
+                                    [
+                                        "beth sy\u0027n bod?",
+                                        "what\u0027s wrong?"
+                                    ],
+                                    [
+                                        "mae gen i ben tost",
+                                        "I have a headache"
+                                    ],
+                                    [
+                                        "mae gen i wres",
+                                        "I have a fever"
+                                    ],
+                                    [
+                                        "dw i wedi brifo fy mraich",
+                                        "I have hurt my arm"
+                                    ],
+                                    [
+                                        "ers pryd?",
+                                        "since when?"
+                                    ],
+                                    [
+                                        "ers tridiau",
+                                        "for three days"
+                                    ],
+                                    [
+                                        "cymerwch hwn ddwywaith y dydd",
+                                        "take this twice a day"
+                                    ],
+                                    [
+                                        "cyn bwyd",
+                                        "before food"
+                                    ],
+                                    [
+                                        "ar ôl bwyd",
+                                        "after food"
+                                    ],
+                                    [
+                                        "a oes gennych chi alergedd?",
+                                        "do you have any allergies?"
+                                    ],
+                                    [
+                                        "dw i\u0027n alergaidd i bensilin",
+                                        "I\u0027m allergic to penicillin"
+                                    ],
+                                    [
+                                        "a allaf gael apwyntiad?",
+                                        "can I get an appointment?"
+                                    ],
+                                    [
+                                        "meddygfa",
+                                        "GP surgery"
+                                    ],
+                                    [
+                                        "adran ddamweiniau ac achosion brys",
+                                        "A\u0026E department"
+                                    ],
+                                    [
+                                        "pwysau gwaed",
+                                        "blood pressure"
+                                    ],
+                                    [
+                                        "curiad calon",
+                                        "heartbeat"
+                                    ],
+                                    [
+                                        "archwiliad",
+                                        "examination/check-up"
+                                    ],
+                                    [
+                                        "sgan",
+                                        "scan"
+                                    ],
+                                    [
+                                        "llawdriniaeth",
+                                        "operation/surgery"
+                                    ],
+                                    [
+                                        "anaf",
+                                        "injury"
+                                    ],
+                                    [
+                                        "adferiad",
+                                        "recovery"
+                                    ],
+                                    [
+                                        "hunan-ynysu",
+                                        "self-isolate"
+                                    ],
+                                    [
+                                        "brechiad",
+                                        "vaccination"
+                                    ],
+                                    [
+                                        "iechyd meddwl",
+                                        "mental health"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Restaurant \u0026 Cafe Phrases",
+                      "description":  "Useful phrases for eating out",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "bwrdd i ddau, os gwelwch yn dda",
+                                        "a table for two, please"
+                                    ],
+                                    [
+                                        "ga i weld y fwydlen?",
+                                        "can I see the menu?"
+                                    ],
+                                    [
+                                        "beth hoffech chi?",
+                                        "what would you like?"
+                                    ],
+                                    [
+                                        "dw i\u0027n cymryd...",
+                                        "I\u0027ll have..."
+                                    ],
+                                    [
+                                        "beth ydy\u0027r pryd arbennig heddiw?",
+                                        "what\u0027s today\u0027s special?"
+                                    ],
+                                    [
+                                        "a oes seigiau llysieuol?",
+                                        "are there vegetarian dishes?"
+                                    ],
+                                    [
+                                        "dim cnau, os gwelwch yn dda",
+                                        "no nuts, please"
+                                    ],
+                                    [
+                                        "ga i\u0027r bil, os gwelwch yn dda?",
+                                        "can I have the bill, please?"
+                                    ],
+                                    [
+                                        "oedd y bwyd yn flasus iawn",
+                                        "the food was very tasty"
+                                    ],
+                                    [
+                                        "a yw\u0027r gwasanaeth wedi\u0027i gynnwys?",
+                                        "is service included?"
+                                    ],
+                                    [
+                                        "cwpan o de, os gwelwch yn dda",
+                                        "a cup of tea, please"
+                                    ],
+                                    [
+                                        "heb siwgr",
+                                        "without sugar"
+                                    ],
+                                    [
+                                        "â llaeth",
+                                        "with milk"
+                                    ],
+                                    [
+                                        "pwdin",
+                                        "dessert"
+                                    ],
+                                    [
+                                        "prif gwrs",
+                                        "main course"
+                                    ],
+                                    [
+                                        "cwrs cyntaf / cwrs blasu",
+                                        "starter / appetiser"
+                                    ],
+                                    [
+                                        "archebu bwrdd",
+                                        "to book a table"
+                                    ],
+                                    [
+                                        "mynd â bwyd allan",
+                                        "to get a takeaway"
+                                    ],
+                                    [
+                                        "cyllell a fforc",
+                                        "knife and fork"
+                                    ],
+                                    [
+                                        "napcyn",
+                                        "napkin"
+                                    ],
+                                    [
+                                        "mwynhewch eich pryd!",
+                                        "enjoy your meal!"
+                                    ],
+                                    [
+                                        "llwgu",
+                                        "to be starving"
+                                    ],
+                                    [
+                                        "syched arna i",
+                                        "I\u0027m thirsty"
+                                    ],
+                                    [
+                                        "yn llawn",
+                                        "full (after eating)"
+                                    ],
+                                    [
+                                        "cildwrn",
+                                        "tip (gratuity)"
+                                    ]
+                                ]
+                  },
+                  {
+                      "name":  "Banking \u0026 Post Office",
+                      "description":  "Vocabulary for banks and the post office",
+                      "level":  "Intermediate",
+                      "cards":  [
+                                    [
+                                        "cyfrif banc",
+                                        "bank account"
+                                    ],
+                                    [
+                                        "agor cyfrif",
+                                        "to open an account"
+                                    ],
+                                    [
+                                        "cau cyfrif",
+                                        "to close an account"
+                                    ],
+                                    [
+                                        "adneuo",
+                                        "to deposit"
+                                    ],
+                                    [
+                                        "tynnu arian allan",
+                                        "to withdraw money"
+                                    ],
+                                    [
+                                        "trosglwyddiad",
+                                        "transfer"
+                                    ],
+                                    [
+                                        "balans",
+                                        "balance"
+                                    ],
+                                    [
+                                        "datganiad banc",
+                                        "bank statement"
+                                    ],
+                                    [
+                                        "peiriant arian parod",
+                                        "cash machine / ATM"
+                                    ],
+                                    [
+                                        "pin",
+                                        "PIN"
+                                    ],
+                                    [
+                                        "benthyciad",
+                                        "loan"
+                                    ],
+                                    [
+                                        "llog",
+                                        "interest"
+                                    ],
+                                    [
+                                        "morgais",
+                                        "mortgage"
+                                    ],
+                                    [
+                                        "yswiriant",
+                                        "insurance"
+                                    ],
+                                    [
+                                        "parsel",
+                                        "parcel"
+                                    ],
+                                    [
+                                        "llythyr",
+                                        "letter"
+                                    ],
+                                    [
+                                        "stamp",
+                                        "stamp"
+                                    ],
+                                    [
+                                        "amlen",
+                                        "envelope"
+                                    ],
+                                    [
+                                        "postio",
+                                        "to post"
+                                    ],
+                                    [
+                                        "cyfeiriad",
+                                        "address"
+                                    ],
+                                    [
+                                        "côd post",
+                                        "postcode"
+                                    ],
+                                    [
+                                        "danfon",
+                                        "to send"
+                                    ],
+                                    [
+                                        "derbyn",
+                                        "to receive"
+                                    ],
+                                    [
+                                        "pwyso",
+                                        "to weigh"
+                                    ],
+                                    [
+                                        "llofnod",
+                                        "signature"
+                                    ]
+                                ]
+                  }
+              ]
+}
