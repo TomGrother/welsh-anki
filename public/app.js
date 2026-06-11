@@ -39,7 +39,12 @@ function renderNav() {
   }
 }
 
+function toggleNav() {
+  document.getElementById('nav').classList.toggle('nav-open');
+}
+
 function showView(name) {
+  document.getElementById('nav').classList.remove('nav-open');
   document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
   document.getElementById('view-' + name).classList.remove('hidden');
   if (name === 'dashboard') loadDashboard();

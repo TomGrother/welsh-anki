@@ -38,7 +38,8 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 <body>
 <header>
   <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dysgu Cymraeg</a>
-  <nav>
+  <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
+  <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>
     <a class="nav-link" href="/how-it-works">How It Works</a>
     <a class="nav-link" href="/decks">Decks</a>

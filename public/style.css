@@ -61,6 +61,43 @@ nav { display: flex; gap: 0.6rem; align-items: center; }
 .nav-link { color: var(--ink); font-weight: 600; font-size: 0.9rem; text-decoration: none; padding: 0.4rem 0.6rem; }
 .nav-link:hover { color: var(--welsh-green-dark); }
 
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 42px;
+  height: 38px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+@media (max-width: 720px) {
+  html, body { overflow-x: hidden; }
+
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+  nav.nav-open { display: flex; }
+  nav .nav-link { padding: 0.6rem 0.4rem; }
+  nav button, nav .btn { width: 100%; text-align: center; }
+}
+
 nav button, .btn {
   background: var(--welsh-green);
   color: white;
