@@ -43,7 +43,16 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 <main>
 ${body}
 </main>
-<footer>Dysgu Cymraeg — Open source Welsh vocabulary trainer. <a href="/">Sign up free</a> to track your progress with spaced repetition.</footer>
+<footer>
+  Dysgu Cymraeg — Open source Welsh vocabulary trainer.
+  <nav class="footer-links">
+    <a href="/about">About</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/decks">Vocabulary Decks</a>
+    <a href="/faq">FAQ</a>
+    <a href="/">Sign up free</a>
+  </nav>
+</footer>
 </body>
 </html>`;
 }
@@ -53,6 +62,9 @@ router.get('/sitemap.xml', (req, res) => {
   const decks = db.prepare('SELECT name FROM decks').all();
   const urls = [
     `${SITE_URL}/`,
+    `${SITE_URL}/about`,
+    `${SITE_URL}/how-it-works`,
+    `${SITE_URL}/faq`,
     `${SITE_URL}/decks`,
     ...decks.map(d => `${SITE_URL}/decks/${slugify(d.name)}`)
   ];
@@ -61,6 +73,111 @@ router.get('/sitemap.xml', (req, res) => {
 ${urls.map(u => `  <url><loc>${u}</loc></url>`).join('\n')}
 </urlset>`;
   res.type('application/xml').send(xml);
+});
+
+// About page — explains the platform and method.
+router.get('/about', (req, res) => {
+  const totals = db.prepare(`
+    SELECT (SELECT COUNT(*) FROM cards) AS cards, (SELECT COUNT(*) FROM decks) AS decks
+  `).get();
+
+  const body = `
+    <div class="card-panel hero">
+      <h1>About Dysgu Cymraeg</h1>
+      <p>Dysgu Cymraeg ("Learning Welsh") is a free, open vocabulary trainer built to help anyone — from complete beginners to fluent speakers brushing up on grammar — learn the Welsh language using proven spaced-repetition techniques.</p>
+    </div>
+    <div class="card-panel">
+      <h2>Our Mission</h2>
+      <p>Welsh is a beautiful, living language spoken by hundreds of thousands of people, and we believe everyone should have free access to high-quality tools for learning it. Dysgu Cymraeg combines a comprehensive vocabulary database — currently ${totals.cards}+ flashcards across ${totals.decks}+ topic decks — with the same SM-2 spaced-repetition algorithm used by Anki, one of the most effective memorisation tools available.</p>
+      <h2>What Makes Us Different</h2>
+      <ul class="deck-list-seo">
+        <li><strong>Comprehensive coverage</strong> — from "Bore da" and basic greetings to soft mutations, irregular verbs, and conditional tense.</li>
+        <li><strong>Structured levels</strong> — Beginner, Intermediate and Advanced decks so you always know what to learn next.</li>
+        <li><strong>Smart scheduling</strong> — spaced repetition shows you words right before you'd forget them.</li>
+        <li><strong>Daily streaks</strong> — build a sustainable study habit with progress tracking.</li>
+        <li><strong>Completely free</strong> — no subscriptions, no paywalls.</li>
+      </ul>
+      <p><a class="btn" href="/">Get Started Free</a></p>
+    </div>
+  `;
+
+  res.send(layout({
+    title: 'About Dysgu Cymraeg | Free Welsh Learning Platform',
+    description: `Learn about Dysgu Cymraeg, a free platform for learning Welsh with ${totals.cards}+ spaced-repetition flashcards across ${totals.decks}+ topics, from Beginner to Advanced.`,
+    canonical: `${SITE_URL}/about`,
+    body
+  }));
+});
+
+// How It Works page — explains spaced repetition and the study flow.
+router.get('/how-it-works', (req, res) => {
+  const body = `
+    <div class="card-panel hero">
+      <h1>How Dysgu Cymraeg Works</h1>
+      <p>Learn Welsh efficiently using spaced repetition — a scientifically proven technique that shows you words at increasing intervals, right before you're likely to forget them.</p>
+    </div>
+    <div class="card-panel">
+      <h2>1. Create a Free Account</h2>
+      <p>Sign up in seconds with just a username, email and password. Your progress, streaks and review schedule are saved to your account so you can pick up where you left off on any device.</p>
+      <h2>2. Choose Your Level</h2>
+      <p>Decks are organised into <strong>Beginner</strong>, <strong>Intermediate</strong> and <strong>Advanced</strong> levels — covering everything from everyday phrases to soft mutations and conjugated prepositions. Pick the level you're ready for, and the platform introduces new words from that level at a comfortable pace.</p>
+      <h2>3. Study with Flashcards</h2>
+      <p>Each card shows a Welsh word or phrase. Try to recall the English translation, then flip the card to check. Rate how well you knew it — <em>Again</em>, <em>Hard</em>, <em>Good</em> or <em>Easy</em> — and the SM-2 algorithm schedules your next review automatically.</p>
+      <h2>4. Build a Streak</h2>
+      <p>Studying a little every day is far more effective than cramming. Dysgu Cymraeg tracks your daily streak and longest streak to help keep you motivated.</p>
+      <h2>5. Track Your Progress</h2>
+      <p>Visit your Progress page to see charts of your daily reviews, new words learned over time, and a breakdown of your answer quality — so you can see exactly how your Welsh is improving.</p>
+      <p><a class="btn" href="/">Start Learning Now</a></p>
+    </div>
+  `;
+
+  res.send(layout({
+    title: 'How It Works — Spaced Repetition for Learning Welsh | Dysgu Cymraeg',
+    description: 'See how Dysgu Cymraeg uses the SM-2 spaced-repetition algorithm, levelled decks, and daily streaks to help you learn Welsh vocabulary and grammar effectively.',
+    canonical: `${SITE_URL}/how-it-works`,
+    body
+  }));
+});
+
+// FAQ page — common questions, with FAQPage structured data.
+router.get('/faq', (req, res) => {
+  const faqs = [
+    ['Is Dysgu Cymraeg really free?', 'Yes — Dysgu Cymraeg is completely free to use, with no subscriptions, ads, or paywalls. Our goal is to make Welsh accessible to everyone.'],
+    ['What is spaced repetition?', 'Spaced repetition is a learning technique where you review information at gradually increasing intervals. Cards you find easy are shown less often, while cards you struggle with appear more frequently — helping you learn efficiently and retain words long-term.'],
+    ['Do I need to know any Welsh to start?', 'No. The Beginner decks start with everyday greetings and basic vocabulary, so complete beginners can jump straight in.'],
+    ['How many words and topics are covered?', 'The platform currently covers thousands of flashcards across more than 90 topic decks, including grammar topics like mutations, verb conjugation, pronouns, and more — grouped into Beginner, Intermediate and Advanced levels.'],
+    ['What does the daily streak mean?', 'Your streak counts the number of consecutive days you\'ve completed at least one review. It\'s a simple way to encourage consistent daily practice, which is the most effective way to learn a language.'],
+    ['How many new cards do I learn per day?', 'By default, 10 new cards are introduced per day across all your decks combined, but you can change this number in your dashboard settings to suit your pace.'],
+    ['Can I focus on a specific difficulty level?', 'Yes. In your study settings, you can choose your "active level" (Beginner, Intermediate or Advanced) — new cards will only be introduced from decks at that level until you choose to move on.'],
+    ['Is this based on Anki?', 'Dysgu Cymraeg uses the same SM-2 spaced-repetition algorithm that powers Anki, one of the most popular and effective flashcard apps, but is purpose-built and pre-loaded with Welsh vocabulary.']
+  ];
+
+  const body = `
+    <div class="card-panel hero">
+      <h1>Frequently Asked Questions</h1>
+      <p>Everything you need to know about learning Welsh with Dysgu Cymraeg.</p>
+    </div>
+    <div class="card-panel">
+      ${faqs.map(([q, a]) => `<h2>${escapeHtml(q)}</h2><p>${escapeHtml(a)}</p>`).join('')}
+      <p><a class="btn" href="/">Get Started Free</a></p>
+    </div>
+  `;
+
+  res.send(layout({
+    title: 'FAQ — Dysgu Cymraeg | Free Welsh Learning Platform',
+    description: 'Frequently asked questions about Dysgu Cymraeg: spaced repetition, daily streaks, levels, vocabulary coverage, and more.',
+    canonical: `${SITE_URL}/faq`,
+    body,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a }
+      }))
+    }
+  }));
 });
 
 // Index of all decks, grouped by level — crawlable overview page.
