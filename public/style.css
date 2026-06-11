@@ -58,6 +58,8 @@ header .brand .dragon {
 }
 
 nav { display: flex; gap: 0.6rem; align-items: center; }
+.nav-link { color: var(--ink); font-weight: 600; font-size: 0.9rem; text-decoration: none; padding: 0.4rem 0.6rem; }
+.nav-link:hover { color: var(--welsh-green-dark); }
 
 nav button, .btn {
   background: var(--welsh-green);

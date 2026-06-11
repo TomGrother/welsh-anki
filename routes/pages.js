@@ -38,7 +38,13 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 <body>
 <header>
   <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dysgu Cymraeg</a>
-  <nav><a class="btn" href="/">Start Learning Free</a></nav>
+  <nav>
+    <a class="nav-link" href="/about">About</a>
+    <a class="nav-link" href="/how-it-works">How It Works</a>
+    <a class="nav-link" href="/decks">Decks</a>
+    <a class="nav-link" href="/faq">FAQ</a>
+    <a class="btn" href="/">Start Learning Free</a>
+  </nav>
 </header>
 <main>
 ${body}

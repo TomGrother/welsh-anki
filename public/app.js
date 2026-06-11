@@ -28,7 +28,14 @@ function renderNav() {
       <button class="btn-outline" onclick="logout()">Log Out</button>
     `;
   } else {
-    nav.innerHTML = '';
+    nav.innerHTML = `
+      <a class="nav-link" href="/about">About</a>
+      <a class="nav-link" href="/how-it-works">How It Works</a>
+      <a class="nav-link" href="/decks">Decks</a>
+      <a class="nav-link" href="/faq">FAQ</a>
+      <button class="btn-outline" onclick="showView('login')">Log In</button>
+      <button class="btn" onclick="showView('register')">Sign Up</button>
+    `;
   }
 }
 
