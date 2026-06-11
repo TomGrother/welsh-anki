@@ -30,14 +30,14 @@ function layout({ title, description, canonical, body, jsonLd }) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:site_name" content="Dysgu Cymraeg">
+<meta property="og:site_name" content="Dragon Dysgu">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>">
 <link rel="stylesheet" href="/style.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
 </head>
 <body>
 <header>
-  <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dysgu Cymraeg</a>
+  <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dragon Dysgu</a>
   <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
   <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>
@@ -51,7 +51,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 ${body}
 </main>
 <footer>
-  Dysgu Cymraeg — Open source Welsh vocabulary trainer.
+  Dragon Dysgu — Open source Welsh vocabulary trainer.
   <nav class="footer-links">
     <a href="/about">About</a>
     <a href="/how-it-works">How It Works</a>
@@ -90,12 +90,12 @@ router.get('/about', (req, res) => {
 
   const body = `
     <div class="card-panel hero">
-      <h1>About Dysgu Cymraeg</h1>
-      <p>Dysgu Cymraeg ("Learning Welsh") is a free, open vocabulary trainer built to help anyone — from complete beginners to fluent speakers brushing up on grammar — learn the Welsh language using proven spaced-repetition techniques.</p>
+      <h1>About Dragon Dysgu</h1>
+      <p>Dragon Dysgu ("Learning Welsh") is a free, open vocabulary trainer built to help anyone — from complete beginners to fluent speakers brushing up on grammar — learn the Welsh language using proven spaced-repetition techniques.</p>
     </div>
     <div class="card-panel">
       <h2>Our Mission</h2>
-      <p>Welsh is a beautiful, living language spoken by hundreds of thousands of people, and we believe everyone should have free access to high-quality tools for learning it. Dysgu Cymraeg combines a comprehensive vocabulary database — currently ${totals.cards}+ flashcards across ${totals.decks}+ topic decks — with the same SM-2 spaced-repetition algorithm used by Anki, one of the most effective memorisation tools available.</p>
+      <p>Welsh is a beautiful, living language spoken by hundreds of thousands of people, and we believe everyone should have free access to high-quality tools for learning it. Dragon Dysgu combines a comprehensive vocabulary database — currently ${totals.cards}+ flashcards across ${totals.decks}+ topic decks — with the same SM-2 spaced-repetition algorithm used by Anki, one of the most effective memorisation tools available.</p>
       <h2>What Makes Us Different</h2>
       <ul class="deck-list-seo">
         <li><strong>Comprehensive coverage</strong> — from "Bore da" and basic greetings to soft mutations, irregular verbs, and conditional tense.</li>
@@ -109,8 +109,8 @@ router.get('/about', (req, res) => {
   `;
 
   res.send(layout({
-    title: 'About Dysgu Cymraeg | Free Welsh Learning Platform',
-    description: `Learn about Dysgu Cymraeg, a free platform for learning Welsh with ${totals.cards}+ spaced-repetition flashcards across ${totals.decks}+ topics, from Beginner to Advanced.`,
+    title: 'About Dragon Dysgu | Free Welsh Learning Platform',
+    description: `Learn about Dragon Dysgu, a free platform for learning Welsh with ${totals.cards}+ spaced-repetition flashcards across ${totals.decks}+ topics, from Beginner to Advanced.`,
     canonical: `${SITE_URL}/about`,
     body
   }));
@@ -120,7 +120,7 @@ router.get('/about', (req, res) => {
 router.get('/how-it-works', (req, res) => {
   const body = `
     <div class="card-panel hero">
-      <h1>How Dysgu Cymraeg Works</h1>
+      <h1>How Dragon Dysgu Works</h1>
       <p>Learn Welsh efficiently using spaced repetition — a scientifically proven technique that shows you words at increasing intervals, right before you're likely to forget them.</p>
     </div>
     <div class="card-panel">
@@ -131,7 +131,7 @@ router.get('/how-it-works', (req, res) => {
       <h2>3. Study with Flashcards</h2>
       <p>Each card shows a Welsh word or phrase. Try to recall the English translation, then flip the card to check. Rate how well you knew it — <em>Again</em>, <em>Hard</em>, <em>Good</em> or <em>Easy</em> — and the SM-2 algorithm schedules your next review automatically.</p>
       <h2>4. Build a Streak</h2>
-      <p>Studying a little every day is far more effective than cramming. Dysgu Cymraeg tracks your daily streak and longest streak to help keep you motivated.</p>
+      <p>Studying a little every day is far more effective than cramming. Dragon Dysgu tracks your daily streak and longest streak to help keep you motivated.</p>
       <h2>5. Track Your Progress</h2>
       <p>Visit your Progress page to see charts of your daily reviews, new words learned over time, and a breakdown of your answer quality — so you can see exactly how your Welsh is improving.</p>
       <p><a class="btn" href="/">Start Learning Now</a></p>
@@ -139,8 +139,8 @@ router.get('/how-it-works', (req, res) => {
   `;
 
   res.send(layout({
-    title: 'How It Works — Spaced Repetition for Learning Welsh | Dysgu Cymraeg',
-    description: 'See how Dysgu Cymraeg uses the SM-2 spaced-repetition algorithm, levelled decks, and daily streaks to help you learn Welsh vocabulary and grammar effectively.',
+    title: 'How It Works — Spaced Repetition for Learning Welsh | Dragon Dysgu',
+    description: 'See how Dragon Dysgu uses the SM-2 spaced-repetition algorithm, levelled decks, and daily streaks to help you learn Welsh vocabulary and grammar effectively.',
     canonical: `${SITE_URL}/how-it-works`,
     body
   }));
@@ -149,20 +149,20 @@ router.get('/how-it-works', (req, res) => {
 // FAQ page — common questions, with FAQPage structured data.
 router.get('/faq', (req, res) => {
   const faqs = [
-    ['Is Dysgu Cymraeg really free?', 'Yes — Dysgu Cymraeg is completely free to use, with no subscriptions, ads, or paywalls. Our goal is to make Welsh accessible to everyone.'],
+    ['Is Dragon Dysgu really free?', 'Yes — Dragon Dysgu is completely free to use, with no subscriptions, ads, or paywalls. Our goal is to make Welsh accessible to everyone.'],
     ['What is spaced repetition?', 'Spaced repetition is a learning technique where you review information at gradually increasing intervals. Cards you find easy are shown less often, while cards you struggle with appear more frequently — helping you learn efficiently and retain words long-term.'],
     ['Do I need to know any Welsh to start?', 'No. The Beginner decks start with everyday greetings and basic vocabulary, so complete beginners can jump straight in.'],
     ['How many words and topics are covered?', 'The platform currently covers thousands of flashcards across more than 90 topic decks, including grammar topics like mutations, verb conjugation, pronouns, and more — grouped into Beginner, Intermediate and Advanced levels.'],
     ['What does the daily streak mean?', 'Your streak counts the number of consecutive days you\'ve completed at least one review. It\'s a simple way to encourage consistent daily practice, which is the most effective way to learn a language.'],
     ['How many new cards do I learn per day?', 'By default, 10 new cards are introduced per day across all your decks combined, but you can change this number in your dashboard settings to suit your pace.'],
     ['Can I focus on a specific difficulty level?', 'Yes. In your study settings, you can choose your "active level" (Beginner, Intermediate or Advanced) — new cards will only be introduced from decks at that level until you choose to move on.'],
-    ['Is this based on Anki?', 'Dysgu Cymraeg uses the same SM-2 spaced-repetition algorithm that powers Anki, one of the most popular and effective flashcard apps, but is purpose-built and pre-loaded with Welsh vocabulary.']
+    ['Is this based on Anki?', 'Dragon Dysgu uses the same SM-2 spaced-repetition algorithm that powers Anki, one of the most popular and effective flashcard apps, but is purpose-built and pre-loaded with Welsh vocabulary.']
   ];
 
   const body = `
     <div class="card-panel hero">
       <h1>Frequently Asked Questions</h1>
-      <p>Everything you need to know about learning Welsh with Dysgu Cymraeg.</p>
+      <p>Everything you need to know about learning Welsh with Dragon Dysgu.</p>
     </div>
     <div class="card-panel">
       ${faqs.map(([q, a]) => `<h2>${escapeHtml(q)}</h2><p>${escapeHtml(a)}</p>`).join('')}
@@ -171,8 +171,8 @@ router.get('/faq', (req, res) => {
   `;
 
   res.send(layout({
-    title: 'FAQ — Dysgu Cymraeg | Free Welsh Learning Platform',
-    description: 'Frequently asked questions about Dysgu Cymraeg: spaced repetition, daily streaks, levels, vocabulary coverage, and more.',
+    title: 'FAQ — Dragon Dysgu | Free Welsh Learning Platform',
+    description: 'Frequently asked questions about Dragon Dysgu: spaced repetition, daily streaks, levels, vocabulary coverage, and more.',
     canonical: `${SITE_URL}/faq`,
     body,
     jsonLd: {
@@ -213,13 +213,13 @@ router.get('/decks', (req, res) => {
   const body = `
     <div class="card-panel">
       <h1>Welsh Vocabulary Decks — Browse ${decks.length} Topics</h1>
-      <p>Explore every Welsh vocabulary topic available on Dysgu Cymraeg, from everyday greetings to advanced grammar and mutations. Click a deck to preview the words, or <a href="/">create a free account</a> to study them with spaced repetition and track your progress.</p>
+      <p>Explore every Welsh vocabulary topic available on Dragon Dysgu, from everyday greetings to advanced grammar and mutations. Click a deck to preview the words, or <a href="/">create a free account</a> to study them with spaced repetition and track your progress.</p>
       ${sections}
     </div>
   `;
 
   res.send(layout({
-    title: 'Browse Welsh Vocabulary Decks | Dysgu Cymraeg',
+    title: 'Browse Welsh Vocabulary Decks | Dragon Dysgu',
     description: `Browse ${decks.length} free Welsh vocabulary decks covering Beginner, Intermediate and Advanced topics — greetings, grammar, mutations, food, travel and more.`,
     canonical: `${SITE_URL}/decks`,
     body,
@@ -266,7 +266,7 @@ router.get('/decks/:slug', (req, res, next) => {
   `;
 
   res.send(layout({
-    title: `${deck.name} — ${deck.level} Welsh Vocabulary | Dysgu Cymraeg`,
+    title: `${deck.name} — ${deck.level} Welsh Vocabulary | Dragon Dysgu`,
     description: `Learn ${deck.name} Welsh vocabulary: ${cards.slice(0, 6).map(c => c.welsh).join(', ')}${cards.length > 6 ? ', and more' : ''}. ${deck.description || ''}`.trim(),
     canonical: `${SITE_URL}/decks/${req.params.slug}`,
     body,
@@ -279,7 +279,7 @@ router.get('/decks/:slug', (req, res, next) => {
       inLanguage: 'cy',
       isPartOf: {
         '@type': 'WebSite',
-        name: 'Dysgu Cymraeg',
+        name: 'Dragon Dysgu',
         url: SITE_URL
       }
     }
