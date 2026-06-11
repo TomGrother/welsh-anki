@@ -222,4 +222,38 @@ router.get('/stats', (req, res) => {
   res.json({ ...user, ...totals });
 });
 
+// Daily review history for charts (last 14 days), plus a quality breakdown.
+router.get('/history', (req, res) => {
+  const reviews = db.prepare(`
+    SELECT date(reviewed_at) AS day, COUNT(*) AS count
+    FROM review_log
+    WHERE user_id = ? AND reviewed_at >= datetime('now', '-13 days')
+    GROUP BY day
+  `).all(req.user.id);
+
+  const newCards = db.prepare(`
+    SELECT date(first_seen) AS day, COUNT(*) AS count
+    FROM user_cards
+    WHERE user_id = ? AND first_seen >= datetime('now', '-13 days')
+    GROUP BY day
+  `).all(req.user.id);
+
+  const reviewMap = Object.fromEntries(reviews.map(r => [r.day, r.count]));
+  const newMap = Object.fromEntries(newCards.map(r => [r.day, r.count]));
+
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    days.push({ day: key, reviews: reviewMap[key] || 0, new_cards: newMap[key] || 0 });
+  }
+
+  const quality = db.prepare(`
+    SELECT quality, COUNT(*) AS count FROM review_log WHERE user_id = ? GROUP BY quality
+  `).all(req.user.id);
+
+  res.json({ days, quality });
+});
+
 module.exports = router;

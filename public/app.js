@@ -37,6 +37,7 @@ function showView(name) {
   document.getElementById('view-' + name).classList.remove('hidden');
   if (name === 'dashboard') loadDashboard();
   if (name === 'admin') loadAdmin();
+  if (name === 'progress') loadProgress();
 }
 
 function logout() {
@@ -153,6 +154,50 @@ async function saveSettings(e) {
     result.textContent = err.message;
   }
   return false;
+}
+
+// --- Progress ---
+async function loadProgress() {
+  const { days, quality } = await api('/study/history');
+
+  const maxReviews = Math.max(1, ...days.map(d => d.reviews));
+  document.getElementById('chart-reviews').innerHTML = days.map(d => `
+    <div class="bar-col">
+      <div class="bar" style="height:${(d.reviews / maxReviews) * 100}%" title="${d.reviews} reviews"></div>
+      <div class="bar-label">${formatDay(d.day)}</div>
+      <div class="bar-value">${d.reviews}</div>
+    </div>
+  `).join('');
+
+  const maxNew = Math.max(1, ...days.map(d => d.new_cards));
+  document.getElementById('chart-new').innerHTML = days.map(d => `
+    <div class="bar-col">
+      <div class="bar bar-new" style="height:${(d.new_cards / maxNew) * 100}%" title="${d.new_cards} new cards"></div>
+      <div class="bar-label">${formatDay(d.day)}</div>
+      <div class="bar-value">${d.new_cards}</div>
+    </div>
+  `).join('');
+
+  const labels = { 0: 'Again', 3: 'Hard', 4: 'Good', 5: 'Easy' };
+  const classes = { 0: 'btn-again', 3: 'btn-hard', 4: 'btn-good', 5: 'btn-easy' };
+  const totalQ = quality.reduce((s, q) => s + q.count, 0) || 1;
+  const qMap = Object.fromEntries(quality.map(q => [q.quality, q.count]));
+  document.getElementById('chart-quality').innerHTML = Object.entries(labels).map(([q, label]) => {
+    const count = qMap[q] || 0;
+    const pct = Math.round((count / totalQ) * 100);
+    return `
+      <div class="quality-row">
+        <span class="quality-label">${label}</span>
+        <div class="quality-track"><div class="quality-fill ${classes[q]}" style="width:${pct}%"></div></div>
+        <span class="quality-count">${count} (${pct}%)</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatDay(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00Z');
+  return d.toLocaleDateString(undefined, { weekday: 'short' });
 }
 
 // --- Study ---

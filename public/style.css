@@ -215,6 +215,30 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 }
 .stat-box .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-top: 0.25rem; }
 .stat-box.streak .value { background: linear-gradient(120deg, var(--welsh-red-dark), var(--welsh-red)); -webkit-background-clip: text; background-clip: text; }
+.stat-box.clickable { cursor: pointer; }
+.stat-box.clickable:hover { box-shadow: var(--shadow-lg); border-color: var(--welsh-green); }
+
+.bar-chart {
+  display: flex; align-items: flex-end; gap: 0.6rem; height: 180px; padding-top: 1.5rem;
+}
+.bar-col {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;
+}
+.bar {
+  width: 100%; max-width: 28px; border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--welsh-green), var(--welsh-green-dark));
+  min-height: 2px; transition: height 0.3s ease;
+}
+.bar-new { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+.bar-value { font-size: 0.75rem; font-weight: 700; color: var(--ink); margin-top: 0.3rem; }
+.bar-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; text-transform: uppercase; }
+
+.quality-bars { display: flex; flex-direction: column; gap: 0.75rem; }
+.quality-row { display: flex; align-items: center; gap: 0.75rem; }
+.quality-label { width: 60px; font-weight: 700; font-size: 0.85rem; }
+.quality-track { flex: 1; height: 14px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+.quality-fill { height: 100%; border-radius: 999px; transition: width 0.3s ease; }
+.quality-count { width: 90px; text-align: right; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
 
 .deck-list { display: flex; flex-direction: column; gap: 0.75rem; }
 .deck-item {
