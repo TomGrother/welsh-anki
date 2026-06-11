@@ -26,7 +26,7 @@ app.use('/', pagesRoutes);
 app.use(express.static(path.join(__dirname, 'public'), {
   maxAge: '1d',
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('index.html')) {
+    if (filePath.endsWith('index.html') || filePath.endsWith('.css') || filePath.endsWith('.js')) {
       res.setHeader('Cache-Control', 'no-cache');
     }
   }
