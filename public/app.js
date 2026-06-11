@@ -219,6 +219,15 @@ async function startStudy(deckId, extra) {
   const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${extra ? '&extra=1' : ''}`);
   if (cards.length === 0) {
     showView('complete');
+    const note = document.getElementById('complete-note');
+    const continueBtn = document.getElementById('btn-continue-study');
+    if (extra) {
+      note.textContent = "You've completed every card in this deck — nice work!";
+      continueBtn.classList.add('hidden');
+    } else {
+      note.textContent = '';
+      continueBtn.classList.toggle('hidden', !state.lastDeckId);
+    }
     return;
   }
   state.queue = cards;
@@ -271,6 +280,8 @@ async function submitReview(quality) {
   if (state.queueIndex >= state.queue.length) {
     document.getElementById('study-progress').style.width = '100%';
     showView('complete');
+    document.getElementById('complete-note').textContent = '';
+    document.getElementById('btn-continue-study').classList.toggle('hidden', !state.lastDeckId);
   } else {
     renderCard();
   }

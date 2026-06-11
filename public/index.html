@@ -233,9 +233,10 @@
     <div class="card-panel hero">
       <h1 style="font-size:2rem">Da iawn! 🎉</h1>
       <p>You've finished this session. Come back tomorrow to keep your streak alive!</p>
+      <p class="muted" id="complete-note"></p>
       <div class="flex-row" style="justify-content:center;margin-top:1rem">
         <button class="btn" onclick="showView('dashboard')">Back to Dashboard</button>
-        <button class="btn btn-secondary" onclick="continueStudy()">Keep Studying This Topic</button>
+        <button class="btn btn-secondary hidden" id="btn-continue-study" onclick="continueStudy()">Keep Studying This Topic</button>
       </div>
     </div>
   </section>
