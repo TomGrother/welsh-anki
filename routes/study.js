@@ -43,8 +43,9 @@ router.get('/decks', (req, res) => {
   let newAllowed = Math.max(0, settings.new_cards_per_day - newCardsIntroducedToday(req.user.id));
 
   for (const deck of decks) {
+    const started = deck.new_total < deck.total_cards;
     let newAvailable = 0;
-    if (deck.level === settings.active_level) {
+    if (started && deck.level === settings.active_level) {
       newAvailable = Math.min(deck.new_total, newAllowed);
       newAllowed -= newAvailable;
     }
@@ -84,7 +85,13 @@ router.get('/queue', (req, res) => {
   // Only introduce new cards from decks matching the user's active level.
   // If a specific deck was requested but it's not at the active level, no
   // new cards are introduced for it (review cards still apply above).
-  const levelFilter = deckId ? '' : 'AND d.level = ?';
+  // For the "all decks" queue, only introduce new cards from decks the user
+  // has already started (at least one user_card exists), at their active
+  // level — so a brand-new account doesn't see new cards from every topic.
+  const levelFilter = deckId ? '' : `AND d.level = ? AND EXISTS (
+    SELECT 1 FROM user_cards uc2 JOIN cards c2 ON c2.id = uc2.card_id
+    WHERE uc2.user_id = ? AND c2.deck_id = d.id
+  )`;
   if (newLimit > 0) {
     const newSql = `
       SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
@@ -102,7 +109,7 @@ router.get('/queue', (req, res) => {
         ? [req.user.id, deckId, newLimit]
         : null;
     } else {
-      newParams = [req.user.id, settings.active_level, newLimit];
+      newParams = [req.user.id, settings.active_level, req.user.id, newLimit];
     }
     if (newParams) newCards = db.prepare(newSql).all(...newParams);
   }
