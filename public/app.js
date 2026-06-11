@@ -230,8 +230,15 @@ async function startStudy(deckId, extra) {
       note.textContent = '';
       continueBtn.classList.remove('hidden');
     } else {
-      note.textContent = '';
-      continueBtn.classList.add('hidden');
+      const fallback = state.decks.find(d => d.in_progress) || state.decks.find(d => !d.completed);
+      if (fallback) {
+        state.lastDeckId = fallback.id;
+        note.textContent = "You're all caught up for today, but you can keep learning ahead!";
+        continueBtn.classList.remove('hidden');
+      } else {
+        note.textContent = "You've learned every card available — amazing work!";
+        continueBtn.classList.add('hidden');
+      }
     }
     return;
   }

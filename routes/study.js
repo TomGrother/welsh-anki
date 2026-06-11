@@ -54,6 +54,7 @@ router.get('/decks', (req, res) => {
     }
     deck.due_cards = deck.due_review + newAvailable;
     deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
+    deck.completed = deck.started_cards >= deck.total_cards && deck.total_cards > 0;
     delete deck.due_review;
     delete deck.new_total;
     delete deck.started_cards;
