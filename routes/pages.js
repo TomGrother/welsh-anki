@@ -38,7 +38,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 <body>
 <header>
   <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dragon Dysgu</a>
-  <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
+  <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open');document.getElementById('site-nav-backdrop').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
   <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>
     <a class="nav-link" href="/how-it-works">How It Works</a>
@@ -46,6 +46,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     <a class="nav-link" href="/faq">FAQ</a>
     <a class="btn" href="/">Start Learning Free</a>
   </nav>
+  <div class="nav-backdrop" id="site-nav-backdrop" onclick="document.getElementById('site-nav').classList.remove('nav-open');this.classList.remove('nav-open')"></div>
 </header>
 <main>
 ${body}
