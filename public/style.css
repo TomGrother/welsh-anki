@@ -96,6 +96,11 @@ nav { display: flex; gap: 0.6rem; align-items: center; }
   nav.nav-open { display: flex; }
   nav .nav-link { padding: 0.6rem 0.4rem; }
   nav button, nav .btn { width: 100%; text-align: center; }
+
+  main { padding: 1.5rem 1rem; }
+  .hero h1 { font-size: 2.1rem; }
+  .deck-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
 }
 
 nav button, .btn {
