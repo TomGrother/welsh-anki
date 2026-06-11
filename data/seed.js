@@ -1,0 +1,272 @@
+// Seeds the database with decks and a comprehensive set of Welsh vocabulary.
+// Safe to re-run: uses INSERT OR IGNORE on unique deck names, but will
+// duplicate cards if run twice unless the DB is fresh. Intended for first run.
+const db = require('../db');
+
+const decks = {
+  "Greetings & Basics": [
+    ["Bore da", "Good morning"],
+    ["Prynhawn da", "Good afternoon"],
+    ["Noswaith dda", "Good evening"],
+    ["Nos da", "Good night"],
+    ["Helo", "Hello"],
+    ["Hwyl fawr", "Goodbye"],
+    ["Hwyl", "Bye / Cheers"],
+    ["Sut wyt ti?", "How are you? (informal)"],
+    ["Sut dych chi?", "How are you? (formal/plural)"],
+    ["Da iawn, diolch", "Very well, thanks"],
+    ["Iawn, diolch", "Fine, thanks"],
+    ["A tithau?", "And you? (informal)"],
+    ["A chithau?", "And you? (formal)"],
+    ["Diolch", "Thank you"],
+    ["Diolch yn fawr", "Thank you very much"],
+    ["Croeso", "Welcome / You're welcome"],
+    ["Os gwelwch yn dda", "Please (formal)"],
+    ["Plis", "Please (informal)"],
+    ["Mae'n ddrwg gen i", "I'm sorry"],
+    ["Esgusodwch fi", "Excuse me"],
+    ["Ie", "Yes"],
+    ["Nage", "No (it isn't)"],
+    ["Ydw", "Yes (I am)"],
+    ["Nac ydw", "No (I am not)"],
+    ["Iawn", "OK / fine"],
+    ["Beth yw eich enw chi?", "What is your name? (formal)"],
+    ["Beth yw d'enw di?", "What is your name? (informal)"],
+    ["Fy enw i yw...", "My name is..."],
+    ["Pleser cwrdd â chi", "Pleasure to meet you"],
+    ["Croeso i Gymru", "Welcome to Wales"]
+  ],
+  "Numbers": [
+    ["un", "one"],
+    ["dau", "two"],
+    ["tri", "three"],
+    ["pedwar", "four"],
+    ["pump", "five"],
+    ["chwech", "six"],
+    ["saith", "seven"],
+    ["wyth", "eight"],
+    ["naw", "nine"],
+    ["deg", "ten"],
+    ["un deg un", "eleven"],
+    ["un deg dau", "twelve"],
+    ["ugain", "twenty"],
+    ["deg ar hugain", "thirty"],
+    ["pedwar deg", "forty"],
+    ["hanner cant", "fifty"],
+    ["cant", "one hundred"],
+    ["mil", "one thousand"],
+    ["sero", "zero"],
+    ["dwsin", "a dozen"]
+  ],
+  "Colours": [
+    ["coch", "red"],
+    ["glas", "blue"],
+    ["gwyrdd", "green"],
+    ["melyn", "yellow"],
+    ["du", "black"],
+    ["gwyn", "white"],
+    ["pinc", "pink"],
+    ["porffor", "purple"],
+    ["llwyd", "grey"],
+    ["brown", "brown"],
+    ["oren", "orange"],
+    ["arian", "silver"],
+    ["aur", "gold"]
+  ],
+  "Family": [
+    ["mam", "mother"],
+    ["tad", "father"],
+    ["mam-gu", "grandmother (south)"],
+    ["tad-cu", "grandfather (south)"],
+    ["nain", "grandmother (north)"],
+    ["taid", "grandfather (north)"],
+    ["brawd", "brother"],
+    ["chwaer", "sister"],
+    ["mab", "son"],
+    ["merch", "daughter"],
+    ["gwraig", "wife"],
+    ["gŵr", "husband"],
+    ["modryb", "aunt"],
+    ["ewythr", "uncle"],
+    ["cefnder", "male cousin"],
+    ["cyfnither", "female cousin"],
+    ["babi", "baby"],
+    ["teulu", "family"],
+    ["ffrind", "friend"],
+    ["plentyn", "child"]
+  ],
+  "Days & Time": [
+    ["dydd Llun", "Monday"],
+    ["dydd Mawrth", "Tuesday"],
+    ["dydd Mercher", "Wednesday"],
+    ["dydd Iau", "Thursday"],
+    ["dydd Gwener", "Friday"],
+    ["dydd Sadwrn", "Saturday"],
+    ["dydd Sul", "Sunday"],
+    ["heddiw", "today"],
+    ["yfory", "tomorrow"],
+    ["ddoe", "yesterday"],
+    ["wythnos", "week"],
+    ["mis", "month"],
+    ["blwyddyn", "year"],
+    ["bore", "morning"],
+    ["prynhawn", "afternoon"],
+    ["nos", "night"],
+    ["awr", "hour"],
+    ["munud", "minute"],
+    ["heno", "tonight"],
+    ["wedyn", "afterwards / later"]
+  ],
+  "Months & Seasons": [
+    ["Ionawr", "January"],
+    ["Chwefror", "February"],
+    ["Mawrth", "March"],
+    ["Ebrill", "April"],
+    ["Mai", "May"],
+    ["Mehefin", "June"],
+    ["Gorffennaf", "July"],
+    ["Awst", "August"],
+    ["Medi", "September"],
+    ["Hydref", "October"],
+    ["Tachwedd", "November"],
+    ["Rhagfyr", "December"],
+    ["gwanwyn", "spring"],
+    ["haf", "summer"],
+    ["hydref", "autumn"],
+    ["gaeaf", "winter"]
+  ],
+  "Food & Drink": [
+    ["bara", "bread"],
+    ["caws", "cheese"],
+    ["llaeth", "milk"],
+    ["te", "tea"],
+    ["coffi", "coffee"],
+    ["dŵr", "water"],
+    ["cig", "meat"],
+    ["pysgod", "fish"],
+    ["llysiau", "vegetables"],
+    ["ffrwythau", "fruit"],
+    ["afal", "apple"],
+    ["banana", "banana"],
+    ["wy", "egg"],
+    ["cawl", "soup / Welsh broth"],
+    ["cinio", "lunch / dinner"],
+    ["brecwast", "breakfast"],
+    ["swper", "supper"],
+    ["bwyd", "food"],
+    ["diod", "drink"],
+    ["siwgr", "sugar"],
+    ["halen", "salt"],
+    ["cacen", "cake"],
+    ["cwrw", "beer"],
+    ["gwin", "wine"]
+  ],
+  "Animals": [
+    ["ci", "dog"],
+    ["cath", "cat"],
+    ["ceffyl", "horse"],
+    ["dafad", "sheep"],
+    ["mochyn", "pig"],
+    ["buwch", "cow"],
+    ["aderyn", "bird"],
+    ["pysgodyn", "fish (single)"],
+    ["llygoden", "mouse"],
+    ["cwningen", "rabbit"],
+    ["draig", "dragon"],
+    ["llew", "lion"],
+    ["arth", "bear"],
+    ["iar", "hen"],
+    ["hwyaden", "duck"]
+  ],
+  "Common Verbs": [
+    ["bod", "to be"],
+    ["mynd", "to go"],
+    ["dod", "to come"],
+    ["gwneud", "to do / make"],
+    ["cael", "to have / get"],
+    ["gweld", "to see"],
+    ["clywed", "to hear"],
+    ["siarad", "to speak"],
+    ["dweud", "to say"],
+    ["bwyta", "to eat"],
+    ["yfed", "to drink"],
+    ["cysgu", "to sleep"],
+    ["gweithio", "to work"],
+    ["chwarae", "to play"],
+    ["darllen", "to read"],
+    ["ysgrifennu", "to write"],
+    ["dysgu", "to learn / teach"],
+    ["hoffi", "to like"],
+    ["caru", "to love"],
+    ["eisiau", "to want"],
+    ["gallu", "to be able to / can"],
+    ["rhedeg", "to run"],
+    ["cerdded", "to walk"],
+    ["byw", "to live"],
+    ["prynu", "to buy"]
+  ],
+  "Useful Phrases": [
+    ["Dw i'n dysgu Cymraeg", "I am learning Welsh"],
+    ["Dw i ddim yn deall", "I don't understand"],
+    ["Sut dwedwch chi...?", "How do you say...?"],
+    ["Beth yw hwn?", "What is this?"],
+    ["Ble mae'r toiled?", "Where is the toilet?"],
+    ["Faint yw e?", "How much is it?"],
+    ["Dw i eisiau...", "I want..."],
+    ["Mae'n ddrwg gen i, dw i ddim yn siarad Cymraeg yn dda", "Sorry, I don't speak Welsh well"],
+    ["Wyt ti'n siarad Saesneg?", "Do you speak English?"],
+    ["Ble rwyt ti'n byw?", "Where do you live?"],
+    ["Dw i'n byw yng Nghymru", "I live in Wales"],
+    ["Faint o'r gloch yw hi?", "What time is it?"],
+    ["Hoffwn i baned o de", "I would like a cup of tea"],
+    ["Pob lwc!", "Good luck!"],
+    ["Llongyfarchiadau!", "Congratulations!"],
+    ["Cymru am byth", "Wales forever"],
+    ["Iechyd da!", "Cheers! (good health)"]
+  ],
+  "Places & Directions": [
+    ["tref", "town"],
+    ["dinas", "city"],
+    ["pentref", "village"],
+    ["ysgol", "school"],
+    ["tŷ", "house"],
+    ["siop", "shop"],
+    ["eglwys", "church"],
+    ["mynydd", "mountain"],
+    ["afon", "river"],
+    ["môr", "sea"],
+    ["traeth", "beach"],
+    ["chwith", "left"],
+    ["de", "right / south"],
+    ["syth ymlaen", "straight ahead"],
+    ["yma", "here"],
+    ["yna", "there"],
+    ["gogledd", "north"],
+    ["dwyrain", "east"],
+    ["gorllewin", "west"],
+    ["gwlad", "country"]
+  ]
+};
+
+const insertDeck = db.prepare('INSERT OR IGNORE INTO decks (name, description) VALUES (?, ?)');
+const getDeck = db.prepare('SELECT id FROM decks WHERE name = ?');
+const insertCard = db.prepare(`INSERT INTO cards (deck_id, welsh, english) VALUES (?, ?, ?)`);
+const countCards = db.prepare('SELECT COUNT(*) AS c FROM cards').get();
+
+if (countCards.c > 0) {
+  console.log('Cards already exist — skipping seed. Use the admin panel to add more.');
+  process.exit(0);
+}
+
+const insertAll = db.transaction(() => {
+  for (const [deckName, cards] of Object.entries(decks)) {
+    insertDeck.run(deckName, `${deckName} vocabulary for Welsh learners`);
+    const deck = getDeck.get(deckName);
+    for (const [welsh, english] of cards) {
+      insertCard.run(deck.id, welsh, english);
+    }
+  }
+});
+
+insertAll();
+console.log('Seed complete:', db.prepare('SELECT COUNT(*) AS c FROM cards').get().c, 'cards across', Object.keys(decks).length, 'decks.');

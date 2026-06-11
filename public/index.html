@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dysgu Cymraeg — Learn Welsh</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="dragon">🐉</span> Dysgu Cymraeg</div>
+  <nav id="nav"></nav>
+</header>
+
+<main>
+
+  <!-- HOME / LANDING -->
+  <section id="view-home" class="hidden">
+    <div class="hero">
+      <h1>Dysgu Cymraeg</h1>
+      <p>Learn Welsh the smart way — spaced repetition flashcards, daily streaks, and a growing vocabulary database.</p>
+      <div class="flex-row" style="justify-content:center">
+        <button class="btn" onclick="showView('register')">Get Started</button>
+        <button class="btn btn-secondary" onclick="showView('login')">Log In</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="view-login" class="hidden">
+    <div class="card-panel">
+      <h2>Log In</h2><br>
+      <form onsubmit="return handleLogin(event)">
+        <label>Username or Email</label>
+        <input type="text" id="login-username" required>
+        <label>Password</label>
+        <input type="password" id="login-password" required>
+        <div class="error-msg" id="login-error"></div>
+        <button class="btn" type="submit">Log In</button>
+      </form>
+      <p style="text-align:center;margin-top:1rem">No account? <a href="#" onclick="showView('register')">Register</a></p>
+    </div>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="view-register" class="hidden">
+    <div class="card-panel">
+      <h2>Create Account</h2><br>
+      <form onsubmit="return handleRegister(event)">
+        <label>Username</label>
+        <input type="text" id="reg-username" required>
+        <label>Email</label>
+        <input type="email" id="reg-email" required>
+        <label>Password (min 6 chars)</label>
+        <input type="password" id="reg-password" required minlength="6">
+        <div class="error-msg" id="reg-error"></div>
+        <button class="btn" type="submit">Register</button>
+      </form>
+      <p style="text-align:center;margin-top:1rem">Already have an account? <a href="#" onclick="showView('login')">Log in</a></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="view-dashboard" class="hidden">
+    <h2 style="margin-bottom:1rem">Croeso, <span id="dash-username"></span>!</h2>
+    <div class="stats-grid">
+      <div class="stat-box streak"><div class="value" id="stat-streak">0</div><div class="label">Day Streak 🔥</div></div>
+      <div class="stat-box"><div class="value" id="stat-longest">0</div><div class="label">Longest Streak</div></div>
+      <div class="stat-box"><div class="value" id="stat-due">0</div><div class="label">Due Now</div></div>
+      <div class="stat-box"><div class="value" id="stat-learned">0</div><div class="label">Words Learned</div></div>
+      <div class="stat-box"><div class="value" id="stat-total">0</div><div class="label">Total Words</div></div>
+    </div>
+    <div class="card-panel">
+      <h3 style="margin-bottom:1rem">Decks</h3>
+      <div class="deck-list" id="deck-list"></div>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section id="view-study" class="hidden">
+    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="card-panel" style="margin-top:1rem">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="study-progress" style="width:0%"></div></div>
+      <p class="muted" id="study-counter">0 / 0</p>
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="word" id="card-front">—</div>
+        <div class="sub hidden" id="card-back"></div>
+        <div class="example hidden" id="card-example"></div>
+        <div class="hint" id="card-hint">Tap card to reveal answer</div>
+      </div>
+      <div class="review-buttons hidden" id="review-buttons">
+        <button class="btn-again" onclick="submitReview(0)">Again</button>
+        <button class="btn-hard" onclick="submitReview(3)">Hard</button>
+        <button class="btn-good" onclick="submitReview(4)">Good</button>
+        <button class="btn-easy" onclick="submitReview(5)">Easy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDY COMPLETE -->
+  <section id="view-complete" class="hidden">
+    <div class="card-panel hero">
+      <h1 style="font-size:2rem">Da iawn! 🎉</h1>
+      <p>You've finished this session. Come back tomorrow to keep your streak alive!</p>
+      <button class="btn" onclick="showView('dashboard')">Back to Dashboard</button>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="view-admin" class="hidden">
+    <h2 style="margin-bottom:1rem">Admin — Manage Vocabulary</h2>
+    <div class="tabs">
+      <button class="active" onclick="adminTab('decks')" id="tab-decks">Decks</button>
+      <button onclick="adminTab('cards')" id="tab-cards">Cards</button>
+      <button onclick="adminTab('import')" id="tab-import">Bulk Import</button>
+      <button onclick="adminTab('users')" id="tab-users">Users</button>
+    </div>
+
+    <div id="admin-decks" class="card-panel">
+      <h3>Add Deck</h3>
+      <form onsubmit="return adminAddDeck(event)" style="margin-top:1rem">
+        <label>Name</label><input type="text" id="deck-name" required>
+        <label>Description</label><input type="text" id="deck-desc">
+        <button class="btn" type="submit">Add Deck</button>
+      </form>
+      <table id="decks-table"><thead><tr><th>Name</th><th>Description</th><th>Cards</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div id="admin-cards" class="card-panel hidden">
+      <h3>Add Card</h3>
+      <form onsubmit="return adminAddCard(event)" style="margin-top:1rem">
+        <label>Deck</label>
+        <select id="card-deck"></select>
+        <label>Welsh</label><input type="text" id="card-welsh" required>
+        <label>English</label><input type="text" id="card-english" required>
+        <label>Notes (optional)</label><input type="text" id="card-notes">
+        <label>Example (Welsh, optional)</label><input type="text" id="card-ex-cy">
+        <label>Example (English, optional)</label><input type="text" id="card-ex-en">
+        <button class="btn" type="submit">Add Card</button>
+      </form>
+      <div class="flex-row" style="margin-top:1rem">
+        <label style="margin:0">Filter by deck:</label>
+        <select id="cards-filter" onchange="loadAdminCards()"></select>
+      </div>
+      <table id="cards-table"><thead><tr><th>Welsh</th><th>English</th><th>Deck</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div id="admin-import" class="card-panel hidden">
+      <h3>Bulk Import (JSON)</h3>
+      <p class="muted">Paste an array of objects: <code>[{"welsh":"...", "english":"...", "notes":"...", "example_welsh":"...", "example_english":"..."}]</code></p>
+      <form onsubmit="return adminImport(event)" style="margin-top:1rem;max-width:100%">
+        <label>Target Deck</label>
+        <select id="import-deck"></select>
+        <label>JSON Data</label>
+        <textarea id="import-json" rows="10" style="width:100%;font-family:monospace"></textarea>
+        <div class="success-msg" id="import-result"></div>
+        <button class="btn" type="submit">Import</button>
+      </form>
+    </div>
+
+    <div id="admin-users" class="card-panel hidden">
+      <h3>Registered Users</h3>
+      <table id="users-table"><thead><tr><th>Username</th><th>Email</th><th>Streak</th><th>Longest</th><th>Admin</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+</main>
+
+<footer>Dysgu Cymraeg — Open source Welsh vocabulary trainer.</footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+welsh.db
+welsh.db-journal
+welsh.db-wal
+welsh.db-shm
+.env
