@@ -68,6 +68,9 @@ router.get('/decks', (req, res) => {
 router.get('/queue', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const deckId = req.query.deck_id ? parseInt(req.query.deck_id) : null;
+  // "extra" lets a user keep going past their daily new-card cap, e.g. to
+  // finish a topic they're partway through. Only meaningful with a deck_id.
+  const extra = req.query.extra === '1' && deckId;
   const deckFilter = deckId ? 'AND c.deck_id = ?' : '';
   const settings = getUserSettings(req.user.id);
 
@@ -84,7 +87,7 @@ router.get('/queue', (req, res) => {
 
   const remaining = limit - reviewCards.length;
   const newAllowed = Math.max(0, settings.new_cards_per_day - newCardsIntroducedToday(req.user.id));
-  const newLimit = Math.min(remaining, newAllowed);
+  const newLimit = extra ? remaining : Math.min(remaining, newAllowed);
 
   let newCards = [];
   // Only introduce new cards from decks matching the user's active level.
@@ -110,7 +113,7 @@ router.get('/queue', (req, res) => {
     let newParams;
     if (deckId) {
       const deck = db.prepare('SELECT level FROM decks WHERE id = ?').get(deckId);
-      newParams = (deck && deck.level === settings.active_level)
+      newParams = (extra || (deck && deck.level === settings.active_level))
         ? [req.user.id, deckId, newLimit]
         : null;
     } else {

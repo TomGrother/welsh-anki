@@ -135,6 +135,7 @@ async function loadDashboard() {
                   <div class="flex-row">
                     ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
                     <button class="btn" onclick="startStudy(${d.id})">Study</button>
+                    ${d.in_progress ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Keep going past your daily new-card limit">Study More</button>` : ''}
                   </div>
                 </div>
               `).join('')}
@@ -213,8 +214,9 @@ function formatDay(dateStr) {
 }
 
 // --- Study ---
-async function startStudy(deckId) {
-  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}`);
+async function startStudy(deckId, extra) {
+  state.lastDeckId = deckId || null;
+  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${extra ? '&extra=1' : ''}`);
   if (cards.length === 0) {
     showView('complete');
     return;
@@ -223,6 +225,14 @@ async function startStudy(deckId) {
   state.queueIndex = 0;
   showView('study');
   renderCard();
+}
+
+function continueStudy() {
+  if (state.lastDeckId) {
+    startStudy(state.lastDeckId, true);
+  } else {
+    showView('dashboard');
+  }
 }
 
 function renderCard() {
