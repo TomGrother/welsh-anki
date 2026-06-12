@@ -298,6 +298,19 @@
       <input type="search" id="deck-search" placeholder="Search topics..." oninput="renderDeckList()" style="margin-top:0.75rem;margin-bottom:1rem">
       <div class="deck-list" id="deck-list"></div>
     </div>
+
+    <div class="card-panel">
+      <h3 style="margin-bottom:0.75rem">🧠 How Spaced Repetition (SM-2) Works With Your Decks</h3>
+      <p>Every card in every deck above has its own personal schedule, tracked separately for you. When you study a deck, you're not just working through a flat list from top to bottom — you're seeing exactly the cards that are <strong>due for review right now</strong>, mixed with a handful of <strong>new cards</strong> introduced at the daily pace you chose (see Settings).</p>
+      <p style="margin-top:0.75rem">Each time you rate a card, the SM-2 algorithm decides when it should reappear:</p>
+      <ul class="deck-list-seo">
+        <li><strong>Again</strong> — the card stays due <em>today</em> and keeps reappearing in your queue (moved to the back, so other cards come first) until you get it right. It hasn't "stuck" yet, so it won't disappear from Due Now.</li>
+        <li><strong>Hard</strong> — you knew it, but it was a struggle. It comes back again fairly soon — a smaller jump than Good.</li>
+        <li><strong>Good</strong> — a solid recall. The gap before its next review grows: typically 1 day → 6 days → then roughly ×2.5 each time after that (1 → 6 → ~15 → ~37 days, and so on).</li>
+        <li><strong>Easy</strong> — instant recall. The gap grows even faster than Good, so well-known words fade into occasional refreshers measured in weeks or months.</li>
+      </ul>
+      <p style="margin-top:0.75rem">This is why a deck you've "completed" can still show cards as due later — it's not re-testing everything, just the specific words that are due to resurface based on how well you knew them last time. The repetition isn't random or evenly spaced: words you find easy are repeated less and less often over time, while words you find tricky are repeated more frequently until they finally stick. Over weeks, this naturally concentrates your study time on your weak spots rather than wasting it re-confirming things you already know.</p>
+    </div>
   </section>
 
   <!-- PROGRESS -->
