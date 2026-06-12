@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const { sm2 } = require('../sm2');
+const { ACHIEVEMENTS } = require('../achievements');
 const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -214,4 +215,48 @@ router.get('/history', (req, res) => {
   res.json({ days, quality });
 });
 
+// Compute progress stats used to evaluate achievements.
+function getAchievementStats(userId) {
+  const user = db.prepare('SELECT longest_streak FROM users WHERE id = ?').get(userId);
+  const totals = db.prepare(`
+    SELECT
+      (SELECT COUNT(*) FROM user_cards WHERE user_id = ? AND repetitions >= 2) AS learned_cards,
+      (SELECT COUNT(*) FROM review_log WHERE user_id = ?) AS total_reviews,
+      (SELECT COUNT(*) FROM decks) AS total_decks,
+      (SELECT COUNT(*) FROM (
+        SELECT d.id FROM decks d
+        WHERE (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) > 0
+          AND (SELECT COUNT(*) FROM cards c JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ? WHERE c.deck_id = d.id)
+              >= (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id)
+      )) AS completed_decks
+  `).get(userId, userId, userId);
+
+  return { longest_streak: user.longest_streak, ...totals };
+}
+
+// Returns the full achievement list annotated with earned status, awarding
+// any newly-earned achievements along the way.
+function getAchievements(userId) {
+  const stats = getAchievementStats(userId);
+  const earnedRows = db.prepare('SELECT code, earned_at FROM user_achievements WHERE user_id = ?').all(userId);
+  const earnedMap = Object.fromEntries(earnedRows.map(r => [r.code, r.earned_at]));
+
+  return ACHIEVEMENTS.map(a => {
+    let earnedAt = earnedMap[a.code];
+    if (!earnedAt && a.check(stats)) {
+      db.prepare('INSERT OR IGNORE INTO user_achievements (user_id, code) VALUES (?, ?)').run(userId, a.code);
+      earnedAt = db.prepare('SELECT earned_at FROM user_achievements WHERE user_id = ? AND code = ?').get(userId, a.code).earned_at;
+    }
+    return {
+      code: a.code, name: a.name, description: a.description, icon: a.icon,
+      earned: !!earnedAt, earned_at: earnedAt || null,
+    };
+  });
+}
+
+router.get('/achievements', (req, res) => {
+  res.json({ achievements: getAchievements(req.user.id) });
+});
+
 module.exports = router;
+module.exports.getAchievements = getAchievements;

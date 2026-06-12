@@ -26,6 +26,8 @@ function renderNav() {
   if (state.user) {
     nav.innerHTML = `
       <span style="margin-right:0.5rem">${state.user.username}</span>
+      <button class="btn-outline" onclick="showView('achievements')">🏆 Achievements</button>
+      <button class="btn-outline" onclick="showView('friends')">👥 Friends</button>
       ${state.user.is_admin ? '<button class="btn-outline" onclick="showView(\'admin\')">Admin</button>' : ''}
       <button class="btn-outline" onclick="logout()">Log Out</button>
     `;
@@ -58,6 +60,8 @@ function showView(name) {
   if (name === 'dashboard') loadDashboard();
   if (name === 'admin') loadAdmin();
   if (name === 'progress') loadProgress();
+  if (name === 'achievements') loadAchievements();
+  if (name === 'friends') loadFriends();
 }
 
 function logout() {
@@ -420,6 +424,121 @@ async function submitReview(quality) {
   } else {
     renderCard();
   }
+}
+
+// --- Achievements ---
+async function loadAchievements() {
+  const { achievements } = await api('/study/achievements');
+  const earned = achievements.filter(a => a.earned).length;
+  document.getElementById('achievements-summary').textContent = `${earned} / ${achievements.length} unlocked`;
+  document.getElementById('achievements-grid').innerHTML = achievements.map(a => `
+    <div class="badge-card ${a.earned ? 'earned' : 'locked'}">
+      <div class="badge-icon">${a.icon}</div>
+      <div class="badge-name">${escapeHtml(a.name)}</div>
+      <div class="badge-desc">${escapeHtml(a.description)}</div>
+      ${a.earned ? `<div class="badge-date">Earned ${new Date(a.earned_at).toLocaleDateString()}</div>` : '<div class="badge-date">🔒 Locked</div>'}
+    </div>
+  `).join('');
+}
+
+// --- Friends ---
+async function loadFriends() {
+  const [{ friends, incoming, outgoing }, { leaderboard }] = await Promise.all([
+    api('/social/friends'),
+    api('/social/leaderboard')
+  ]);
+
+  const requestsEl = document.getElementById('friend-requests');
+  if (incoming.length === 0 && outgoing.length === 0) {
+    requestsEl.innerHTML = '';
+  } else {
+    requestsEl.innerHTML = `
+      ${incoming.map(r => `
+        <div class="friend-request">
+          <span>${escapeHtml(r.username)} wants to be your friend</span>
+          <div class="flex-row">
+            <button class="btn" onclick="respondFriendRequest(${r.request_id}, true)">Accept</button>
+            <button class="btn-outline" onclick="respondFriendRequest(${r.request_id}, false)">Decline</button>
+          </div>
+        </div>
+      `).join('')}
+      ${outgoing.map(r => `
+        <div class="friend-request">
+          <span>Request sent to ${escapeHtml(r.username)}</span>
+          <span class="muted">Pending</span>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  const friendsEl = document.getElementById('friends-list');
+  friendsEl.innerHTML = friends.length === 0
+    ? '<p class="muted">No friends yet — search for a username above to add one.</p>'
+    : friends.map(f => `
+      <div class="friend-item">
+        <span>${escapeHtml(f.username)}</span>
+        <button class="btn-outline" onclick="removeFriend(${f.id})">Remove</button>
+      </div>
+    `).join('');
+
+  renderLeaderboard(leaderboard);
+}
+
+function renderLeaderboard(leaderboard) {
+  const tbody = document.querySelector('#leaderboard-table tbody');
+  tbody.innerHTML = leaderboard.map((u, i) => `
+    <tr class="${u.id === state.user.id ? 'leaderboard-you' : ''}">
+      <td>${i + 1}</td>
+      <td>${escapeHtml(u.username)}${u.id === state.user.id ? ' (you)' : ''}</td>
+      <td>${u.current_streak} 🔥</td>
+      <td>${u.longest_streak}</td>
+      <td>${u.learned_cards}</td>
+      <td>${u.total_reviews}</td>
+    </tr>
+  `).join('');
+}
+
+let friendSearchTimeout;
+function onFriendSearchInput() {
+  clearTimeout(friendSearchTimeout);
+  friendSearchTimeout = setTimeout(friendSearch, 300);
+}
+
+async function friendSearch() {
+  const q = document.getElementById('friend-search').value.trim();
+  const resultsEl = document.getElementById('friend-search-results');
+  if (!q) { resultsEl.innerHTML = ''; return; }
+  const { users } = await api('/social/search?q=' + encodeURIComponent(q));
+  resultsEl.innerHTML = users.map(u => `
+    <div class="friend-item">
+      <span>${escapeHtml(u.username)}</span>
+      <button class="btn" onclick="sendFriendRequest('${escapeHtml(u.username)}')">Add Friend</button>
+    </div>
+  `).join('') || '<p class="muted">No users found.</p>';
+}
+
+async function sendFriendRequest(username) {
+  const errorEl = document.getElementById('friend-error');
+  errorEl.textContent = '';
+  try {
+    await api('/social/request', { method: 'POST', body: JSON.stringify({ username }) });
+    document.getElementById('friend-search').value = '';
+    document.getElementById('friend-search-results').innerHTML = '';
+    await loadFriends();
+  } catch (err) {
+    errorEl.textContent = err.message;
+  }
+}
+
+async function respondFriendRequest(requestId, accept) {
+  await api('/social/respond', { method: 'POST', body: JSON.stringify({ request_id: requestId, accept }) });
+  await loadFriends();
+}
+
+async function removeFriend(userId) {
+  if (!confirm('Remove this friend?')) return;
+  await api('/social/remove', { method: 'POST', body: JSON.stringify({ user_id: userId }) });
+  await loadFriends();
 }
 
 // --- Admin ---

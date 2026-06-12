@@ -223,6 +223,43 @@
     </div>
   </section>
 
+  <!-- ACHIEVEMENTS -->
+  <section id="view-achievements" class="hidden">
+    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="card-panel" style="margin-top:1rem">
+      <div class="flex-row" style="justify-content:space-between">
+        <h3>🏆 Achievements</h3>
+        <span class="muted" id="achievements-summary"></span>
+      </div>
+      <div class="badge-grid" id="achievements-grid"></div>
+    </div>
+  </section>
+
+  <!-- FRIENDS -->
+  <section id="view-friends" class="hidden">
+    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="card-panel" style="margin-top:1rem">
+      <h3 style="margin-bottom:1rem">Add a Friend</h3>
+      <input type="search" id="friend-search" placeholder="Search by username..." oninput="onFriendSearchInput()">
+      <p class="error-msg" id="friend-error"></p>
+      <div id="friend-search-results"></div>
+    </div>
+    <div class="card-panel" id="friend-requests-panel">
+      <div id="friend-requests"></div>
+    </div>
+    <div class="card-panel">
+      <h3 style="margin-bottom:1rem">Your Friends</h3>
+      <div id="friends-list"></div>
+    </div>
+    <div class="card-panel">
+      <h3 style="margin-bottom:1rem">Leaderboard</h3>
+      <table id="leaderboard-table">
+        <thead><tr><th>#</th><th>Name</th><th>Streak</th><th>Best Streak</th><th>Words Learned</th><th>Reviews</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- STUDY -->
   <section id="view-study" class="hidden">
     <div class="flex-row" style="justify-content:space-between">

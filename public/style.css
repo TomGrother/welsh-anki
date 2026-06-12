@@ -461,6 +461,31 @@ tr:hover td { background: var(--bg); }
 .flex-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
 .muted { color: var(--muted); font-size: 0.9rem; }
 
+/* Achievements */
+.badge-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem; margin-top: 1rem;
+}
+.badge-card {
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 1rem;
+  text-align: center; transition: all 0.15s ease;
+}
+.badge-card.earned { background: linear-gradient(160deg, rgba(0,166,86,0.08), transparent); border-color: var(--welsh-green); }
+.badge-card.locked { opacity: 0.45; filter: grayscale(1); }
+.badge-icon { font-size: 2.2rem; margin-bottom: 0.4rem; }
+.badge-name { font-weight: 700; font-size: 0.95rem; }
+.badge-desc { color: var(--muted); font-size: 0.8rem; margin-top: 0.2rem; }
+.badge-date { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Friends */
+.friend-request, .friend-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.7rem 0; border-bottom: 1px solid var(--border); gap: 0.75rem;
+}
+.friend-request:last-child, .friend-item:last-child { border-bottom: none; }
+#friend-search-results:not(:empty) { margin-top: 0.75rem; }
+.leaderboard-you td { background: rgba(0,166,86,0.08); font-weight: 700; }
+
 footer {
   text-align: center; padding: 2.5rem; color: #b0b8c4; font-size: 0.85rem;
 }
