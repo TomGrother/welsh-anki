@@ -66,7 +66,7 @@
 </head>
 <body>
 <header>
-  <div class="brand" onclick="goHome()" role="button" tabindex="0"><img class="dragon" src="dragon-icon.svg" alt=""> Dragon Lingo</div>
+  <div class="brand" onclick="goHome()" role="button" tabindex="0"><img class="dragon" src="dragon-icon.svg" alt=""> Dragon Lingo <span class="beta-sticker">Beta</span></div>
   <button class="nav-toggle" id="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">☰</button>
   <nav id="nav"></nav>
   <div class="nav-backdrop" id="nav-backdrop" onclick="toggleNav()"></div>
@@ -78,7 +78,10 @@
   <section id="view-home" class="hidden">
     <div class="hero">
       <div class="hero-badge">🐉 Welsh, the smart way</div>
-      <img src="dragon-icon.svg" alt="Dragon Lingo" class="hero-logo">
+      <div class="hero-logo-wrap">
+        <img src="dragon-icon.svg" alt="Dragon Lingo" class="hero-logo">
+        <span class="beta-sticker">Beta</span>
+      </div>
       <h1>Dragon Lingo — Learn Welsh Online for Free</h1>
       <p>Master Welsh vocabulary and grammar with spaced repetition flashcards, daily streaks, and a vocabulary database covering everything from "Bore da" to full verb conjugations.</p>
       <div class="flex-row" style="justify-content:center">
@@ -266,7 +269,7 @@
 
   <!-- DASHBOARD -->
   <section id="view-dashboard" class="hidden">
-    <h2 style="margin-bottom:1rem">Croeso, <span id="dash-username"></span>!</h2>
+    <h2 style="margin-bottom:1rem">Croeso, <span id="dash-username"></span>! <span class="beta-sticker">Beta</span></h2>
     <div class="stats-grid">
       <div class="stat-box streak"><div class="value" id="stat-streak">0</div><div class="label">Day Streak 🔥</div></div>
       <div class="stat-box"><div class="value" id="stat-longest">0</div><div class="label">Longest Streak</div></div>

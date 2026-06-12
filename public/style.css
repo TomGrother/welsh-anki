@@ -595,3 +595,23 @@ a { color: var(--welsh-green-dark); font-weight: 600; }
   text-align: center;
 }
 .modal-box h3 { margin-bottom: 0.5rem; }
+
+/* Beta sticker badges */
+.beta-sticker {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--welsh-red), var(--welsh-red-dark));
+  color: #fff; font-weight: 800; font-size: 0.65rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px;
+  transform: rotate(-6deg); box-shadow: var(--shadow); white-space: nowrap;
+  vertical-align: middle; line-height: 1.4;
+}
+.brand .beta-sticker { margin-left: 0.4rem; font-size: 0.6rem; transform: rotate(-8deg); }
+.hero-logo-wrap { position: relative; display: inline-block; }
+.hero-logo-wrap .beta-sticker {
+  position: absolute; top: 0.5rem; right: -1.2rem; font-size: 0.7rem;
+  transform: rotate(12deg); z-index: 1;
+}
+.card-panel h3 .beta-sticker, h2 .beta-sticker { margin-left: 0.5rem; font-size: 0.6rem; }
+@media (max-width: 720px) {
+  .hero-logo-wrap .beta-sticker { right: 0; top: -0.25rem; }
+}

@@ -37,7 +37,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 </head>
 <body>
 <header>
-  <a href="/" class="brand" style="text-decoration:none;color:inherit"><img class="dragon" src="/dragon-icon.svg" alt=""> Dragon Lingo</a>
+  <a href="/" class="brand" style="text-decoration:none;color:inherit"><img class="dragon" src="/dragon-icon.svg" alt=""> Dragon Lingo <span class="beta-sticker">Beta</span></a>
   <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open');document.getElementById('site-nav-backdrop').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
   <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>
