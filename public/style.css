@@ -403,9 +403,9 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .status-dot.status-new { background: #cbd5e1; }
 
 .status-badge {
-  border-radius: 999px; color: white;
+  display: inline-block; border-radius: 999px; color: white;
   padding: 0.15rem 0.6rem; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
-  vertical-align: middle;
+  vertical-align: middle; white-space: nowrap; margin-left: 0.4rem;
 }
 .status-badge.status-done { background: linear-gradient(120deg, var(--welsh-green), var(--welsh-green-dark)); }
 .status-badge.status-progress { background: linear-gradient(120deg, #f59e0b, #d97706); }
