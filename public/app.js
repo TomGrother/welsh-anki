@@ -391,23 +391,8 @@ async function printCheatsheet(deckId) {
 async function loadProgress() {
   const { days, quality } = await api('/study/history');
 
-  const maxReviews = Math.max(1, ...days.map(d => d.reviews));
-  document.getElementById('chart-reviews').innerHTML = days.map(d => `
-    <div class="bar-col">
-      <div class="bar" style="height:${(d.reviews / maxReviews) * 100}%" title="${d.reviews} reviews"></div>
-      <div class="bar-label">${formatDay(d.day)}</div>
-      <div class="bar-value">${d.reviews}</div>
-    </div>
-  `).join('');
-
-  const maxNew = Math.max(1, ...days.map(d => d.new_cards));
-  document.getElementById('chart-new').innerHTML = days.map(d => `
-    <div class="bar-col">
-      <div class="bar bar-new" style="height:${(d.new_cards / maxNew) * 100}%" title="${d.new_cards} new cards"></div>
-      <div class="bar-label">${formatDay(d.day)}</div>
-      <div class="bar-value">${d.new_cards}</div>
-    </div>
-  `).join('');
+  renderHeatmap('chart-reviews', days, 'reviews', 'green');
+  renderHeatmap('chart-new', days, 'new_cards', 'blue');
 
   const labels = { 0: 'Again', 3: 'Hard', 4: 'Good', 5: 'Easy' };
   const classes = { 0: 'btn-again', 3: 'btn-hard', 4: 'btn-good', 5: 'btn-easy' };
@@ -426,9 +411,36 @@ async function loadProgress() {
   }).join('');
 }
 
-function formatDay(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00Z');
-  return d.toLocaleDateString(undefined, { weekday: 'short' });
+// Renders a GitHub-style activity heatmap: weeks as columns, days (Sun-Sat) as rows.
+function renderHeatmap(elId, days, key, color) {
+  const cells = [];
+  const firstDay = new Date(days[0].day + 'T00:00:00Z').getUTCDay();
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  days.forEach(d => cells.push(d));
+
+  const weeks = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+
+  const max = Math.max(1, ...days.map(d => d[key]));
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  document.getElementById(elId).innerHTML = `
+    <div class="heatmap">
+      <div class="heatmap-col heatmap-labels">
+        ${dayLabels.map((l, i) => `<div class="heatmap-cell heatmap-daylabel">${i % 2 === 1 ? l : ''}</div>`).join('')}
+      </div>
+      ${weeks.map(week => `
+        <div class="heatmap-col">
+          ${week.map(d => {
+            if (!d) return '<div class="heatmap-cell empty"></div>';
+            const level = d[key] === 0 ? 0 : Math.min(4, Math.ceil((d[key] / max) * 4));
+            const date = new Date(d.day + 'T00:00:00Z').toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+            return `<div class="heatmap-cell ${color} level-${level}" title="${date}: ${d[key]}"></div>`;
+          }).join('')}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 // --- Study ---

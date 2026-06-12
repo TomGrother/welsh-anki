@@ -346,20 +346,31 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .stat-box.clickable { cursor: pointer; }
 .stat-box.clickable:hover { box-shadow: var(--shadow-lg); border-color: var(--welsh-green); }
 
-.bar-chart {
-  display: flex; align-items: flex-end; gap: 0.6rem; height: 180px; padding-top: 1.5rem;
+.bar-chart { overflow-x: auto; padding-bottom: 0.5rem; }
+
+.heatmap { display: flex; gap: 3px; }
+.heatmap-col { display: flex; flex-direction: column; gap: 3px; }
+.heatmap-cell {
+  width: 13px; height: 13px; border-radius: 3px; background: var(--bg);
+  border: 1px solid var(--border);
 }
-.bar-col {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;
+.heatmap-cell.empty { background: transparent; border-color: transparent; }
+.heatmap-daylabel {
+  width: auto; height: 13px; border: none; background: transparent;
+  font-size: 0.62rem; color: var(--muted); display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 0.35rem; text-transform: uppercase;
 }
-.bar {
-  width: 100%; max-width: 28px; border-radius: 6px 6px 0 0;
-  background: linear-gradient(180deg, var(--welsh-green), var(--welsh-green-dark));
-  min-height: 2px; transition: height 0.3s ease;
-}
-.bar-new { background: linear-gradient(180deg, #3b82f6, #2563eb); }
-.bar-value { font-size: 0.75rem; font-weight: 700; color: var(--ink); margin-top: 0.3rem; }
-.bar-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; text-transform: uppercase; }
+.heatmap-labels { margin-right: 0.15rem; }
+
+.heatmap-cell.green.level-1 { background: #c6f0d8; border-color: #c6f0d8; }
+.heatmap-cell.green.level-2 { background: #7fdcab; border-color: #7fdcab; }
+.heatmap-cell.green.level-3 { background: var(--welsh-green); border-color: var(--welsh-green); }
+.heatmap-cell.green.level-4 { background: var(--welsh-green-dark); border-color: var(--welsh-green-dark); }
+
+.heatmap-cell.blue.level-1 { background: #bfdbfe; border-color: #bfdbfe; }
+.heatmap-cell.blue.level-2 { background: #60a5fa; border-color: #60a5fa; }
+.heatmap-cell.blue.level-3 { background: #3b82f6; border-color: #3b82f6; }
+.heatmap-cell.blue.level-4 { background: #1d4ed8; border-color: #1d4ed8; }
 
 .quality-bars { display: flex; flex-direction: column; gap: 0.75rem; }
 .quality-row { display: flex; align-items: center; gap: 0.75rem; }

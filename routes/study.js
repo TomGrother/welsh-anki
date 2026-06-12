@@ -284,19 +284,19 @@ router.get('/stats', (req, res) => {
   res.json({ ...user, ...totals });
 });
 
-// Daily review history for charts (last 14 days), plus a quality breakdown.
+// Daily review history for charts (last 119 days, ~17 weeks for a heatmap), plus a quality breakdown.
 router.get('/history', (req, res) => {
   const reviews = db.prepare(`
     SELECT date(reviewed_at) AS day, COUNT(*) AS count
     FROM review_log
-    WHERE user_id = ? AND reviewed_at >= datetime('now', '-13 days')
+    WHERE user_id = ? AND reviewed_at >= datetime('now', '-118 days')
     GROUP BY day
   `).all(req.user.id);
 
   const newCards = db.prepare(`
     SELECT date(first_seen) AS day, COUNT(*) AS count
     FROM user_cards
-    WHERE user_id = ? AND first_seen >= datetime('now', '-13 days')
+    WHERE user_id = ? AND first_seen >= datetime('now', '-118 days')
     GROUP BY day
   `).all(req.user.id);
 
@@ -304,7 +304,7 @@ router.get('/history', (req, res) => {
   const newMap = Object.fromEntries(newCards.map(r => [r.day, r.count]));
 
   const days = [];
-  for (let i = 13; i >= 0; i--) {
+  for (let i = 118; i >= 0; i--) {
     const d = new Date();
     d.setUTCDate(d.getUTCDate() - i);
     const key = d.toISOString().slice(0, 10);
