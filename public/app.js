@@ -307,6 +307,34 @@ async function addMyCard(e) {
   return false;
 }
 
+function toggleMyDeckImport() {
+  document.getElementById('mydeck-import').classList.toggle('hidden');
+}
+
+async function importMyDeckCards() {
+  const resultEl = document.getElementById('mydeck-import-result');
+  resultEl.textContent = '';
+  let cards;
+  try {
+    cards = JSON.parse(document.getElementById('mydeck-import-json').value);
+    if (!Array.isArray(cards)) throw new Error('Expected a JSON array');
+  } catch (err) {
+    resultEl.style.color = 'var(--welsh-red)';
+    resultEl.textContent = 'Invalid JSON: ' + err.message;
+    return;
+  }
+  try {
+    const data = await api(`/study/decks/${state.myDeckId}/import`, { method: 'POST', body: JSON.stringify({ cards }) });
+    resultEl.style.color = '';
+    resultEl.textContent = `Imported ${data.imported} word(s).`;
+    document.getElementById('mydeck-import-json').value = '';
+    await loadMyDeck();
+  } catch (err) {
+    resultEl.style.color = 'var(--welsh-red)';
+    resultEl.textContent = err.message;
+  }
+}
+
 async function deleteMyCard(id) {
   await api('/study/cards/' + id, { method: 'DELETE' });
   await loadMyDeck();

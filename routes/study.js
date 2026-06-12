@@ -82,6 +82,32 @@ router.post('/decks/:id/cards', (req, res) => {
   res.json({ id: result.lastInsertRowid });
 });
 
+// Bulk import cards into one of your own personal decks.
+// Accepts { cards: [{welsh, english, notes?, example_welsh?, example_english?}, ...] }
+router.post('/decks/:id/import', (req, res) => {
+  const deck = db.prepare('SELECT * FROM decks WHERE id = ?').get(req.params.id);
+  if (!deck) return res.status(404).json({ error: 'Deck not found' });
+  if (deck.owner_id !== req.user.id) return res.status(403).json({ error: 'You can only import into your own decks' });
+
+  const { cards } = req.body || {};
+  if (!Array.isArray(cards)) return res.status(400).json({ error: 'A cards array is required' });
+
+  const insert = db.prepare(`
+    INSERT INTO cards (deck_id, welsh, english, notes, example_welsh, example_english)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  let count = 0;
+  const run = db.transaction((rows) => {
+    for (const row of rows) {
+      if (!row.welsh || !row.english) continue;
+      insert.run(deck.id, row.welsh, row.english, row.notes || null, row.example_welsh || null, row.example_english || null);
+      count++;
+    }
+  });
+  run(cards);
+  res.json({ imported: count });
+});
+
 // Delete a card from one of your own personal decks.
 router.delete('/cards/:id', (req, res) => {
   const card = db.prepare('SELECT c.*, d.owner_id FROM cards c JOIN decks d ON d.id = c.deck_id WHERE c.id = ?').get(req.params.id);

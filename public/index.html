@@ -295,6 +295,27 @@
         <tbody></tbody>
       </table>
     </div>
+    <div class="card-panel">
+      <div class="flex-row" style="justify-content:space-between">
+        <h3>Bulk Import</h3>
+        <button class="btn-outline" onclick="toggleMyDeckImport()">Import JSON</button>
+      </div>
+      <div id="mydeck-import" class="hidden" style="margin-top:0.75rem">
+        <p class="muted" style="margin-bottom:0.5rem">
+          Paste an array of words to add them all at once. Each entry needs <code>welsh</code> and <code>english</code> —
+          <code>notes</code>, <code>example_welsh</code> and <code>example_english</code> are optional. Example:
+        </p>
+        <pre class="import-example">[
+  { "welsh": "bore da", "english": "good morning" },
+  { "welsh": "diolch", "english": "thank you", "notes": "very common" }
+]</pre>
+        <textarea id="mydeck-import-json" rows="8" style="width:100%;font-family:monospace" placeholder='[{"welsh": "...", "english": "..."}]'></textarea>
+        <div class="flex-row" style="margin-top:0.5rem">
+          <button class="btn" onclick="importMyDeckCards()">Import</button>
+          <span id="mydeck-import-result" class="muted"></span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- STUDY -->
