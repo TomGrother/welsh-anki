@@ -222,8 +222,7 @@ router.get('/queue', (req, res) => {
       LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
       WHERE c.deck_id = ?
       ORDER BY (uc.id IS NULL) DESC, uc.due_date ASC, c.id ASC
-      LIMIT ?
-    `).all(req.user.id, deckId, limit);
+    `).all(req.user.id, deckId);
     return res.json({ cards });
   }
 
