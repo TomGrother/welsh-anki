@@ -263,9 +263,7 @@ function renderDeckList() {
                   <button class="btn-danger icon-btn" onclick="deleteMyDeck(${d.id})" title="Delete this deck">🗑️</button>` : ''}
                 ${d.total_cards === 0
                   ? `<button class="btn" disabled title="Add some words first">Study</button>`
-                  : d.completed
-                  ? `<button class="btn" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>`
-                  : `<button class="btn" onclick="startStudy(${d.id})">Study</button>`}
+                  : `<button class="btn" onclick="startStudy(${d.id}, true)" title="Review any word from this topic, any time">Study</button>`}
               </div>
             </div>
           `).join('')}

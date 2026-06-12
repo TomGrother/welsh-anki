@@ -185,7 +185,7 @@ router.get('/queue', (req, res) => {
   const DAILY_NEW_CARD_LIMIT = new_cards_per_day || 10;
 
   let newCards = [];
-  if (deckId) {
+  if (!reviewAll) {
     const remaining = limit - reviewCards.length;
     if (remaining > 0) {
       const { count: newToday } = db.prepare(`
@@ -194,14 +194,20 @@ router.get('/queue', (req, res) => {
       `).get(req.user.id);
       const newAllowance = Math.max(0, Math.min(remaining, DAILY_NEW_CARD_LIMIT - newToday));
       if (newAllowance > 0) {
-        newCards = db.prepare(`
+        const newCardSql = `
           SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
             NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
           FROM cards c
+          JOIN decks d ON d.id = c.deck_id
           LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-          WHERE uc.id IS NULL AND c.deck_id = ?
-          ORDER BY c.id ASC LIMIT ?
-        `).all(req.user.id, deckId, newAllowance);
+          WHERE uc.id IS NULL AND (d.owner_id IS NULL OR d.owner_id = ?) ${deckFilter}
+          ORDER BY
+            CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END,
+            d.id, c.id ASC
+          LIMIT ?
+        `;
+        const newCardParams = deckId ? [req.user.id, req.user.id, deckId, newAllowance] : [req.user.id, req.user.id, newAllowance];
+        newCards = db.prepare(newCardSql).all(...newCardParams);
       }
     }
   }
