@@ -147,8 +147,9 @@
         <input type="text" id="reg-username" required>
         <label>Email</label>
         <input type="email" id="reg-email" required>
-        <label>Password (min 6 chars)</label>
-        <input type="password" id="reg-password" required minlength="6">
+        <label>Password</label>
+        <input type="password" id="reg-password" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="At least 8 characters, including an uppercase letter, a lowercase letter, a number and a symbol">
+        <p class="muted" style="margin-top:-0.5rem">At least 8 characters, with an uppercase letter, lowercase letter, number and symbol.</p>
         <div class="error-msg" id="reg-error"></div>
         <button class="btn" type="submit">Register</button>
       </form>
