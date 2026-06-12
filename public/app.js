@@ -99,8 +99,6 @@ function onAuthSuccess(data) {
 // --- Dashboard ---
 async function loadDashboard() {
   document.getElementById('dash-username').textContent = state.user.username;
-  document.getElementById('settings-new-cards').value = state.user.new_cards_per_day ?? 10;
-  document.getElementById('settings-active-level').value = state.user.active_level || 'Beginner';
   try {
     const stats = await api('/study/stats');
     document.getElementById('stat-streak').textContent = stats.current_streak;
@@ -155,7 +153,6 @@ function renderDeckList() {
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
                 <button class="btn" onclick="startStudy(${d.id})">Study</button>
-                ${d.in_progress ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Keep going past your daily new-card limit">Study More</button>` : ''}
               </div>
             </div>
           `).join('')}
@@ -163,26 +160,6 @@ function renderDeckList() {
       </div>
     `;
   }).join('');
-}
-
-async function saveSettings(e) {
-  e.preventDefault();
-  const new_cards_per_day = parseInt(document.getElementById('settings-new-cards').value);
-  const active_level = document.getElementById('settings-active-level').value;
-  const result = document.getElementById('settings-result');
-  try {
-    const data = await api('/study/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day, active_level }) });
-    state.user = data.user;
-    localStorage.setItem('user', JSON.stringify(state.user));
-    result.style.color = '';
-    result.textContent = 'Saved!';
-    await loadDashboard();
-    setTimeout(() => { result.textContent = ''; }, 2000);
-  } catch (err) {
-    result.style.color = 'red';
-    result.textContent = err.message;
-  }
-  return false;
 }
 
 // --- Progress ---
@@ -230,24 +207,20 @@ function formatDay(dateStr) {
 }
 
 // --- Study ---
-async function startStudy(deckId, extra) {
-  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${extra ? '&extra=1' : ''}`);
+async function startStudy(deckId) {
+  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}`);
   if (cards.length === 0) {
     showView('complete');
     const note = document.getElementById('complete-note');
     const continueBtn = document.getElementById('btn-continue-study');
-    if (extra) {
+    if (deckId) {
       note.textContent = "You've completed every card in this deck — nice work!";
       continueBtn.classList.add('hidden');
-    } else if (deckId) {
-      state.lastDeckId = deckId;
-      note.textContent = '';
-      continueBtn.classList.remove('hidden');
     } else {
       const fallback = state.decks.find(d => d.in_progress) || state.decks.find(d => !d.completed);
       if (fallback) {
         state.lastDeckId = fallback.id;
-        note.textContent = "You're all caught up for today, but you can keep learning ahead!";
+        note.textContent = "You're all caught up for now, but you can keep learning ahead!";
         continueBtn.classList.remove('hidden');
       } else {
         note.textContent = "You've learned every card available — amazing work!";
@@ -267,7 +240,7 @@ async function startStudy(deckId, extra) {
 
 function continueStudy() {
   if (state.lastDeckId) {
-    startStudy(state.lastDeckId, true);
+    startStudy(state.lastDeckId);
   } else {
     showView('dashboard');
   }

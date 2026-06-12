@@ -6,74 +6,39 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 router.use(requireAuth);
 
-const VALID_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
-
-// How many never-studied cards a user is introduced to per day, across ALL
-// decks combined. Keeps new accounts from being greeted by hundreds of
-// "due" cards on day one.
-function newCardsIntroducedToday(userId) {
-  return db.prepare(`
-    SELECT COUNT(*) AS c FROM user_cards uc
-    WHERE uc.user_id = ? AND date(uc.first_seen) = date('now')
-  `).get(userId).c;
-}
-
-function getUserSettings(userId) {
-  return db.prepare('SELECT new_cards_per_day, active_level FROM users WHERE id = ?').get(userId);
-}
-
-// List decks with total card count, and how many are due now for this user
-// (existing reviews due, plus a share of the global capped new-card allowance
-// for decks at the user's active level).
+// List decks with total card count and how many reviews are due now for
+// each. New cards have no cap — users can work through a topic at their
+// own pace and it'll reappear for review once cards become due.
 router.get('/decks', (req, res) => {
-  const settings = getUserSettings(req.user.id);
   const decks = db.prepare(`
     SELECT d.id, d.name, d.description, d.level,
       (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
       (SELECT COUNT(*) FROM cards c
          JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-         WHERE c.deck_id = d.id AND uc.due_date <= datetime('now')) AS due_review,
-      (SELECT COUNT(*) FROM cards c
-         LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-         WHERE c.deck_id = d.id AND uc.id IS NULL) AS new_total,
+         WHERE c.deck_id = d.id AND uc.due_date <= datetime('now')) AS due_cards,
       (SELECT COUNT(*) FROM cards c
          JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
          WHERE c.deck_id = d.id) AS started_cards
     FROM decks d
     ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 ELSE 2 END, d.id
-  `).all(req.user.id, req.user.id, req.user.id);
-
-  let newAllowed = Math.max(0, settings.new_cards_per_day - newCardsIntroducedToday(req.user.id));
+  `).all(req.user.id, req.user.id);
 
   for (const deck of decks) {
-    const started = deck.new_total < deck.total_cards;
-    let newAvailable = 0;
-    if (started && deck.level === settings.active_level) {
-      newAvailable = Math.min(deck.new_total, newAllowed);
-      newAllowed -= newAvailable;
-    }
-    deck.due_cards = deck.due_review + newAvailable;
     deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
     deck.completed = deck.started_cards >= deck.total_cards && deck.total_cards > 0;
-    delete deck.due_review;
-    delete deck.new_total;
     delete deck.started_cards;
   }
 
   res.json({ decks });
 });
 
-// Get a batch of cards due for review (optionally filtered by deck).
-// Mixes due reviews with a small, globally-capped number of new cards
-// drawn only from decks at the user's active level.
+// Get a batch of cards due for review (optionally filtered by deck), topped
+// up with new cards from that deck. With no deck specified, only due
+// reviews across all decks are returned.
 router.get('/queue', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const deckId = req.query.deck_id ? parseInt(req.query.deck_id) : null;
-  // "extra" lets a user keep going past their daily new-card cap, e.g. to
-  // finish a topic they're partway through. Only meaningful with a deck_id.
-  const extra = req.query.extra === '1' && deckId;
   const deckFilter = deckId ? 'AND c.deck_id = ?' : '';
-  const settings = getUserSettings(req.user.id);
 
   const reviewSql = `
     SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
@@ -86,78 +51,22 @@ router.get('/queue', (req, res) => {
   const reviewParams = deckId ? [req.user.id, deckId, limit] : [req.user.id, limit];
   const reviewCards = db.prepare(reviewSql).all(...reviewParams);
 
-  const remaining = limit - reviewCards.length;
-  const newAllowed = Math.max(0, settings.new_cards_per_day - newCardsIntroducedToday(req.user.id));
-  const newLimit = extra ? remaining : Math.min(remaining, newAllowed);
-
   let newCards = [];
-  // Only introduce new cards from decks matching the user's active level.
-  // If a specific deck was requested but it's not at the active level, no
-  // new cards are introduced for it (review cards still apply above).
-  // For the "all decks" queue, only introduce new cards from decks the user
-  // has already started (at least one user_card exists), at their active
-  // level — so a brand-new account doesn't see new cards from every topic.
-  const levelFilter = deckId ? '' : `AND d.level = ? AND EXISTS (
-    SELECT 1 FROM user_cards uc2 JOIN cards c2 ON c2.id = uc2.card_id
-    WHERE uc2.user_id = ? AND c2.deck_id = d.id
-  )`;
-  if (newLimit > 0) {
-    const newSql = `
-      SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
-        NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
-      FROM cards c
-      JOIN decks d ON d.id = c.deck_id
-      LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-      WHERE uc.id IS NULL ${deckFilter} ${levelFilter}
-      ORDER BY c.id ASC LIMIT ?
-    `;
-    let newParams;
-    if (deckId) {
-      const deck = db.prepare('SELECT level FROM decks WHERE id = ?').get(deckId);
-      newParams = (extra || (deck && deck.level === settings.active_level))
-        ? [req.user.id, deckId, newLimit]
-        : null;
-    } else {
-      newParams = [req.user.id, settings.active_level, req.user.id, newLimit];
+  if (deckId) {
+    const remaining = limit - reviewCards.length;
+    if (remaining > 0) {
+      newCards = db.prepare(`
+        SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+          NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
+        FROM cards c
+        LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+        WHERE uc.id IS NULL AND c.deck_id = ?
+        ORDER BY c.id ASC LIMIT ?
+      `).all(req.user.id, deckId, remaining);
     }
-    if (newParams) newCards = db.prepare(newSql).all(...newParams);
   }
 
   res.json({ cards: [...reviewCards, ...newCards] });
-});
-
-// Update the user's study pacing settings.
-router.put('/settings', (req, res) => {
-  const { new_cards_per_day, active_level } = req.body || {};
-  const updates = [];
-  const params = [];
-
-  if (new_cards_per_day != null) {
-    const n = parseInt(new_cards_per_day);
-    if (!Number.isInteger(n) || n < 0 || n > 200) {
-      return res.status(400).json({ error: 'new_cards_per_day must be an integer between 0 and 200' });
-    }
-    updates.push('new_cards_per_day = ?');
-    params.push(n);
-  }
-
-  if (active_level != null) {
-    if (!VALID_LEVELS.includes(active_level)) {
-      return res.status(400).json({ error: 'active_level must be one of ' + VALID_LEVELS.join(', ') });
-    }
-    updates.push('active_level = ?');
-    params.push(active_level);
-  }
-
-  if (updates.length === 0) {
-    return res.status(400).json({ error: 'Nothing to update' });
-  }
-
-  params.push(req.user.id);
-  db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`).run(...params);
-
-  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level FROM users WHERE id = ?').get(req.user.id);
-  res.json({ ok: true, user });
 });
 
 // Submit a review for a card. quality: 0 (Again), 3 (Hard), 4 (Good), 5 (Easy)
