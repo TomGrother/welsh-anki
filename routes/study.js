@@ -181,18 +181,27 @@ router.get('/queue', (req, res) => {
   const reviewParams = deckId ? [req.user.id, deckId, limit] : [req.user.id, limit];
   const reviewCards = db.prepare(reviewSql).all(...reviewParams);
 
+  const DAILY_NEW_CARD_LIMIT = 20;
+
   let newCards = [];
   if (deckId) {
     const remaining = limit - reviewCards.length;
     if (remaining > 0) {
-      newCards = db.prepare(`
-        SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
-          NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
-        FROM cards c
-        LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-        WHERE uc.id IS NULL AND c.deck_id = ?
-        ORDER BY c.id ASC LIMIT ?
-      `).all(req.user.id, deckId, remaining);
+      const { count: newToday } = db.prepare(`
+        SELECT COUNT(*) AS count FROM user_cards
+        WHERE user_id = ? AND date(first_seen) = date('now')
+      `).get(req.user.id);
+      const newAllowance = Math.max(0, Math.min(remaining, DAILY_NEW_CARD_LIMIT - newToday));
+      if (newAllowance > 0) {
+        newCards = db.prepare(`
+          SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+            NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
+          FROM cards c
+          LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+          WHERE uc.id IS NULL AND c.deck_id = ?
+          ORDER BY c.id ASC LIMIT ?
+        `).all(req.user.id, deckId, newAllowance);
+      }
     }
   }
 
