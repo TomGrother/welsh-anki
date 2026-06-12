@@ -664,6 +664,10 @@ function toggleTypedMode() {
 async function submitReview(quality) {
   const card = state.queue[state.queueIndex];
   await api('/study/review', { method: 'POST', body: JSON.stringify({ card_id: card.id, quality }) });
+  if (quality === 0) {
+    renderCard();
+    return;
+  }
   state.queueIndex++;
   if (state.queueIndex >= state.queue.length) {
     document.getElementById('study-progress').style.width = '100%';
