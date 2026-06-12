@@ -194,10 +194,10 @@ router.get('/decks', (req, res) => {
     SELECT d.id, d.name, d.description, d.level, COUNT(c.id) AS card_count
     FROM decks d LEFT JOIN cards c ON c.deck_id = d.id
     GROUP BY d.id
-    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 ELSE 2 END, d.name
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 ELSE 3 END, d.name
   `).all();
 
-  const levels = ['Beginner', 'Intermediate', 'Advanced'];
+  const levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
   const sections = levels.map(level => {
     const levelDecks = decks.filter(d => d.level === level);
     if (!levelDecks.length) return '';

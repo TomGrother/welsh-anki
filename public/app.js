@@ -2,7 +2,7 @@ const API = '/api';
 let state = {
   token: localStorage.getItem('token') || null,
   user: JSON.parse(localStorage.getItem('user') || 'null'),
-  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{"Beginner":true,"Intermediate":true,"Advanced":true}'),
+  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{"Beginner":true,"Intermediate":true,"Advanced":true,"Fluent":true}'),
   queue: [],
   queueIndex: 0,
   flipped: false,
@@ -162,8 +162,8 @@ function toggleLevelSection(level) {
 
 function renderDeckList() {
   const list = document.getElementById('deck-list');
-  const levels = ['Beginner', 'Intermediate', 'Advanced'];
-  const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳' };
+  const levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
+  const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳', Fluent: '🐉' };
   const query = (document.getElementById('deck-search')?.value || '').trim().toLowerCase();
   const decks = query
     ? state.decks.filter(d => d.name.toLowerCase().includes(query) || (d.description || '').toLowerCase().includes(query))
@@ -437,7 +437,7 @@ function adminTab(name) {
 async function loadAdminDecks() {
   const { decks } = await api('/admin/decks');
   state.decks = decks;
-  const levels = ['Beginner', 'Intermediate', 'Advanced'];
+  const levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
   const tbody = document.querySelector('#decks-table tbody');
   tbody.innerHTML = decks.map(d => `
     <tr>

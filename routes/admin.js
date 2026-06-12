@@ -14,7 +14,7 @@ router.get('/decks', (req, res) => {
   res.json({ decks });
 });
 
-const VALID_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+const VALID_LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
 
 router.post('/decks', (req, res) => {
   const { name, description, level } = req.body || {};
@@ -31,7 +31,7 @@ router.post('/decks', (req, res) => {
 router.put('/decks/:id', (req, res) => {
   const { name, description, level } = req.body || {};
   if (level && !VALID_LEVELS.includes(level)) {
-    return res.status(400).json({ error: 'level must be Beginner, Intermediate or Advanced' });
+    return res.status(400).json({ error: 'level must be Beginner, Intermediate, Advanced or Fluent' });
   }
   db.prepare('UPDATE decks SET name = COALESCE(?, name), description = COALESCE(?, description), level = COALESCE(?, level) WHERE id = ?')
     .run(name, description, level, req.params.id);

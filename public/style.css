@@ -279,6 +279,7 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .level-pill.Beginner { background: linear-gradient(120deg, var(--welsh-green), var(--welsh-green-dark)); }
 .level-pill.Intermediate { background: linear-gradient(120deg, #f59e0b, #d97706); }
 .level-pill.Advanced { background: linear-gradient(120deg, var(--welsh-red), var(--welsh-red-dark)); }
+.level-pill.Fluent { background: linear-gradient(120deg, #7c3aed, #4c1d95); }
 
 .stats-grid {
   display: grid;

@@ -20,7 +20,7 @@ router.get('/decks', (req, res) => {
          JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
          WHERE c.deck_id = d.id) AS started_cards
     FROM decks d
-    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 ELSE 2 END, d.id
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 ELSE 3 END, d.id
   `).all(req.user.id, req.user.id);
 
   for (const deck of decks) {
