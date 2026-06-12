@@ -26,6 +26,8 @@
   --shadow-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
 }
 
+[data-theme="dark"] .flashcard .sub { color: var(--welsh-green); }
+
 [data-theme="dark"] body {
   background:
     radial-gradient(circle at 10% 0%, rgba(0, 166, 86, 0.05), transparent 40%),
