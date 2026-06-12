@@ -194,20 +194,42 @@ router.get('/queue', (req, res) => {
       `).get(req.user.id);
       const newAllowance = Math.max(0, Math.min(remaining, DAILY_NEW_CARD_LIMIT - newToday));
       if (newAllowance > 0) {
-        const newCardSql = `
-          SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
-            NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
-          FROM cards c
-          JOIN decks d ON d.id = c.deck_id
-          LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-          WHERE uc.id IS NULL AND (d.owner_id IS NULL OR d.owner_id = ?) ${deckFilter}
-          ORDER BY
-            CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END,
-            d.id, c.id ASC
-          LIMIT ?
-        `;
-        const newCardParams = deckId ? [req.user.id, req.user.id, deckId, newAllowance] : [req.user.id, req.user.id, newAllowance];
-        newCards = db.prepare(newCardSql).all(...newCardParams);
+        // New cards are only drawn from a deck once every deck before it
+        // (in level order) has been fully completed — keeps new vocab
+        // flowing in a sequential, unlocked order.
+        const orderedDecks = db.prepare(`
+          SELECT d.id,
+            (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
+            (SELECT COUNT(*) FROM cards c JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ? WHERE c.deck_id = d.id) AS started_cards
+          FROM decks d
+          WHERE d.owner_id IS NULL OR d.owner_id = ?
+          ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
+        `).all(req.user.id, req.user.id);
+
+        const eligibleDeckIds = [];
+        for (const d of orderedDecks) {
+          eligibleDeckIds.push(d.id);
+          if (!(d.total_cards > 0 && d.started_cards >= d.total_cards)) break;
+        }
+
+        const eligibleIds = deckId ? eligibleDeckIds.filter(id => id === deckId) : eligibleDeckIds;
+
+        if (eligibleIds.length > 0) {
+          const placeholders = eligibleIds.map(() => '?').join(',');
+          const newCardSql = `
+            SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+              NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
+            FROM cards c
+            JOIN decks d ON d.id = c.deck_id
+            LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+            WHERE uc.id IS NULL AND c.deck_id IN (${placeholders})
+            ORDER BY
+              CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END,
+              d.id, c.id ASC
+            LIMIT ?
+          `;
+          newCards = db.prepare(newCardSql).all(req.user.id, ...eligibleIds, newAllowance);
+        }
       }
     }
   }
