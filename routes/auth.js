@@ -1,8 +1,14 @@
 const express = require('express');
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { SECRET, requireAuth } = require('../middleware/auth');
+
+const PASSWORD_RULES = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol';
+function isValidPassword(password) {
+  return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password);
+}
 
 const router = express.Router();
 
@@ -11,8 +17,8 @@ router.post('/register', (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email and password are required' });
   }
-  if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
-    return res.status(400).json({ error: 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol' });
+  if (!isValidPassword(password)) {
+    return res.status(400).json({ error: PASSWORD_RULES });
   }
 
   const existing = db.prepare('SELECT id FROM users WHERE username = ? OR email = ?').get(username, email);
@@ -45,6 +51,48 @@ router.get('/me', requireAuth, (req, res) => {
   const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: { ...user, is_admin: !!user.is_admin } });
+});
+
+// Request a password reset. Always responds with a generic success message so
+// existing emails can't be enumerated. Generates a one-hour token; until an
+// email provider is configured, the reset link is logged to the server console.
+router.post('/forgot-password', (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const user = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  if (user) {
+    const token = crypto.randomBytes(32).toString('hex');
+    db.prepare(`
+      INSERT INTO password_resets (user_id, token, expires_at)
+      VALUES (?, ?, datetime('now', '+1 hour'))
+    `).run(user.id, token);
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/?reset=${token}`;
+    console.log(`Password reset requested for ${email}: ${resetUrl}`);
+  }
+
+  res.json({ ok: true, message: 'If an account exists for that email, a reset link has been generated.' });
+});
+
+// Complete a password reset using a token from /forgot-password.
+router.post('/reset-password', (req, res) => {
+  const { token, password } = req.body || {};
+  if (!token || !password) return res.status(400).json({ error: 'Token and password are required' });
+  if (!isValidPassword(password)) {
+    return res.status(400).json({ error: PASSWORD_RULES });
+  }
+
+  const reset = db.prepare(`
+    SELECT * FROM password_resets WHERE token = ? AND used = 0 AND expires_at > datetime('now')
+  `).get(token);
+  if (!reset) return res.status(400).json({ error: 'Invalid or expired reset link' });
+
+  const hash = bcrypt.hashSync(password, 10);
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hash, reset.user_id);
+  db.prepare('UPDATE password_resets SET used = 1 WHERE id = ?').run(reset.id);
+
+  res.json({ ok: true });
 });
 
 module.exports = router;

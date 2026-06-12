@@ -135,6 +135,37 @@
         <button class="btn" type="submit">Log In</button>
       </form>
       <p style="text-align:center;margin-top:1rem">No account? <a href="#" onclick="showView('register')">Register</a></p>
+      <p style="text-align:center;margin-top:0.5rem"><a href="#" onclick="showView('forgot')">Forgotten your password?</a></p>
+    </div>
+  </section>
+
+  <!-- FORGOT PASSWORD -->
+  <section id="view-forgot" class="hidden">
+    <div class="card-panel">
+      <h2>Reset Password</h2><br>
+      <form onsubmit="return handleForgotPassword(event)">
+        <label>Email</label>
+        <input type="email" id="forgot-email" required>
+        <div class="error-msg" id="forgot-error"></div>
+        <div class="success-msg" id="forgot-success"></div>
+        <button class="btn" type="submit">Send Reset Link</button>
+      </form>
+      <p style="text-align:center;margin-top:1rem"><a href="#" onclick="showView('login')">Back to Log In</a></p>
+    </div>
+  </section>
+
+  <!-- RESET PASSWORD -->
+  <section id="view-reset" class="hidden">
+    <div class="card-panel">
+      <h2>Choose a New Password</h2><br>
+      <form onsubmit="return handleResetPassword(event)">
+        <label>New Password</label>
+        <input type="password" id="reset-password" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="At least 8 characters, including an uppercase letter, a lowercase letter, a number and a symbol">
+        <p class="muted" style="margin-top:-0.5rem">At least 8 characters, with an uppercase letter, lowercase letter, number and symbol.</p>
+        <div class="error-msg" id="reset-error"></div>
+        <div class="success-msg" id="reset-success"></div>
+        <button class="btn" type="submit">Reset Password</button>
+      </form>
     </div>
   </section>
 

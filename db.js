@@ -67,6 +67,15 @@ CREATE TABLE IF NOT EXISTS review_log (
 
 CREATE INDEX IF NOT EXISTS idx_user_cards_due ON user_cards(user_id, due_date);
 CREATE INDEX IF NOT EXISTS idx_cards_deck ON cards(deck_id);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token TEXT UNIQUE NOT NULL,
+  expires_at TEXT NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 `);
 
 // Migration: add 'level' column to decks if upgrading from an older schema

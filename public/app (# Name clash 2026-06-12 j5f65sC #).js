@@ -559,7 +559,11 @@ function escapeHtml(str) {
 
 // --- Init ---
 renderNav();
-if (state.token && state.user) {
+const resetToken = new URLSearchParams(window.location.search).get('reset');
+if (resetToken) {
+  state.resetToken = resetToken;
+  showView('reset');
+} else if (state.token && state.user) {
   showView('dashboard');
 } else {
   showView('home');
