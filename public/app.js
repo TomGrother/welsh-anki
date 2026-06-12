@@ -217,25 +217,30 @@ async function startStudy(deckId, reviewAll) {
     const continueBtn = document.getElementById('btn-continue-study');
     if (deckId) {
       note.textContent = "You've completed every card in this deck — nice work!";
-      continueBtn.classList.add('hidden');
     } else {
-      const fallback = state.decks.find(d => d.in_progress) || state.decks.find(d => !d.completed);
-      if (fallback) {
-        state.lastDeckId = fallback.id;
-        note.textContent = "You're all caught up for now, but you can keep learning ahead!";
-        continueBtn.classList.remove('hidden');
-      } else {
-        note.textContent = "You've learned every card available — amazing work!";
-        continueBtn.classList.add('hidden');
-      }
+      note.textContent = "You're all caught up — nothing due for review right now!";
     }
+    continueBtn.classList.add('hidden');
     return;
   }
   state.queue = cards;
   state.queueIndex = 0;
-  // Remember the deck of the last card so "Keep Studying" works even when
-  // the session was started from the general "Due Now" queue.
   state.lastDeckId = deckId || cards[cards.length - 1].deck_id;
+  showView('study');
+  renderCard();
+}
+
+async function startRandomStudy() {
+  const { cards } = await api('/study/queue?limit=20&random=1');
+  if (cards.length === 0) {
+    showView('complete');
+    document.getElementById('complete-note').textContent = "Complete a topic first to unlock random study!";
+    document.getElementById('btn-continue-study').classList.add('hidden');
+    return;
+  }
+  state.queue = cards;
+  state.queueIndex = 0;
+  state.lastDeckId = cards[cards.length - 1].deck_id;
   showView('study');
   renderCard();
 }

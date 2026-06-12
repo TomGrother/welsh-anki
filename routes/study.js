@@ -38,6 +38,27 @@ router.get('/decks', (req, res) => {
 router.get('/queue', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const deckId = req.query.deck_id ? parseInt(req.query.deck_id) : null;
+
+  // "random" pulls a shuffled batch of cards from decks the user has
+  // already completed, for casual extra practice outside the SM-2 queue.
+  if (req.query.random === '1') {
+    const cards = db.prepare(`
+      SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+        uc.ease, uc.interval_days, uc.repetitions, uc.due_date
+      FROM cards c
+      JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+      JOIN decks d ON d.id = c.deck_id
+      WHERE d.id IN (
+        SELECT c2.deck_id FROM cards c2
+        JOIN user_cards uc2 ON uc2.card_id = c2.id AND uc2.user_id = ?
+        GROUP BY c2.deck_id
+        HAVING COUNT(*) = (SELECT COUNT(*) FROM cards c3 WHERE c3.deck_id = c2.deck_id)
+      )
+      ORDER BY RANDOM() LIMIT ?
+    `).all(req.user.id, req.user.id, limit);
+    return res.json({ cards });
+  }
+
   // "review_all" lets a user restudy every card in a completed deck, even
   // if none are due yet. Only meaningful with a deck_id.
   const reviewAll = req.query.review_all === '1' && deckId;
