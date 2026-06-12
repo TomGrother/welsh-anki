@@ -209,65 +209,66 @@ router.get('/queue', (req, res) => {
     return res.json({ cards });
   }
 
-  // "review_all" lets a user restudy every card in a completed deck, even
-  // if none are due yet. Only meaningful with a deck_id.
-  const reviewAll = req.query.review_all === '1' && deckId;
-  const deckFilter = deckId ? 'AND c.deck_id = ?' : '';
-  const dueFilter = reviewAll ? '' : "AND uc.due_date <= datetime('now')";
+  // Studying a specific deck (deck_id set) is completely independent of
+  // the SM-2 Due Now queue and the daily new-card pace: every card in the
+  // deck — reviewed or never-seen, due or not — is available so a deck can
+  // always be fully completed in one sitting. Reviewing a card here still
+  // writes normal SM-2 data via /review, which is what later feeds Due Now.
+  if (deckId) {
+    const cards = db.prepare(`
+      SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+        uc.ease, uc.interval_days, uc.repetitions, uc.due_date
+      FROM cards c
+      LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+      WHERE c.deck_id = ?
+      ORDER BY (uc.id IS NULL) DESC, uc.due_date ASC, c.id ASC
+      LIMIT ?
+    `).all(req.user.id, deckId, limit);
+    return res.json({ cards });
+  }
 
   const { new_cards_per_day } = db.prepare('SELECT new_cards_per_day FROM users WHERE id = ?').get(req.user.id);
   const DAILY_NEW_CARD_LIMIT = new_cards_per_day || 10;
 
   // Work out new cards first and guarantee them a slot, so a backlog of
   // due reviews from already-learned decks can never crowd out the day's
-  // new vocabulary (which would otherwise leave a deck stuck "in progress"
-  // forever).
+  // new vocabulary.
   let newCards = [];
-  if (!reviewAll) {
-    const { count: newToday } = db.prepare(`
-      SELECT COUNT(*) AS count FROM user_cards
-      WHERE user_id = ? AND date(first_seen) = date('now')
-    `).get(req.user.id);
-    const newAllowance = Math.max(0, Math.min(limit, DAILY_NEW_CARD_LIMIT - newToday));
-    if (newAllowance > 0) {
-      // New cards are only drawn from the current "frontier" deck — the
-      // first global deck (in level order) that isn't fully completed
-      // yet. Earlier decks must be completed before later ones unlock.
-      const frontierId = getFrontierDeckId(req.user.id);
-      const eligibleIds = frontierId && (!deckId || deckId === frontierId) ? [frontierId] : [];
+  const { count: newToday } = db.prepare(`
+    SELECT COUNT(*) AS count FROM user_cards
+    WHERE user_id = ? AND date(first_seen) = date('now')
+  `).get(req.user.id);
+  const newAllowance = Math.max(0, Math.min(limit, DAILY_NEW_CARD_LIMIT - newToday));
+  if (newAllowance > 0) {
+    // New cards are only drawn from the current "frontier" deck — the
+    // first global deck (in level order) that isn't fully completed yet.
+    // Earlier decks must be completed before later ones unlock.
+    const frontierId = getFrontierDeckId(req.user.id);
 
-      if (eligibleIds.length > 0) {
-        const placeholders = eligibleIds.map(() => '?').join(',');
-        const newCardSql = `
-          SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
-            NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
-          FROM cards c
-          JOIN decks d ON d.id = c.deck_id
-          LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-          WHERE uc.id IS NULL AND c.deck_id IN (${placeholders})
-          ORDER BY
-            CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END,
-            d.id, c.id ASC
-          LIMIT ?
-        `;
-        newCards = db.prepare(newCardSql).all(req.user.id, ...eligibleIds, newAllowance);
-      }
+    if (frontierId) {
+      newCards = db.prepare(`
+        SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+          NULL AS ease, NULL AS interval_days, NULL AS repetitions, NULL AS due_date
+        FROM cards c
+        LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+        WHERE uc.id IS NULL AND c.deck_id = ?
+        ORDER BY c.id ASC
+        LIMIT ?
+      `).all(req.user.id, frontierId, newAllowance);
     }
   }
 
   const reviewLimit = Math.max(0, limit - newCards.length);
   let reviewCards = [];
   if (reviewLimit > 0) {
-    const reviewSql = `
+    reviewCards = db.prepare(`
       SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
         uc.ease, uc.interval_days, uc.repetitions, uc.due_date
       FROM cards c
       JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-      WHERE 1=1 ${dueFilter} ${deckFilter}
+      WHERE uc.due_date <= datetime('now')
       ORDER BY uc.due_date ASC LIMIT ?
-    `;
-    const reviewParams = deckId ? [req.user.id, deckId, reviewLimit] : [req.user.id, reviewLimit];
-    reviewCards = db.prepare(reviewSql).all(...reviewParams);
+    `).all(req.user.id, reviewLimit);
   }
 
   res.json({ cards: [...reviewCards, ...newCards] });
