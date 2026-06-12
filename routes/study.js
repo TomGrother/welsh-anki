@@ -59,6 +59,20 @@ router.get('/queue', (req, res) => {
     return res.json({ cards });
   }
 
+  // "hard" pulls cards the user has struggled with — low ease factor or
+  // reset by an "Again" press — ordered worst-first, for focused drilling.
+  if (req.query.hard === '1') {
+    const cards = db.prepare(`
+      SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
+        uc.ease, uc.interval_days, uc.repetitions, uc.due_date
+      FROM cards c
+      JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+      WHERE uc.ease < 2.3 OR uc.repetitions = 0
+      ORDER BY uc.ease ASC LIMIT ?
+    `).all(req.user.id, limit);
+    return res.json({ cards });
+  }
+
   // "review_all" lets a user restudy every card in a completed deck, even
   // if none are due yet. Only meaningful with a deck_id.
   const reviewAll = req.query.review_all === '1' && deckId;

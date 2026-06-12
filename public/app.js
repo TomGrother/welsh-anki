@@ -251,6 +251,22 @@ async function startRandomStudy() {
   renderCard();
 }
 
+async function startHardStudy() {
+  const { cards } = await api('/study/queue?limit=20&hard=1');
+  if (cards.length === 0) {
+    showView('complete');
+    document.getElementById('complete-note').textContent = "No hard words right now — nice work!";
+    document.getElementById('btn-continue-study').classList.add('hidden');
+    return;
+  }
+  state.queue = cards;
+  state.queueIndex = 0;
+  state.lastDeckId = cards[cards.length - 1].deck_id;
+  syncTypedModeToggle();
+  showView('study');
+  renderCard();
+}
+
 function continueStudy() {
   if (state.lastDeckId) {
     startStudy(state.lastDeckId);
