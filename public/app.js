@@ -36,7 +36,6 @@ function renderNav() {
     nav.innerHTML = `
       <a class="nav-link" href="/about">About</a>
       <a class="nav-link" href="/how-it-works">How It Works</a>
-      <a class="nav-link" href="/decks">Decks</a>
       <a class="nav-link" href="/faq">FAQ</a>
       <button class="btn-outline" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode"></button>
       <button class="btn-outline" onclick="showView('login')">Log In</button>
