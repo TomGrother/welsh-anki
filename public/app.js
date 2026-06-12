@@ -39,6 +39,10 @@ function renderNav() {
   }
 }
 
+function goHome() {
+  showView(state.user ? 'dashboard' : 'home');
+}
+
 function toggleNav() {
   document.getElementById('nav').classList.toggle('nav-open');
   document.getElementById('nav-backdrop').classList.toggle('nav-open');

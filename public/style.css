@@ -50,6 +50,7 @@ header .brand {
   font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  cursor: pointer;
 }
 
 header .brand .dragon {
@@ -116,9 +117,20 @@ nav { display: flex; gap: 0.6rem; align-items: center; }
   .nav-toggle { flex-shrink: 0; }
 
   main { padding: 1.5rem 1rem; }
+  .hero { padding: 2.5rem 0.5rem; }
   .hero h1 { font-size: 2.1rem; }
+  .hero p { padding: 0 0.25rem; }
   .deck-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .deck-item .flex-row { width: 100%; }
+  .deck-item .flex-row button { flex: 1; }
   table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .card-panel { padding: 1.25rem; }
+  .flashcard { padding: 1.5rem 1rem; min-height: 200px; }
+  .flashcard .word { font-size: 2rem; }
+  .review-buttons { gap: 0.5rem; }
+  .review-buttons button { padding: 0.8rem 0.4rem; font-size: 0.85rem; }
+  .stat-box { padding: 1rem; }
+  .stat-box .value { font-size: 1.8rem; }
 }
 
 nav button, .btn {
