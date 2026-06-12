@@ -115,4 +115,30 @@ router.get('/users', (req, res) => {
   res.json({ users });
 });
 
+// Diagnostic: per-deck progress for a given user, including which cards
+// (if any) in a deck have never been introduced to that user.
+router.get('/users/:id/deck-progress', (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+  const decks = db.prepare(`
+    SELECT d.id, d.name, d.level,
+      (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
+      (SELECT COUNT(*) FROM cards c JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ? WHERE c.deck_id = d.id) AS started_cards
+    FROM decks d
+    WHERE d.owner_id IS NULL
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
+  `).all(userId);
+
+  const deckId = req.query.deck_id ? parseInt(req.query.deck_id, 10) : null;
+  let missingCards = null;
+  if (deckId) {
+    missingCards = db.prepare(`
+      SELECT c.id, c.welsh, c.english FROM cards c
+      LEFT JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
+      WHERE c.deck_id = ? AND uc.id IS NULL
+    `).all(userId, deckId);
+  }
+
+  res.json({ decks, missingCards });
+});
+
 module.exports = router;
