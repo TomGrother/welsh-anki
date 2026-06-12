@@ -443,6 +443,42 @@ function renderHeatmap(elId, days, key, color) {
   `;
 }
 
+// Best-effort phonetic respelling of Welsh text, using English-reader-friendly
+// approximations of standard Welsh letter/sound rules. Not IPA — just a guide.
+const WELSH_DIGRAPHS = [
+  ['ngh', 'ng-h'], ['mh', 'm'], ['nh', 'n'], ['ng', 'ng'],
+  ['ch', 'kh'], ['dd', 'th'], ['ff', 'f'], ['ll', 'hl'],
+  ['ph', 'f'], ['rh', 'rh'], ['th', 'th'],
+];
+const WELSH_LETTERS = {
+  a: 'a', â: 'ah', e: 'e', ê: 'eh', i: 'ee', î: 'ee',
+  o: 'o', ô: 'oh', u: 'i', û: 'ee', w: 'oo', ŵ: 'oo',
+  y: 'u', ŷ: 'ee', c: 'k', f: 'v', g: 'g', j: 'j',
+};
+
+function transcribeWelshWord(word) {
+  const s = word.toLowerCase();
+  let out = '';
+  let i = 0;
+  while (i < s.length) {
+    const digraph = WELSH_DIGRAPHS.find(([from]) => s.startsWith(from, i));
+    if (digraph) {
+      out += digraph[1];
+      i += digraph[0].length;
+      continue;
+    }
+    const c = s[i];
+    out += WELSH_LETTERS[c] !== undefined ? WELSH_LETTERS[c] : c;
+    i++;
+  }
+  return out;
+}
+
+function welshPronunciation(text) {
+  if (!text) return '';
+  return text.replace(/[a-zA-Zâêîôûŵŷ]+/g, transcribeWelshWord);
+}
+
 // --- Study ---
 async function startStudy(deckId, reviewAll) {
   const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${reviewAll ? '&review_all=1' : ''}`);
@@ -523,11 +559,15 @@ function renderCard() {
   typedResult.classList.add('hidden');
   typedResult.textContent = '';
 
+  const pron = document.getElementById('card-pronunciation');
+  pron.textContent = `🔊 ${welshPronunciation(card.welsh)}`;
+
   if (state.typedMode) {
     document.getElementById('card-front').textContent = card.english;
     document.getElementById('card-back').textContent = card.welsh;
     document.getElementById('card-back').classList.add('hidden');
     document.getElementById('card-hint').classList.add('hidden');
+    pron.classList.add('hidden');
     document.getElementById('typed-answer-input').value = '';
     typedForm.classList.remove('hidden');
     setTimeout(() => document.getElementById('typed-answer-input').focus(), 50);
@@ -536,6 +576,7 @@ function renderCard() {
     document.getElementById('card-back').textContent = card.english;
     document.getElementById('card-back').classList.add('hidden');
     document.getElementById('card-hint').classList.remove('hidden');
+    pron.classList.remove('hidden');
     typedForm.classList.add('hidden');
   }
 
@@ -567,6 +608,7 @@ function checkTypedAnswer(e) {
   document.getElementById('typed-answer-form').classList.add('hidden');
   document.getElementById('card-back').classList.remove('hidden');
   document.getElementById('card-example').classList.remove('hidden');
+  document.getElementById('card-pronunciation').classList.remove('hidden');
 
   const result = document.getElementById('typed-result');
   result.classList.remove('hidden');
