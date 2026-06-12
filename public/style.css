@@ -16,6 +16,23 @@
   --shadow-lg: 0 16px 40px -12px rgba(26, 32, 44, 0.18);
 }
 
+[data-theme="dark"] {
+  --ink: #e8edf4;
+  --muted: #98a4b8;
+  --bg: #11151c;
+  --surface: #1a2029;
+  --border: #2c3442;
+  --shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0, 166, 86, 0.05), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(229, 62, 62, 0.05), transparent 40%),
+    var(--bg);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {

@@ -29,6 +29,7 @@ function renderNav() {
       <button class="btn-outline" onclick="showView('achievements')">🏆 Achievements</button>
       <button class="btn-outline" onclick="showView('friends')">👥 Friends</button>
       ${state.user.is_admin ? '<button class="btn-outline" onclick="showView(\'admin\')">Admin</button>' : ''}
+      <button class="btn-outline" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode"></button>
       <button class="btn-outline" onclick="logout()">Log Out</button>
     `;
   } else {
@@ -37,10 +38,30 @@ function renderNav() {
       <a class="nav-link" href="/how-it-works">How It Works</a>
       <a class="nav-link" href="/decks">Decks</a>
       <a class="nav-link" href="/faq">FAQ</a>
+      <button class="btn-outline" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode"></button>
       <button class="btn-outline" onclick="showView('login')">Log In</button>
       <button class="btn" onclick="showView('register')">Sign Up</button>
     `;
   }
+  syncThemeToggle();
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  syncThemeToggle();
+}
+
+function syncThemeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+  btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
 }
 
 function goHome() {
@@ -211,6 +232,7 @@ function renderDeckList() {
               </div>
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
+                <button class="btn-outline" onclick="printCheatsheet(${d.id})" title="Print a cheatsheet for this topic">🖨️</button>
                 ${d.completed
                   ? `<button class="btn" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>`
                   : `<button class="btn" onclick="startStudy(${d.id})">Study</button>`}
@@ -221,6 +243,53 @@ function renderDeckList() {
       </div>
     `;
   }).join('');
+}
+
+// --- Cheatsheets ---
+async function printCheatsheet(deckId) {
+  const { deck, cards } = await api(`/study/decks/${deckId}/cards`);
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>${escapeHtml(deck.name)} — Cheatsheet — Dragon Dysgu</title>
+      <style>
+        body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; padding: 2rem; color: #1a202c; }
+        h1 { margin-bottom: 0.2rem; }
+        .desc { color: #718096; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid #e6eaf0; font-size: 0.95rem; vertical-align: top; }
+        th { text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; color: #718096; }
+        .example { color: #718096; font-size: 0.85rem; margin-top: 0.2rem; }
+        @media print { body { padding: 0.5rem; } }
+      </style>
+    </head>
+    <body>
+      <h1>🐉 ${escapeHtml(deck.name)}</h1>
+      <div class="desc">${escapeHtml(deck.description || '')} — ${cards.length} words — Dragon Dysgu</div>
+      <table>
+        <thead><tr><th>Welsh</th><th>English</th><th>Notes / Example</th></tr></thead>
+        <tbody>
+          ${cards.map(c => `
+            <tr>
+              <td>${escapeHtml(c.welsh)}</td>
+              <td>${escapeHtml(c.english)}</td>
+              <td>
+                ${c.notes ? escapeHtml(c.notes) : ''}
+                ${c.example_welsh ? `<div class="example">${escapeHtml(c.example_welsh)}<br>${escapeHtml(c.example_english || '')}</div>` : ''}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+  win.document.close();
+  win.focus();
+  win.print();
 }
 
 // --- Progress ---

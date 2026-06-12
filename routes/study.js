@@ -110,6 +110,19 @@ router.get('/queue', (req, res) => {
   res.json({ cards: [...reviewCards, ...newCards] });
 });
 
+// All cards in a deck, for printable cheatsheets.
+router.get('/decks/:id/cards', (req, res) => {
+  const deck = db.prepare('SELECT id, name, description FROM decks WHERE id = ?').get(req.params.id);
+  if (!deck) return res.status(404).json({ error: 'Deck not found' });
+
+  const cards = db.prepare(`
+    SELECT welsh, english, notes, example_welsh, example_english
+    FROM cards WHERE deck_id = ? ORDER BY id
+  `).all(deck.id);
+
+  res.json({ deck, cards });
+});
+
 // Submit a review for a card. quality: 0 (Again), 3 (Hard), 4 (Good), 5 (Easy)
 router.post('/review', (req, res) => {
   const { card_id, quality } = req.body || {};
