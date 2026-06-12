@@ -105,7 +105,6 @@ async function loadDashboard() {
     document.getElementById('stat-longest').textContent = stats.longest_streak;
     document.getElementById('stat-due').textContent = stats.due_now;
     document.getElementById('stat-learned').textContent = stats.learned_cards;
-    document.getElementById('stat-total').textContent = stats.total_cards;
 
     const { decks } = await api('/study/decks');
     state.decks = decks;
