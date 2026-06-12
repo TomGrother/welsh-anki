@@ -250,18 +250,20 @@ function renderDeckList() {
         </div>
         <div class="deck-list" ${collapsed ? 'style="display:none"' : ''}>
           ${levelDecks.map(d => `
-            <div class="deck-item">
-              <span class="status-dot ${d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>
+            <div class="deck-item ${d.locked ? 'deck-locked' : ''}">
+              <span class="status-dot ${d.locked ? 'status-locked' : d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.locked ? 'Locked' : d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>
               <div class="deck-info">
-                <div class="deck-name">${escapeHtml(d.name)} ${d.completed ? '<span class="status-badge status-done">Completed</span>' : d.in_progress ? '<span class="status-badge status-progress">In Progress</span>' : ''}</div>
-                <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
+                <div class="deck-name">${escapeHtml(d.name)} ${d.locked ? '<span class="status-badge status-locked">🔒 Locked</span>' : d.completed ? '<span class="status-badge status-done">Completed</span>' : d.in_progress ? '<span class="status-badge status-progress">In Progress</span>' : ''}</div>
+                <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.locked ? 'Complete the previous topic to unlock' : (d.description || ''))}</div>
               </div>
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
                 <button class="btn-outline icon-btn" onclick="printCheatsheet(${d.id})" title="Print a cheatsheet for this topic">🖨️</button>
                 ${d.is_own ? `<button class="btn-outline icon-btn" onclick="openMyDeck(${d.id})" title="Manage words">✏️</button>
                   <button class="btn-danger icon-btn" onclick="deleteMyDeck(${d.id})" title="Delete this deck">🗑️</button>` : ''}
-                ${d.total_cards === 0
+                ${d.locked
+                  ? `<button class="btn" disabled title="Complete the previous topic to unlock">🔒 Locked</button>`
+                  : d.total_cards === 0
                   ? `<button class="btn" disabled title="Add some words first">Study</button>`
                   : `<button class="btn" onclick="startStudy(${d.id}, true)" title="Review any word from this topic, any time">Study</button>`}
               </div>

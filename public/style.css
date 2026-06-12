@@ -421,6 +421,7 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .status-dot.status-done { background: var(--welsh-green); }
 .status-dot.status-progress { background: #f59e0b; }
 .status-dot.status-new { background: #cbd5e1; }
+.status-dot.status-locked { background: #94a3b8; }
 
 .status-badge {
   display: inline-block; border-radius: 999px; color: white;
@@ -429,6 +430,8 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 }
 .status-badge.status-done { background: linear-gradient(120deg, var(--welsh-green), var(--welsh-green-dark)); }
 .status-badge.status-progress { background: linear-gradient(120deg, #f59e0b, #d97706); }
+.status-badge.status-locked { background: #94a3b8; }
+.deck-item.deck-locked { opacity: 0.6; }
 .deck-item .due-badge {
   background: linear-gradient(120deg, var(--welsh-red), var(--welsh-red-dark)); color: white; border-radius: 999px;
   padding: 0.25rem 0.8rem; font-size: 0.8rem; font-weight: 700;

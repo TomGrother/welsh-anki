@@ -7,6 +7,38 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 router.use(requireAuth);
 
+// Global decks unlock sequentially in level order. Returns the ordered list
+// of global decks with their completion status for a user.
+function getOrderedGlobalDecks(userId) {
+  return db.prepare(`
+    SELECT d.id,
+      (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
+      (SELECT COUNT(*) FROM cards c JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ? WHERE c.deck_id = d.id) AS started_cards
+    FROM decks d
+    WHERE d.owner_id IS NULL
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
+  `).all(userId);
+}
+
+// The first global deck (in level order) that isn't fully completed yet —
+// the only deck currently allowed to introduce new cards.
+function getFrontierDeckId(userId) {
+  for (const d of getOrderedGlobalDecks(userId)) {
+    if (!(d.total_cards > 0 && d.started_cards >= d.total_cards)) return d.id;
+  }
+  return null;
+}
+
+// A global deck is locked until every deck before it (in level order) is
+// fully completed.
+function isDeckLocked(userId, deckId) {
+  for (const d of getOrderedGlobalDecks(userId)) {
+    if (d.id === deckId) return false;
+    if (!(d.total_cards > 0 && d.started_cards >= d.total_cards)) return true;
+  }
+  return false;
+}
+
 // List decks with total card count and how many reviews are due now for
 // each. New cards have no cap — users can work through a topic at their
 // own pace and it'll reappear for review once cards become due.
@@ -25,11 +57,23 @@ router.get('/decks', (req, res) => {
     ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
   `).all(req.user.id, req.user.id, req.user.id);
 
+  let prevCompleted = true;
   for (const deck of decks) {
     deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
     deck.completed = deck.started_cards >= deck.total_cards && deck.total_cards > 0;
     deck.progress_pct = deck.total_cards > 0 ? Math.round((deck.started_cards / deck.total_cards) * 100) : 0;
     deck.is_own = deck.owner_id === req.user.id;
+
+    // Global decks unlock sequentially: a deck is locked until every deck
+    // before it (in level order) has been fully completed. Personal decks
+    // are always unlocked.
+    if (deck.owner_id) {
+      deck.locked = false;
+    } else {
+      deck.locked = !prevCompleted;
+      prevCompleted = prevCompleted && deck.completed;
+    }
+
     delete deck.started_cards;
     delete deck.owner_id;
   }
@@ -128,6 +172,7 @@ router.get('/queue', (req, res) => {
   if (deckId) {
     const deck = db.prepare('SELECT owner_id FROM decks WHERE id = ?').get(deckId);
     if (!deck || (deck.owner_id && deck.owner_id !== req.user.id)) return res.status(404).json({ error: 'Deck not found' });
+    if (!deck.owner_id && isDeckLocked(req.user.id, deckId)) return res.status(403).json({ error: 'This deck is locked until you complete the previous decks' });
   }
 
   // "random" pulls a shuffled batch of cards from decks the user has
@@ -194,25 +239,11 @@ router.get('/queue', (req, res) => {
       `).get(req.user.id);
       const newAllowance = Math.max(0, Math.min(remaining, DAILY_NEW_CARD_LIMIT - newToday));
       if (newAllowance > 0) {
-        // New cards are only drawn from a deck once every deck before it
-        // (in level order) has been fully completed — keeps new vocab
-        // flowing in a sequential, unlocked order.
-        const orderedDecks = db.prepare(`
-          SELECT d.id,
-            (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
-            (SELECT COUNT(*) FROM cards c JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ? WHERE c.deck_id = d.id) AS started_cards
-          FROM decks d
-          WHERE d.owner_id IS NULL OR d.owner_id = ?
-          ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
-        `).all(req.user.id, req.user.id);
-
-        const eligibleDeckIds = [];
-        for (const d of orderedDecks) {
-          eligibleDeckIds.push(d.id);
-          if (!(d.total_cards > 0 && d.started_cards >= d.total_cards)) break;
-        }
-
-        const eligibleIds = deckId ? eligibleDeckIds.filter(id => id === deckId) : eligibleDeckIds;
+        // New cards are only drawn from the current "frontier" deck — the
+        // first global deck (in level order) that isn't fully completed
+        // yet. Earlier decks must be completed before later ones unlock.
+        const frontierId = getFrontierDeckId(req.user.id);
+        const eligibleIds = frontierId && (!deckId || deckId === frontierId) ? [frontierId] : [];
 
         if (eligibleIds.length > 0) {
           const placeholders = eligibleIds.map(() => '?').join(',');
