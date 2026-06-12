@@ -201,7 +201,7 @@ function renderDeckList() {
           ${levelDecks.map(d => `
             <div class="deck-item">
               <span class="status-dot ${d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>
-              <div>
+              <div class="deck-info">
                 <div class="deck-name">${escapeHtml(d.name)} ${d.completed ? '<span class="status-badge status-done">Completed</span>' : d.in_progress ? '<span class="status-badge status-progress">In Progress</span>' : ''}</div>
                 <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
               </div>
