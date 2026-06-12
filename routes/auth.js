@@ -12,8 +12,10 @@ function isValidPassword(password) {
 
 const router = express.Router();
 
+const LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
+
 router.post('/register', (req, res) => {
-  const { username, email, password, new_cards_per_day } = req.body || {};
+  const { username, email, password, new_cards_per_day, level } = req.body || {};
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email and password are required' });
   }
@@ -28,6 +30,13 @@ router.post('/register', (req, res) => {
     }
     newCardsPerDay = value;
   }
+  let userLevel = 'Beginner';
+  if (level !== undefined) {
+    if (!LEVELS.includes(level)) {
+      return res.status(400).json({ error: 'level must be one of ' + LEVELS.join(', ') });
+    }
+    userLevel = level;
+  }
 
   const existing = db.prepare('SELECT id FROM users WHERE username = ? OR email = ?').get(username, email);
   if (existing) return res.status(409).json({ error: 'Username or email already in use' });
@@ -35,8 +44,33 @@ router.post('/register', (req, res) => {
   const hash = bcrypt.hashSync(password, 10);
   const isFirstUser = db.prepare('SELECT COUNT(*) AS c FROM users').get().c === 0;
   const result = db.prepare(
-    'INSERT INTO users (username, email, password_hash, is_admin, new_cards_per_day) VALUES (?, ?, ?, ?, ?)'
-  ).run(username, email, hash, isFirstUser ? 1 : 0, newCardsPerDay);
+    'INSERT INTO users (username, email, password_hash, is_admin, new_cards_per_day, active_level) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(username, email, hash, isFirstUser ? 1 : 0, newCardsPerDay, userLevel);
+
+  // If the user already knows some Welsh, mark every deck below their
+  // chosen level as completed and "learned" so they unlock straight away
+  // and feed into the SM-2 review queue, instead of starting from scratch.
+  const levelIndex = LEVELS.indexOf(userLevel);
+  if (levelIndex > 0) {
+    const earlierDecks = db.prepare(`
+      SELECT id FROM decks WHERE owner_id IS NULL AND level IN (${LEVELS.slice(0, levelIndex).map(() => '?').join(',')})
+    `).all(...LEVELS.slice(0, levelIndex));
+
+    if (earlierDecks.length > 0) {
+      const cards = db.prepare(`
+        SELECT id FROM cards WHERE deck_id IN (${earlierDecks.map(() => '?').join(',')})
+      `).all(...earlierDecks.map(d => d.id));
+
+      const insertUserCard = db.prepare(`
+        INSERT INTO user_cards (user_id, card_id, ease, interval_days, repetitions, due_date, last_reviewed, first_seen)
+        VALUES (?, ?, 2.5, 6, 2, datetime('now', '+6 days'), datetime('now'), datetime('now'))
+      `);
+      const run = db.transaction((rows) => {
+        for (const c of rows) insertUserCard.run(result.lastInsertRowid, c.id);
+      });
+      run(cards);
+    }
+  }
 
   const token = jwt.sign({ id: result.lastInsertRowid, username, is_admin: isFirstUser ? 1 : 0 }, SECRET, { expiresIn: '30d' });
   res.json({ token, user: { id: result.lastInsertRowid, username, is_admin: isFirstUser } });

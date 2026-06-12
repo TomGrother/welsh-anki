@@ -99,8 +99,9 @@ async function handleRegister(e) {
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
   const new_cards_per_day = parseInt(document.getElementById('reg-new-cards').value, 10);
+  const level = document.getElementById('reg-level').value;
   try {
-    const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, new_cards_per_day }) });
+    const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, new_cards_per_day, level }) });
     onAuthSuccess(data);
   } catch (err) {
     document.getElementById('reg-error').textContent = err.message;

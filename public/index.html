@@ -252,6 +252,14 @@
         <label>Password</label>
         <input type="password" id="reg-password" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="At least 8 characters, including an uppercase letter, a lowercase letter, a number and a symbol">
         <p class="muted" style="margin-top:-0.5rem">At least 8 characters, with an uppercase letter, lowercase letter, number and symbol.</p>
+        <label>What's your current Welsh level?</label>
+        <select id="reg-level">
+          <option value="Beginner" selected>Beginner — I'm just starting out</option>
+          <option value="Intermediate">Intermediate — I know some basics</option>
+          <option value="Advanced">Advanced — I'm fairly confident</option>
+          <option value="Fluent">Fluent — I speak Welsh well</option>
+        </select>
+        <p class="muted" style="margin-top:-0.5rem">If you already know some Welsh, choosing a higher level unlocks earlier topics automatically and marks them as learned, so you won't be stuck repeating the basics.</p>
         <label>How many new words per day?</label>
         <select id="reg-new-cards">
           <option value="5">5 — Relaxed pace</option>
