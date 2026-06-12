@@ -203,13 +203,23 @@
     <div class="card-panel">
       <div class="flex-row" style="justify-content:space-between">
         <h3>Decks</h3>
-        <button class="btn-outline" onclick="toggleNewDeckForm()">+ New Deck</button>
+        <button class="btn" onclick="toggleNewDeckForm()">✨ Create Your Own Deck</button>
       </div>
-      <form id="new-deck-form" class="hidden flex-row" style="margin-top:0.75rem" onsubmit="return createMyDeck(event)">
-        <input type="text" id="new-deck-name" placeholder="Deck name (e.g. My Holiday Words)" required style="flex:1">
-        <input type="text" id="new-deck-desc" placeholder="Description (optional)" style="flex:1">
-        <button class="btn" type="submit">Create</button>
-      </form>
+      <div id="new-deck-form" class="hidden new-deck-panel" style="margin-top:0.75rem">
+        <h4 style="margin-bottom:0.4rem">Create a personal deck</h4>
+        <p class="muted" style="margin-bottom:0.75rem">
+          This creates a private topic just for you — perfect for words from work, family, a holiday, or anything not already covered.
+          Once created, you can add your own Welsh/English word pairs to it. It'll appear in your deck list under <strong>📝 My Decks</strong>,
+          and works just like the built-in topics: spaced repetition, due reviews, streaks, printable cheatsheets — all of it.
+          Only you can see it.
+        </p>
+        <form class="flex-row" onsubmit="return createMyDeck(event)">
+          <input type="text" id="new-deck-name" placeholder="Deck name (e.g. My Holiday Words)" required style="flex:1">
+          <input type="text" id="new-deck-desc" placeholder="Description (optional)" style="flex:1">
+          <button class="btn" type="submit">Create Deck</button>
+          <button class="btn-outline" type="button" onclick="toggleNewDeckForm()">Cancel</button>
+        </form>
+      </div>
       <input type="search" id="deck-search" placeholder="Search topics..." oninput="renderDeckList()" style="margin-top:0.75rem;margin-bottom:1rem">
       <div class="deck-list" id="deck-list"></div>
     </div>

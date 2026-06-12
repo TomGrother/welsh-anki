@@ -494,6 +494,14 @@ tr:hover td { background: var(--bg); }
 .badge-desc { color: var(--muted); font-size: 0.8rem; margin-top: 0.2rem; }
 .badge-date { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
 
+/* New personal deck panel */
+.new-deck-panel {
+  border: 1.5px dashed var(--welsh-green);
+  border-radius: var(--radius-sm);
+  background: rgba(0,166,86,0.06);
+  padding: 1rem;
+}
+
 /* Friends */
 .friend-request, .friend-item {
   display: flex; justify-content: space-between; align-items: center;
