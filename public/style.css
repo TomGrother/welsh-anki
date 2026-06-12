@@ -27,6 +27,7 @@
 }
 
 [data-theme="dark"] .flashcard .sub { color: var(--welsh-green); }
+[data-theme="dark"] .flashcard { background: linear-gradient(160deg, var(--surface) 0%, #15351f 100%); }
 
 [data-theme="dark"] body {
   background:
