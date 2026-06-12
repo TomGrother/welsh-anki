@@ -352,7 +352,7 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .deck-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.deck-item .deck-info { text-align: left; margin-right: 1rem; }
+.deck-item .deck-info { text-align: left; margin-right: 1rem; flex: 1; min-width: 0; }
 .deck-item .deck-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
 .deck-item .deck-meta { color: var(--muted); font-size: 0.85rem; margin-top: 0.15rem; }
 .status-dot {
