@@ -129,8 +129,8 @@ nav { display: flex; gap: 0.6rem; align-items: center; }
   .flashcard .word { font-size: 2rem; }
   .review-buttons { gap: 0.5rem; }
   .review-buttons button { padding: 0.8rem 0.4rem; font-size: 0.85rem; }
-  .stat-box { padding: 1rem; }
-  .stat-box .value { font-size: 1.8rem; }
+  .stat-box { padding: 0.85rem 0.4rem; }
+  .stat-box .value { font-size: 1.5rem; }
 }
 
 nav button, .btn {
@@ -264,14 +264,21 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 520px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .stat-box {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: 1.4rem;
+  padding: 1rem 0.6rem;
   text-align: center;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
@@ -279,7 +286,7 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 }
 .stat-box:hover { transform: translateY(-3px); }
 .stat-box .value {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   background: linear-gradient(120deg, var(--welsh-green-dark), var(--welsh-green));
@@ -287,7 +294,7 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
   background-clip: text;
   color: transparent;
 }
-.stat-box .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-top: 0.25rem; }
+.stat-box .label { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-top: 0.25rem; }
 .stat-box.streak .value { background: linear-gradient(120deg, var(--welsh-red-dark), var(--welsh-red)); -webkit-background-clip: text; background-clip: text; }
 .stat-box.clickable { cursor: pointer; }
 .stat-box.clickable:hover { box-shadow: var(--shadow-lg); border-color: var(--welsh-green); }
