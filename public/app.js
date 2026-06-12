@@ -281,7 +281,6 @@ function renderCard() {
     document.getElementById('card-back').textContent = card.welsh;
     document.getElementById('card-back').classList.add('hidden');
     document.getElementById('card-hint').classList.add('hidden');
-    document.getElementById('card-audio-btn').classList.add('hidden');
     document.getElementById('typed-answer-input').value = '';
     typedForm.classList.remove('hidden');
     setTimeout(() => document.getElementById('typed-answer-input').focus(), 50);
@@ -290,7 +289,6 @@ function renderCard() {
     document.getElementById('card-back').textContent = card.english;
     document.getElementById('card-back').classList.add('hidden');
     document.getElementById('card-hint').classList.remove('hidden');
-    document.getElementById('card-audio-btn').classList.remove('hidden');
     typedForm.classList.add('hidden');
   }
 
@@ -322,7 +320,6 @@ function checkTypedAnswer(e) {
   document.getElementById('typed-answer-form').classList.add('hidden');
   document.getElementById('card-back').classList.remove('hidden');
   document.getElementById('card-example').classList.remove('hidden');
-  document.getElementById('card-audio-btn').classList.remove('hidden');
 
   const result = document.getElementById('typed-result');
   result.classList.remove('hidden');
@@ -337,15 +334,6 @@ function toggleTypedMode() {
   state.typedMode = document.getElementById('typed-mode-toggle').checked;
   localStorage.setItem('typedMode', state.typedMode ? '1' : '0');
   if (state.queue.length) renderCard();
-}
-
-function playCardAudio() {
-  const card = state.queue[state.queueIndex];
-  if (!card || !window.speechSynthesis) return;
-  const utterance = new SpeechSynthesisUtterance(card.welsh);
-  utterance.lang = 'cy-GB';
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
 }
 
 async function submitReview(quality) {
