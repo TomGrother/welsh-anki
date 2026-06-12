@@ -187,8 +187,8 @@ function toggleLevelSection(level) {
 
 function renderDeckList() {
   const list = document.getElementById('deck-list');
-  const levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
-  const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳', Fluent: '🐉' };
+  const levels = ['Beginner', 'Intermediate', 'Advanced', 'Fluent', 'My Decks'];
+  const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳', Fluent: '🐉', 'My Decks': '📝' };
   const query = (document.getElementById('deck-search')?.value || '').trim().toLowerCase();
   const decks = query
     ? state.decks.filter(d => d.name.toLowerCase().includes(query) || (d.description || '').toLowerCase().includes(query))
@@ -233,7 +233,11 @@ function renderDeckList() {
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
                 <button class="btn-outline" onclick="printCheatsheet(${d.id})" title="Print a cheatsheet for this topic">🖨️</button>
-                ${d.completed
+                ${d.is_own ? `<button class="btn-outline" onclick="openMyDeck(${d.id})" title="Manage words">✏️</button>
+                  <button class="btn-danger" onclick="deleteMyDeck(${d.id})" title="Delete this deck">🗑️</button>` : ''}
+                ${d.total_cards === 0
+                  ? `<button class="btn" disabled title="Add some words first">Study</button>`
+                  : d.completed
                   ? `<button class="btn" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>`
                   : `<button class="btn" onclick="startStudy(${d.id})">Study</button>`}
               </div>
@@ -243,6 +247,70 @@ function renderDeckList() {
       </div>
     `;
   }).join('');
+}
+
+// --- My Decks ---
+function toggleNewDeckForm() {
+  document.getElementById('new-deck-form').classList.toggle('hidden');
+}
+
+async function createMyDeck(e) {
+  e.preventDefault();
+  const name = document.getElementById('new-deck-name').value.trim();
+  const description = document.getElementById('new-deck-desc').value.trim();
+  if (!name) return false;
+  await api('/study/decks', { method: 'POST', body: JSON.stringify({ name, description }) });
+  document.getElementById('new-deck-name').value = '';
+  document.getElementById('new-deck-desc').value = '';
+  document.getElementById('new-deck-form').classList.add('hidden');
+  await loadDashboard();
+  return false;
+}
+
+async function deleteMyDeck(id) {
+  if (!confirm('Delete this deck and all its words?')) return;
+  await api('/study/decks/' + id, { method: 'DELETE' });
+  await loadDashboard();
+}
+
+async function openMyDeck(id) {
+  state.myDeckId = id;
+  showView('mydeck');
+  await loadMyDeck();
+}
+
+async function loadMyDeck() {
+  const { deck, cards } = await api(`/study/decks/${state.myDeckId}/cards`);
+  document.getElementById('mydeck-name').textContent = `✏️ ${deck.name}`;
+  document.querySelector('#mydeck-table tbody').innerHTML = cards.length === 0
+    ? '<tr><td colspan="4" class="muted">No words yet — add your first one above.</td></tr>'
+    : cards.map(c => `
+      <tr>
+        <td>${escapeHtml(c.welsh)}</td>
+        <td>${escapeHtml(c.english)}</td>
+        <td>${escapeHtml(c.notes || '')}</td>
+        <td><button class="btn-danger" onclick="deleteMyCard(${c.id})">Delete</button></td>
+      </tr>
+    `).join('');
+}
+
+async function addMyCard(e) {
+  e.preventDefault();
+  const welsh = document.getElementById('mydeck-welsh').value.trim();
+  const english = document.getElementById('mydeck-english').value.trim();
+  const notes = document.getElementById('mydeck-notes').value.trim();
+  if (!welsh || !english) return false;
+  await api(`/study/decks/${state.myDeckId}/cards`, { method: 'POST', body: JSON.stringify({ welsh, english, notes }) });
+  document.getElementById('mydeck-welsh').value = '';
+  document.getElementById('mydeck-english').value = '';
+  document.getElementById('mydeck-notes').value = '';
+  await loadMyDeck();
+  return false;
+}
+
+async function deleteMyCard(id) {
+  await api('/study/cards/' + id, { method: 'DELETE' });
+  await loadMyDeck();
 }
 
 // --- Cheatsheets ---

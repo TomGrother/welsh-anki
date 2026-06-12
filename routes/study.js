@@ -12,7 +12,7 @@ router.use(requireAuth);
 // own pace and it'll reappear for review once cards become due.
 router.get('/decks', (req, res) => {
   const decks = db.prepare(`
-    SELECT d.id, d.name, d.description, d.level,
+    SELECT d.id, d.name, d.description, d.level, d.owner_id,
       (SELECT COUNT(*) FROM cards c WHERE c.deck_id = d.id) AS total_cards,
       (SELECT COUNT(*) FROM cards c
          JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
@@ -21,17 +21,75 @@ router.get('/decks', (req, res) => {
          JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
          WHERE c.deck_id = d.id) AS started_cards
     FROM decks d
-    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 ELSE 3 END, d.id
-  `).all(req.user.id, req.user.id);
+    WHERE d.owner_id IS NULL OR d.owner_id = ?
+    ORDER BY CASE d.level WHEN 'Beginner' THEN 0 WHEN 'Intermediate' THEN 1 WHEN 'Advanced' THEN 2 WHEN 'Fluent' THEN 3 ELSE 4 END, d.id
+  `).all(req.user.id, req.user.id, req.user.id);
 
   for (const deck of decks) {
     deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
     deck.completed = deck.started_cards >= deck.total_cards && deck.total_cards > 0;
     deck.progress_pct = deck.total_cards > 0 ? Math.round((deck.started_cards / deck.total_cards) * 100) : 0;
+    deck.is_own = deck.owner_id === req.user.id;
     delete deck.started_cards;
+    delete deck.owner_id;
   }
 
   res.json({ decks });
+});
+
+// Create a personal deck, visible only to the creator.
+router.post('/decks', (req, res) => {
+  const { name, description } = req.body || {};
+  if (!name || !name.trim()) return res.status(400).json({ error: 'name is required' });
+
+  let finalName = name.trim();
+  let suffix = 1;
+  while (db.prepare('SELECT id FROM decks WHERE name = ?').get(finalName)) {
+    suffix++;
+    finalName = `${name.trim()} #${suffix}`;
+  }
+
+  const result = db.prepare('INSERT INTO decks (name, description, level, owner_id) VALUES (?, ?, ?, ?)')
+    .run(finalName, (description || '').trim(), 'My Decks', req.user.id);
+
+  res.json({ id: result.lastInsertRowid, name: finalName });
+});
+
+// Delete one of your own personal decks (and its cards).
+router.delete('/decks/:id', (req, res) => {
+  const deck = db.prepare('SELECT * FROM decks WHERE id = ?').get(req.params.id);
+  if (!deck) return res.status(404).json({ error: 'Deck not found' });
+  if (deck.owner_id !== req.user.id) return res.status(403).json({ error: 'You can only delete your own decks' });
+
+  db.prepare('DELETE FROM decks WHERE id = ?').run(deck.id);
+  res.json({ ok: true });
+});
+
+// Add a card to one of your own personal decks.
+router.post('/decks/:id/cards', (req, res) => {
+  const deck = db.prepare('SELECT * FROM decks WHERE id = ?').get(req.params.id);
+  if (!deck) return res.status(404).json({ error: 'Deck not found' });
+  if (deck.owner_id !== req.user.id) return res.status(403).json({ error: 'You can only add cards to your own decks' });
+
+  const { welsh, english, notes, example_welsh, example_english } = req.body || {};
+  if (!welsh || !english) return res.status(400).json({ error: 'welsh and english are required' });
+
+  const result = db.prepare(`
+    INSERT INTO cards (deck_id, welsh, english, notes, example_welsh, example_english)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(deck.id, welsh.trim(), english.trim(), (notes || '').trim(), (example_welsh || '').trim(), (example_english || '').trim());
+
+  res.json({ id: result.lastInsertRowid });
+});
+
+// Delete a card from one of your own personal decks.
+router.delete('/cards/:id', (req, res) => {
+  const card = db.prepare('SELECT c.*, d.owner_id FROM cards c JOIN decks d ON d.id = c.deck_id WHERE c.id = ?').get(req.params.id);
+  if (!card) return res.status(404).json({ error: 'Card not found' });
+  if (card.owner_id !== req.user.id) return res.status(403).json({ error: 'You can only delete cards from your own decks' });
+
+  db.prepare('DELETE FROM cards WHERE id = ?').run(card.id);
+  res.json({ ok: true });
 });
 
 // Get a batch of cards due for review (optionally filtered by deck), topped
@@ -40,6 +98,11 @@ router.get('/decks', (req, res) => {
 router.get('/queue', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const deckId = req.query.deck_id ? parseInt(req.query.deck_id) : null;
+
+  if (deckId) {
+    const deck = db.prepare('SELECT owner_id FROM decks WHERE id = ?').get(deckId);
+    if (!deck || (deck.owner_id && deck.owner_id !== req.user.id)) return res.status(404).json({ error: 'Deck not found' });
+  }
 
   // "random" pulls a shuffled batch of cards from decks the user has
   // already completed, for casual extra practice outside the SM-2 queue.
@@ -112,11 +175,12 @@ router.get('/queue', (req, res) => {
 
 // All cards in a deck, for printable cheatsheets.
 router.get('/decks/:id/cards', (req, res) => {
-  const deck = db.prepare('SELECT id, name, description FROM decks WHERE id = ?').get(req.params.id);
+  const deck = db.prepare('SELECT id, name, description, owner_id FROM decks WHERE id = ?').get(req.params.id);
   if (!deck) return res.status(404).json({ error: 'Deck not found' });
+  if (deck.owner_id && deck.owner_id !== req.user.id) return res.status(404).json({ error: 'Deck not found' });
 
   const cards = db.prepare(`
-    SELECT welsh, english, notes, example_welsh, example_english
+    SELECT id, welsh, english, notes, example_welsh, example_english
     FROM cards WHERE deck_id = ? ORDER BY id
   `).all(deck.id);
 

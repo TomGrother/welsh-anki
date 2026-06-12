@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS decks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT UNIQUE NOT NULL,
   description TEXT,
-  level TEXT NOT NULL DEFAULT 'Beginner'
+  level TEXT NOT NULL DEFAULT 'Beginner',
+  owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cards (
@@ -99,6 +100,9 @@ CREATE TABLE IF NOT EXISTS password_resets (
 const deckColumns = db.prepare("PRAGMA table_info(decks)").all().map(c => c.name);
 if (!deckColumns.includes('level')) {
   db.exec("ALTER TABLE decks ADD COLUMN level TEXT NOT NULL DEFAULT 'Beginner'");
+}
+if (!deckColumns.includes('owner_id')) {
+  db.exec("ALTER TABLE decks ADD COLUMN owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE");
 }
 
 // Migration: add 'first_seen' column to user_cards if upgrading from an older schema

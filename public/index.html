@@ -201,8 +201,16 @@
       <div class="stat-box clickable" id="stat-hard-box" onclick="startHardStudy()"><div class="value">💪</div><div class="label">Hard Words — focus drill</div></div>
     </div>
     <div class="card-panel">
-      <h3 style="margin-bottom:1rem">Decks</h3>
-      <input type="search" id="deck-search" placeholder="Search topics..." oninput="renderDeckList()" style="margin-bottom:1rem">
+      <div class="flex-row" style="justify-content:space-between">
+        <h3>Decks</h3>
+        <button class="btn-outline" onclick="toggleNewDeckForm()">+ New Deck</button>
+      </div>
+      <form id="new-deck-form" class="hidden flex-row" style="margin-top:0.75rem" onsubmit="return createMyDeck(event)">
+        <input type="text" id="new-deck-name" placeholder="Deck name (e.g. My Holiday Words)" required style="flex:1">
+        <input type="text" id="new-deck-desc" placeholder="Description (optional)" style="flex:1">
+        <button class="btn" type="submit">Create</button>
+      </form>
+      <input type="search" id="deck-search" placeholder="Search topics..." oninput="renderDeckList()" style="margin-top:0.75rem;margin-bottom:1rem">
       <div class="deck-list" id="deck-list"></div>
     </div>
   </section>
@@ -256,6 +264,24 @@
       <h3 style="margin-bottom:1rem">Leaderboard</h3>
       <table id="leaderboard-table">
         <thead><tr><th>#</th><th>Name</th><th>Streak</th><th>Best Streak</th><th>Words Learned</th><th>Reviews</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MY DECK (manage words in a personal deck) -->
+  <section id="view-mydeck" class="hidden">
+    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="card-panel" style="margin-top:1rem">
+      <h3 id="mydeck-name" style="margin-bottom:1rem"></h3>
+      <form class="flex-row" onsubmit="return addMyCard(event)">
+        <input type="text" id="mydeck-welsh" placeholder="Welsh" required style="flex:1">
+        <input type="text" id="mydeck-english" placeholder="English" required style="flex:1">
+        <input type="text" id="mydeck-notes" placeholder="Notes (optional)" style="flex:1">
+        <button class="btn" type="submit">Add Word</button>
+      </form>
+      <table id="mydeck-table" style="margin-top:1rem">
+        <thead><tr><th>Welsh</th><th>English</th><th>Notes</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
