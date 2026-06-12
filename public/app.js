@@ -111,45 +111,58 @@ async function loadDashboard() {
 
     const { decks } = await api('/study/decks');
     state.decks = decks;
-    const list = document.getElementById('deck-list');
-    const levels = ['Beginner', 'Intermediate', 'Advanced'];
-    const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳' };
-
-    if (decks.length === 0) {
-      list.innerHTML = '<p class="muted">No decks yet.</p>';
-    } else {
-      list.innerHTML = levels.map(level => {
-        const levelDecks = decks.filter(d => (d.level || 'Beginner') === level);
-        if (levelDecks.length === 0) return '';
-        return `
-          <div class="level-section">
-            <div class="level-heading">
-              <h3>${icons[level]} ${level}</h3>
-              <span class="level-pill ${level}">${levelDecks.length} decks</span>
-            </div>
-            <div class="deck-list">
-              ${levelDecks.map(d => `
-                <div class="deck-item">
-                  <span class="status-dot ${d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>
-                  <div>
-                    <div class="deck-name">${escapeHtml(d.name)} ${d.completed ? '<span class="status-badge status-done">Completed</span>' : d.in_progress ? '<span class="status-badge status-progress">In Progress</span>' : ''}</div>
-                    <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
-                  </div>
-                  <div class="flex-row">
-                    ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
-                    <button class="btn" onclick="startStudy(${d.id})">Study</button>
-                    ${d.in_progress ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Keep going past your daily new-card limit">Study More</button>` : ''}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
+    renderDeckList();
   } catch (err) {
     if (err.message.includes('expired') || err.message.includes('authenticated')) logout();
   }
+}
+
+function renderDeckList() {
+  const list = document.getElementById('deck-list');
+  const levels = ['Beginner', 'Intermediate', 'Advanced'];
+  const icons = { Beginner: '🌱', Intermediate: '🌿', Advanced: '🌳' };
+  const query = (document.getElementById('deck-search')?.value || '').trim().toLowerCase();
+  const decks = query
+    ? state.decks.filter(d => d.name.toLowerCase().includes(query) || (d.description || '').toLowerCase().includes(query))
+    : state.decks;
+
+  if (state.decks.length === 0) {
+    list.innerHTML = '<p class="muted">No decks yet.</p>';
+    return;
+  }
+  if (decks.length === 0) {
+    list.innerHTML = '<p class="muted">No topics match your search.</p>';
+    return;
+  }
+
+  list.innerHTML = levels.map(level => {
+    const levelDecks = decks.filter(d => (d.level || 'Beginner') === level);
+    if (levelDecks.length === 0) return '';
+    return `
+      <div class="level-section">
+        <div class="level-heading">
+          <h3>${icons[level]} ${level}</h3>
+          <span class="level-pill ${level}">${levelDecks.length} decks</span>
+        </div>
+        <div class="deck-list">
+          ${levelDecks.map(d => `
+            <div class="deck-item">
+              <span class="status-dot ${d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>
+              <div>
+                <div class="deck-name">${escapeHtml(d.name)} ${d.completed ? '<span class="status-badge status-done">Completed</span>' : d.in_progress ? '<span class="status-badge status-progress">In Progress</span>' : ''}</div>
+                <div class="deck-meta">${d.total_cards} words — ${escapeHtml(d.description || '')}</div>
+              </div>
+              <div class="flex-row">
+                ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
+                <button class="btn" onclick="startStudy(${d.id})">Study</button>
+                ${d.in_progress ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Keep going past your daily new-card limit">Study More</button>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 async function saveSettings(e) {
