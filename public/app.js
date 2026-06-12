@@ -2,6 +2,7 @@ const API = '/api';
 let state = {
   token: localStorage.getItem('token') || null,
   user: JSON.parse(localStorage.getItem('user') || 'null'),
+  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{}'),
   queue: [],
   queueIndex: 0,
   flipped: false,
@@ -119,6 +120,13 @@ async function loadDashboard() {
   }
 }
 
+function toggleLevelSection(level) {
+  state.collapsedLevels = state.collapsedLevels || {};
+  state.collapsedLevels[level] = !state.collapsedLevels[level];
+  localStorage.setItem('collapsedLevels', JSON.stringify(state.collapsedLevels));
+  renderDeckList();
+}
+
 function renderDeckList() {
   const list = document.getElementById('deck-list');
   const levels = ['Beginner', 'Intermediate', 'Advanced'];
@@ -140,13 +148,23 @@ function renderDeckList() {
   list.innerHTML = levels.map(level => {
     const levelDecks = decks.filter(d => (d.level || 'Beginner') === level);
     if (levelDecks.length === 0) return '';
+    const totalCards = levelDecks.reduce((s, d) => s + d.total_cards, 0);
+    const totalPct = totalCards > 0
+      ? Math.round(levelDecks.reduce((s, d) => s + (d.progress_pct * d.total_cards), 0) / totalCards)
+      : 0;
+    const collapsed = state.collapsedLevels && state.collapsedLevels[level];
     return `
       <div class="level-section">
-        <div class="level-heading">
+        <div class="level-heading" onclick="toggleLevelSection('${level}')">
+          <span class="level-toggle">${collapsed ? '▶' : '▼'}</span>
           <h3>${icons[level]} ${level}</h3>
           <span class="level-pill ${level}">${levelDecks.length} decks</span>
+          <div class="level-progress" title="${totalPct}% complete">
+            <div class="level-progress-bar" style="width:${totalPct}%"></div>
+          </div>
+          <span class="level-progress-pct">${totalPct}%</span>
         </div>
-        <div class="deck-list">
+        <div class="deck-list" ${collapsed ? 'style="display:none"' : ''}>
           ${levelDecks.map(d => `
             <div class="deck-item">
               <span class="status-dot ${d.completed ? 'status-done' : d.in_progress ? 'status-progress' : 'status-new'}" title="${d.completed ? 'Completed' : d.in_progress ? 'In Progress' : 'Not Started'}"></span>

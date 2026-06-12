@@ -252,6 +252,24 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .level-heading {
   display: flex; align-items: center; gap: 0.6rem;
   margin-bottom: 0.85rem;
+  cursor: pointer; user-select: none;
+}
+.level-toggle {
+  font-size: 0.75rem; color: var(--muted, #888); width: 1rem; text-align: center;
+}
+.level-progress {
+  flex: 1; height: 8px; background: var(--border, #e5e7eb); border-radius: 999px;
+  overflow: hidden; min-width: 60px;
+}
+.level-progress-bar {
+  height: 100%; background: linear-gradient(120deg, var(--welsh-green), var(--welsh-green-dark));
+  border-radius: 999px; transition: width 0.3s ease;
+}
+.level-progress-pct {
+  font-size: 0.8rem; font-weight: 700; color: var(--muted, #888); min-width: 2.5em; text-align: right;
+}
+@media (max-width: 600px) {
+  .level-progress { display: none; }
 }
 .level-heading h3 { font-size: 1.1rem; }
 .level-pill {

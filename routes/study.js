@@ -26,6 +26,7 @@ router.get('/decks', (req, res) => {
   for (const deck of decks) {
     deck.in_progress = deck.started_cards > 0 && deck.started_cards < deck.total_cards;
     deck.completed = deck.started_cards >= deck.total_cards && deck.total_cards > 0;
+    deck.progress_pct = deck.total_cards > 0 ? Math.round((deck.started_cards / deck.total_cards) * 100) : 0;
     delete deck.started_cards;
   }
 
