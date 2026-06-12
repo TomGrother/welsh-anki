@@ -152,8 +152,9 @@ function renderDeckList() {
               </div>
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
-                <button class="btn" onclick="startStudy(${d.id})">Study</button>
-                ${d.completed ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>` : ''}
+                ${d.completed
+                  ? `<button class="btn" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>`
+                  : `<button class="btn" onclick="startStudy(${d.id})">Study</button>`}
               </div>
             </div>
           `).join('')}
