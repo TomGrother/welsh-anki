@@ -4,7 +4,7 @@ const { ACHIEVEMENTS } = require('../achievements');
 
 const router = express.Router();
 
-const SITE_URL = process.env.SITE_URL || 'https://welsh-anki-production.up.railway.app';
+const SITE_URL = process.env.SITE_URL || 'https://dragon-lingo.com';
 
 function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -24,14 +24,14 @@ function layout({ title, description, canonical, body, jsonLd }) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:site_name" content="Dragon Dysgu">
+<meta property="og:site_name" content="Dragon Lingo">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>">
 <link rel="stylesheet" href="/style.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
 </head>
 <body>
 <header>
-  <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dragon Dysgu</a>
+  <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dragon Lingo</a>
   <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open');document.getElementById('site-nav-backdrop').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
   <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>
@@ -45,7 +45,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
 ${body}
 </main>
 <footer>
-  Dragon Dysgu — Open source Welsh vocabulary trainer.
+  Dragon Lingo — Open source Welsh vocabulary trainer.
   <nav class="footer-links">
     <a href="/about">About</a>
     <a href="/how-it-works">How It Works</a>
@@ -80,17 +80,17 @@ router.get('/about', (req, res) => {
 
   const body = `
     <div class="card-panel hero">
-      <h1>About Dragon Dysgu</h1>
-      <p>Dragon Dysgu ("Learning Welsh") is a free, open vocabulary and grammar trainer built to help anyone — from complete beginners to fluent speakers brushing up before a job interview, exam, or visit home — learn the Welsh language using proven spaced-repetition techniques.</p>
+      <h1>About Dragon Lingo</h1>
+      <p>Dragon Lingo is a free, open vocabulary and grammar trainer built to help anyone — from complete beginners to fluent speakers brushing up before a job interview, exam, or visit home — learn the Welsh language using proven spaced-repetition techniques.</p>
     </div>
 
     <div class="card-panel">
       <h2>Our Mission</h2>
       <p>Welsh (Cymraeg) is a living, official language spoken by hundreds of thousands of people in Wales and around the world, and central to the identity, culture and history of Wales. We believe everyone — whether you're a complete beginner, a Welsh learner brushing up for GCSE or A-Level, a parent learning alongside your children, or someone reconnecting with family heritage — should have free access to high-quality tools for learning it.</p>
-      <p>Dragon Dysgu combines a comprehensive vocabulary database — currently ${totals.cards.toLocaleString()}+ flashcards across ${totals.decks}+ topic decks — with the same SM-2 spaced-repetition algorithm used by Anki, one of the most effective memorisation tools in the world. Read our <a href="/how-it-works">How It Works</a> page for a full explanation of the science behind it.</p>
+      <p>Dragon Lingo combines a comprehensive vocabulary database — currently ${totals.cards.toLocaleString()}+ flashcards across ${totals.decks}+ topic decks — with the same SM-2 spaced-repetition algorithm used by Anki, one of the most effective memorisation tools in the world. Read our <a href="/how-it-works">How It Works</a> page for a full explanation of the science behind it.</p>
 
       <h2>Structured Learning, From Bore Da to Fluency</h2>
-      <p>Rather than a single overwhelming word list, every deck on Dragon Dysgu is organised into one of four levels, so you always know what to learn next and never feel lost:</p>
+      <p>Rather than a single overwhelming word list, every deck on Dragon Lingo is organised into one of four levels, so you always know what to learn next and never feel lost:</p>
       <ul class="deck-list-seo">
         <li><strong>🌱 Beginner</strong> — greetings, numbers, family, food, colours, everyday objects, and the basic sentence patterns you need to start having simple conversations.</li>
         <li><strong>🌿 Intermediate</strong> — expanded vocabulary across dozens of everyday topics (travel, work, hobbies, health, weather, shopping), plus an introduction to Welsh grammar including soft, nasal and aspirate mutations.</li>
@@ -114,15 +114,15 @@ router.get('/about', (req, res) => {
       </ul>
 
       <h2>Who Is It For?</h2>
-      <p>Dragon Dysgu is designed for anyone learning Welsh as a second language, whether through Welsh-medium education, an evening class, a workplace Cymraeg scheme, Duolingo-style apps, or self-study. It works equally well as a standalone course for absolute beginners, or as a vocabulary "gym" to run alongside a more formal course — many learners use Dragon Dysgu for 5–10 minutes a day to reinforce what they're learning elsewhere.</p>
+      <p>Dragon Lingo is designed for anyone learning Welsh as a second language, whether through Welsh-medium education, an evening class, a workplace Cymraeg scheme, Duolingo-style apps, or self-study. It works equally well as a standalone course for absolute beginners, or as a vocabulary "gym" to run alongside a more formal course — many learners use Dragon Lingo for 5–10 minutes a day to reinforce what they're learning elsewhere.</p>
 
       <p><a class="btn" href="/">Get Started Free</a></p>
     </div>
   `;
 
   res.send(layout({
-    title: 'About Dragon Dysgu | Free Welsh Learning Platform',
-    description: `Learn about Dragon Dysgu, a free platform for learning Welsh with ${totals.cards.toLocaleString()}+ spaced-repetition flashcards across ${totals.decks}+ topics, from Beginner to Fluent — plus achievements, streaks, friends and more.`,
+    title: 'About Dragon Lingo | Free Welsh Learning Platform',
+    description: `Learn about Dragon Lingo, a free platform for learning Welsh with ${totals.cards.toLocaleString()}+ spaced-repetition flashcards across ${totals.decks}+ topics, from Beginner to Fluent — plus achievements, streaks, friends and more.`,
     canonical: `${SITE_URL}/about`,
     body
   }));
@@ -132,7 +132,7 @@ router.get('/about', (req, res) => {
 router.get('/how-it-works', (req, res) => {
   const body = `
     <div class="card-panel hero">
-      <h1>How Dragon Dysgu Works</h1>
+      <h1>How Dragon Lingo Works</h1>
       <p>Learn Welsh efficiently using spaced repetition — a scientifically proven technique that shows you words at increasing intervals, right before you're likely to forget them. Here's exactly how the platform takes you from your first login to fluent recall.</p>
     </div>
 
@@ -154,7 +154,7 @@ router.get('/how-it-works', (req, res) => {
       <p>If you prefer a stricter challenge, switch on <strong>Typed Answer Mode</strong> from the study screen — instead of flipping the card, you'll be shown the English meaning and have to type the Welsh word or phrase from memory, including correct spelling and any mutations.</p>
 
       <h2>4. The Science: How the SM-2 Algorithm Schedules Your Reviews</h2>
-      <p>Dragon Dysgu uses <strong>SM-2</strong>, the spaced-repetition algorithm originally developed for SuperMemo in the late 1980s and later popularised by Anki — widely considered one of the most effective methods for long-term vocabulary retention. Here's what happens behind the scenes every time you review a card:</p>
+      <p>Dragon Lingo uses <strong>SM-2</strong>, the spaced-repetition algorithm originally developed for SuperMemo in the late 1980s and later popularised by Anki — widely considered one of the most effective methods for long-term vocabulary retention. Here's what happens behind the scenes every time you review a card:</p>
       <ul class="deck-list-seo">
         <li>Every card you've started has an <strong>ease factor</strong> (how easy you generally find it, starting at 2.5) and an <strong>interval</strong> (how many days until it's due again).</li>
         <li>When you rate a card <strong>Good</strong> or <strong>Easy</strong>, the interval is multiplied by the ease factor — so a card you find easy might jump from a 1-day interval to a 6-day interval, then to a 16-day interval, then a month, and so on, growing further apart each time.</li>
@@ -168,7 +168,7 @@ router.get('/how-it-works', (req, res) => {
       <p>Each study session blends two types of card: <strong>reviews</strong> (cards you've seen before that are now due, scheduled by SM-2) and <strong>new cards</strong> (words you haven't studied yet, introduced at the pace you set). This keeps your daily session manageable — you're never suddenly faced with hundreds of brand-new words at once, but you also never run out of things to learn.</p>
 
       <h2>6. Build a Daily Streak</h2>
-      <p>Studying a little every day is far more effective for long-term memory than cramming occasionally — this is sometimes called the "spacing effect". Dragon Dysgu tracks your <strong>current streak</strong> (consecutive days you've completed at least one review) and your <strong>longest streak ever</strong>, both shown on your dashboard, to help keep you motivated and consistent.</p>
+      <p>Studying a little every day is far more effective for long-term memory than cramming occasionally — this is sometimes called the "spacing effect". Dragon Lingo tracks your <strong>current streak</strong> (consecutive days you've completed at least one review) and your <strong>longest streak ever</strong>, both shown on your dashboard, to help keep you motivated and consistent.</p>
 
       <h2>7. Unlock Achievements</h2>
       <p>As you study, you'll automatically unlock <strong>achievement badges</strong> — for reaching streak milestones (3, 7, 30, 100, even 365 days), learning vocabulary milestones (10 up to 1,500+ words), completing review-count milestones, and finishing entire topic decks. Visit the Achievements page any time to see which badges you've earned and which are still locked.</p>
@@ -190,8 +190,8 @@ router.get('/how-it-works', (req, res) => {
   `;
 
   res.send(layout({
-    title: 'How It Works — Spaced Repetition for Learning Welsh | Dragon Dysgu',
-    description: 'A deep dive into how Dragon Dysgu works: the SM-2 spaced-repetition algorithm explained, levelled decks from Beginner to Fluent, typed answer mode, daily streaks, achievements, friends, personal decks, and progress tracking.',
+    title: 'How It Works — Spaced Repetition for Learning Welsh | Dragon Lingo',
+    description: 'A deep dive into how Dragon Lingo works: the SM-2 spaced-repetition algorithm explained, levelled decks from Beginner to Fluent, typed answer mode, daily streaks, achievements, friends, personal decks, and progress tracking.',
     canonical: `${SITE_URL}/how-it-works`,
     body
   }));
@@ -200,7 +200,7 @@ router.get('/how-it-works', (req, res) => {
 // FAQ page — common questions, with FAQPage structured data.
 router.get('/faq', (req, res) => {
   const faqs = [
-    ['Is Dragon Dysgu really free?', 'Yes — Dragon Dysgu is completely free to use, with no subscriptions, ads, or paywalls. Our goal is to make Welsh accessible to everyone.'],
+    ['Is Dragon Lingo really free?', 'Yes — Dragon Lingo is completely free to use, with no subscriptions, ads, or paywalls. Our goal is to make Welsh accessible to everyone.'],
     ['What is spaced repetition?', 'Spaced repetition is a learning technique where you review information at gradually increasing intervals. Cards you find easy are shown less often, while cards you struggle with appear more frequently — helping you learn efficiently and retain words long-term. See our How It Works page for a full explanation of the SM-2 algorithm that powers this.'],
     ['What exactly is the SM-2 algorithm?', 'SM-2 is the spaced-repetition algorithm originally created for SuperMemo and later used by Anki. After every review, it adjusts two numbers for that card: an "ease factor" (how easy you generally find it) and an "interval" (days until the next review). Rating a card Easy or Good grows the interval — often multiplying it — so well-known words are reviewed less and less often, while rating it Hard or Again shortens the interval so weak words come back around sooner.'],
     ['Do I need to know any Welsh to start?', 'No. The Beginner decks start with everyday greetings and basic vocabulary, so complete beginners can jump straight in. If you already speak some Welsh, you can set your active level to Intermediate, Advanced or even Fluent and skip ahead.'],
@@ -209,21 +209,21 @@ router.get('/faq', (req, res) => {
     ['What does the daily streak mean?', 'Your streak counts the number of consecutive days you\'ve completed at least one review. It\'s a simple way to encourage consistent daily practice, which is the most effective way to learn a language. Your longest-ever streak is also recorded, and several achievement badges are tied to streak milestones.'],
     ['How many new cards do I learn per day?', 'By default, 10 new cards are introduced per day across all your decks combined, but you can change this number in your dashboard settings to suit your pace.'],
     ['Can I focus on a specific difficulty level?', 'Yes. In your study settings, you can choose your "active level" (Beginner, Intermediate, Advanced or Fluent) — new cards will only be introduced from decks at that level until you choose to move on.'],
-    ['Is this based on Anki?', 'Dragon Dysgu uses the same SM-2 spaced-repetition algorithm that powers Anki, one of the most popular and effective flashcard apps, but is purpose-built and pre-loaded with Welsh vocabulary and grammar.'],
+    ['Is this based on Anki?', 'Dragon Lingo uses the same SM-2 spaced-repetition algorithm that powers Anki, one of the most popular and effective flashcard apps, but is purpose-built and pre-loaded with Welsh vocabulary and grammar.'],
     ['What is Typed Answer Mode?', 'Instead of flipping a card to reveal the answer, Typed Answer Mode shows you the English meaning and asks you to type the Welsh word or phrase from memory, including spelling and mutations. It\'s a stricter test of recall than simple recognition, and can be toggled on or off from the study screen at any time.'],
     ['What are achievements and badges?', 'As you study, you automatically unlock badges for milestones such as reaching a streak of 3, 7, 30, 100 or even 365 days; learning your 10th, 100th, 500th or 1,000th+ word; completing thousands of reviews; and finishing entire topic decks. You can view all your earned and locked badges on the Achievements page.'],
     ['Can I add friends and compare progress?', 'Yes. From the Friends page you can search for other users by username and send a friend request. Once accepted, you\'ll both appear on each other\'s leaderboard, ranked by current streak alongside longest streak, words learned and total reviews.'],
     ['Can I create my own flashcards?', 'Yes. Any user can create their own personal decks from the dashboard and add their own Welsh/English word pairs with optional notes. These personal decks are private — only you can see and study them — but they use exactly the same spaced-repetition scheduling as the built-in decks.'],
     ['Can I print a vocabulary list?', 'Yes — every deck has a "print cheatsheet" button that opens a clean, printable page listing every word, its translation, and any notes or example sentences for that topic.'],
     ['What is Random Study and Hard Words mode?', 'Once you\'ve completed every card in a topic, Random Study lets you revisit its words for casual extra practice outside the normal spaced-repetition schedule. Hard Words mode pulls together the cards you\'ve found most difficult across all your decks — those with a low ease factor, or that you\'ve recently marked "Again" — so you can drill your weak spots directly.'],
-    ['Does Dragon Dysgu have a dark mode?', 'Yes — use the dark mode toggle in the navigation bar to switch between light and dark themes. Your preference is remembered automatically for next time.'],
+    ['Does Dragon Lingo have a dark mode?', 'Yes — use the dark mode toggle in the navigation bar to switch between light and dark themes. Your preference is remembered automatically for next time.'],
     ['I forgot my password — what do I do?', 'On the login screen, click "Forgotten your password?" and enter your account email. You\'ll be sent a secure link to choose a new password.']
   ];
 
   const body = `
     <div class="card-panel hero">
       <h1>Frequently Asked Questions</h1>
-      <p>Everything you need to know about learning Welsh with Dragon Dysgu — spaced repetition, levels, streaks, achievements, friends, personal decks and more.</p>
+      <p>Everything you need to know about learning Welsh with Dragon Lingo — spaced repetition, levels, streaks, achievements, friends, personal decks and more.</p>
     </div>
     <div class="card-panel">
       ${faqs.map(([q, a]) => `<h2>${escapeHtml(q)}</h2><p>${escapeHtml(a)}</p>`).join('')}
@@ -232,8 +232,8 @@ router.get('/faq', (req, res) => {
   `;
 
   res.send(layout({
-    title: 'FAQ — Dragon Dysgu | Free Welsh Learning Platform',
-    description: 'Frequently asked questions about Dragon Dysgu: how the SM-2 spaced-repetition algorithm works, daily streaks, achievements, friends and leaderboards, personal decks, typed answer mode, printable cheatsheets and more.',
+    title: 'FAQ — Dragon Lingo | Free Welsh Learning Platform',
+    description: 'Frequently asked questions about Dragon Lingo: how the SM-2 spaced-repetition algorithm works, daily streaks, achievements, friends and leaderboards, personal decks, typed answer mode, printable cheatsheets and more.',
     canonical: `${SITE_URL}/faq`,
     body,
     jsonLd: {

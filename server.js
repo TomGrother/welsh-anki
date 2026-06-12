@@ -39,5 +39,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Dragon Dysgu server running on http://localhost:${PORT}`);
+  console.log(`Dragon Lingo server running on http://localhost:${PORT}`);
 });

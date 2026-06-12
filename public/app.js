@@ -349,7 +349,7 @@ async function printCheatsheet(deckId) {
     <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <title>${escapeHtml(deck.name)} — Cheatsheet — Dragon Dysgu</title>
+      <title>${escapeHtml(deck.name)} — Cheatsheet — Dragon Lingo</title>
       <style>
         body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; padding: 2rem; color: #1a202c; }
         h1 { margin-bottom: 0.2rem; }
@@ -363,7 +363,7 @@ async function printCheatsheet(deckId) {
     </head>
     <body>
       <h1>🐉 ${escapeHtml(deck.name)}</h1>
-      <div class="desc">${escapeHtml(deck.description || '')} — ${cards.length} words — Dragon Dysgu</div>
+      <div class="desc">${escapeHtml(deck.description || '')} — ${cards.length} words — Dragon Lingo</div>
       <table>
         <thead><tr><th>Welsh</th><th>English</th><th>Notes / Example</th></tr></thead>
         <tbody>
