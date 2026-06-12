@@ -229,7 +229,9 @@ router.post('/review', (req, res) => {
   }
 
   const updated = sm2(userCard, quality);
-  const dueDate = `datetime('now', '+${updated.interval_days} days')`;
+  const dueDate = updated.interval_days >= 1
+    ? `datetime(date('now', '+${updated.interval_days} days'))`
+    : `datetime('now', '+${updated.interval_days} days')`;
 
   db.prepare(`
     INSERT INTO user_cards (user_id, card_id, ease, interval_days, repetitions, due_date, last_reviewed, first_seen)
