@@ -31,13 +31,13 @@ function layout({ title, description, canonical, body, jsonLd }) {
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="${SITE_URL}/og-image.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>">
+<link rel="icon" type="image/svg+xml" href="/dragon-icon.svg">
 <link rel="stylesheet" href="/style.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
 </head>
 <body>
 <header>
-  <a href="/" class="brand" style="text-decoration:none;color:inherit"><span class="dragon">🐉</span> Dragon Lingo</a>
+  <a href="/" class="brand" style="text-decoration:none;color:inherit"><img class="dragon" src="/dragon-icon.svg" alt=""> Dragon Lingo</a>
   <button class="nav-toggle" onclick="document.getElementById('site-nav').classList.toggle('nav-open');document.getElementById('site-nav-backdrop').classList.toggle('nav-open')" aria-label="Toggle navigation">☰</button>
   <nav id="site-nav">
     <a class="nav-link" href="/about">About</a>

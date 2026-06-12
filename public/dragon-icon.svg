@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e53e3e"/>
+      <stop offset="100%" stop-color="#c53030"/>
+    </linearGradient>
+    <linearGradient id="wing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c46a"/>
+      <stop offset="100%" stop-color="#00824a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- wing -->
+  <path d="M64 70 C40 50 28 30 34 14 C46 22 58 38 66 58 Z" fill="url(#wing)"/>
+
+  <!-- body / head -->
+  <path d="M30 92
+           C24 78 28 56 46 44
+           C58 36 76 34 88 42
+           C100 50 104 64 98 76
+           L108 78
+           L96 86
+           L100 96
+           L86 92
+           C76 100 60 102 48 98
+           C38 95 32 96 26 102
+           C24 96 26 90 30 92 Z" fill="url(#body)"/>
+
+  <!-- eye -->
+  <circle cx="78" cy="58" r="5" fill="#fff"/>
+  <circle cx="80" cy="58" r="2.4" fill="#1a202c"/>
+
+  <!-- horn -->
+  <path d="M70 36 C72 28 80 22 90 22 C84 30 80 38 78 46 Z" fill="#ffd95e"/>
+
+  <!-- spikes -->
+  <path d="M50 46 L46 34 L58 42 Z" fill="#ffd95e"/>
+  <path d="M62 40 L60 28 L70 38 Z" fill="#ffd95e"/>
+
+  <!-- flame breath -->
+  <path d="M14 100 C24 94 34 92 44 96 C36 102 26 106 14 104 C10 102 10 100 14 100 Z" fill="#ffb347"/>
+  <path d="M10 96 C20 92 28 92 36 96 C28 100 18 102 8 100 C6 98 6 97 10 96 Z" fill="#ffd95e"/>
+</svg>
