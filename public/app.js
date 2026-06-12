@@ -153,6 +153,7 @@ function renderDeckList() {
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
                 <button class="btn" onclick="startStudy(${d.id})">Study</button>
+                ${d.completed ? `<button class="btn-outline" onclick="startStudy(${d.id}, true)" title="Restudy every card in this topic">Study Again</button>` : ''}
               </div>
             </div>
           `).join('')}
@@ -207,8 +208,8 @@ function formatDay(dateStr) {
 }
 
 // --- Study ---
-async function startStudy(deckId) {
-  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}`);
+async function startStudy(deckId, reviewAll) {
+  const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${reviewAll ? '&review_all=1' : ''}`);
   if (cards.length === 0) {
     showView('complete');
     const note = document.getElementById('complete-note');

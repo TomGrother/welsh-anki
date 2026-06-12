@@ -38,14 +38,18 @@ router.get('/decks', (req, res) => {
 router.get('/queue', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const deckId = req.query.deck_id ? parseInt(req.query.deck_id) : null;
+  // "review_all" lets a user restudy every card in a completed deck, even
+  // if none are due yet. Only meaningful with a deck_id.
+  const reviewAll = req.query.review_all === '1' && deckId;
   const deckFilter = deckId ? 'AND c.deck_id = ?' : '';
+  const dueFilter = reviewAll ? '' : "AND uc.due_date <= datetime('now')";
 
   const reviewSql = `
     SELECT c.id, c.welsh, c.english, c.notes, c.example_welsh, c.example_english, c.deck_id,
       uc.ease, uc.interval_days, uc.repetitions, uc.due_date
     FROM cards c
     JOIN user_cards uc ON uc.card_id = c.id AND uc.user_id = ?
-    WHERE uc.due_date <= datetime('now') ${deckFilter}
+    WHERE 1=1 ${dueFilter} ${deckFilter}
     ORDER BY uc.due_date ASC LIMIT ?
   `;
   const reviewParams = deckId ? [req.user.id, deckId, limit] : [req.user.id, limit];
