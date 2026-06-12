@@ -480,7 +480,28 @@ function welshPronunciation(text) {
 }
 
 // --- Study ---
-async function startStudy(deckId, reviewAll) {
+let pendingStudyAction = null;
+
+function promptTypedMode(action) {
+  pendingStudyAction = action;
+  document.getElementById('typed-mode-modal').classList.remove('hidden');
+}
+
+function chooseTypedMode(useTyped) {
+  state.typedMode = useTyped;
+  localStorage.setItem('typedMode', useTyped ? '1' : '0');
+  syncTypedModeToggle();
+  document.getElementById('typed-mode-modal').classList.add('hidden');
+  const action = pendingStudyAction;
+  pendingStudyAction = null;
+  if (action) action();
+}
+
+function startStudy(deckId, reviewAll) {
+  promptTypedMode(() => _startStudy(deckId, reviewAll));
+}
+
+async function _startStudy(deckId, reviewAll) {
   const { cards } = await api(`/study/queue?limit=20${deckId ? '&deck_id=' + deckId : ''}${reviewAll ? '&review_all=1' : ''}`);
   if (cards.length === 0) {
     showView('complete');
@@ -502,7 +523,11 @@ async function startStudy(deckId, reviewAll) {
   renderCard();
 }
 
-async function startRandomStudy() {
+function startRandomStudy() {
+  promptTypedMode(_startRandomStudy);
+}
+
+async function _startRandomStudy() {
   const { cards } = await api('/study/queue?limit=20&random=1');
   if (cards.length === 0) {
     showView('complete');
@@ -518,7 +543,11 @@ async function startRandomStudy() {
   renderCard();
 }
 
-async function startHardStudy() {
+function startHardStudy() {
+  promptTypedMode(_startHardStudy);
+}
+
+async function _startHardStudy() {
   const { cards } = await api('/study/queue?limit=20&hard=1');
   if (cards.length === 0) {
     showView('complete');
