@@ -230,7 +230,7 @@ async function startStudy(deckId, reviewAll) {
   state.queue = cards;
   state.queueIndex = 0;
   state.lastDeckId = deckId || cards[cards.length - 1].deck_id;
-  document.getElementById('typed-mode-toggle').checked = state.typedMode;
+  syncTypedModeToggle();
   showView('study');
   renderCard();
 }
@@ -246,7 +246,7 @@ async function startRandomStudy() {
   state.queue = cards;
   state.queueIndex = 0;
   state.lastDeckId = cards[cards.length - 1].deck_id;
-  document.getElementById('typed-mode-toggle').checked = state.typedMode;
+  syncTypedModeToggle();
   showView('study');
   renderCard();
 }
@@ -330,9 +330,16 @@ function checkTypedAnswer(e) {
   return false;
 }
 
+function syncTypedModeToggle() {
+  const toggle = document.getElementById('typed-mode-toggle');
+  toggle.checked = state.typedMode;
+  toggle.closest('.typed-mode-label').classList.toggle('active', state.typedMode);
+}
+
 function toggleTypedMode() {
   state.typedMode = document.getElementById('typed-mode-toggle').checked;
   localStorage.setItem('typedMode', state.typedMode ? '1' : '0');
+  syncTypedModeToggle();
   if (state.queue.length) renderCard();
 }
 

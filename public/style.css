@@ -373,6 +373,14 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .flashcard .example { margin-top: 1.1rem; font-style: italic; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
 .flashcard .hint { margin-top: 1.75rem; color: #b0b8c4; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; }
 
+.typed-mode-label {
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 999px;
+  padding: 0.5rem 1rem; transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.typed-mode-label:hover { border-color: var(--welsh-green); box-shadow: 0 4px 14px -6px rgba(0, 166, 86, 0.3); }
+.typed-mode-label.active { border-color: var(--welsh-green); color: var(--welsh-green-dark); background: rgba(0, 166, 86, 0.08); }
+
 .typed-answer {
   position: relative; z-index: 1; display: flex; gap: 0.6rem; margin-top: 1.5rem;
   max-width: 360px; width: 100%;
