@@ -28,6 +28,7 @@ function renderNav() {
       <span style="margin-right:0.5rem">${state.user.username}</span>
       <button class="btn-outline" onclick="showView('achievements')">🏆 Achievements</button>
       <button class="btn-outline" onclick="showView('friends')">👥 Friends</button>
+      <button class="btn-outline" onclick="showView('settings')">⚙️ Settings</button>
       ${state.user.is_admin ? '<button class="btn-outline" onclick="showView(\'admin\')">Admin</button>' : ''}
       <button class="btn-outline" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode"></button>
       <button class="btn-outline" onclick="logout()">Log Out</button>
@@ -82,6 +83,7 @@ function showView(name) {
   if (name === 'progress') loadProgress();
   if (name === 'achievements') loadAchievements();
   if (name === 'friends') loadFriends();
+  if (name === 'settings') loadSettings();
 }
 
 function logout() {
@@ -96,8 +98,9 @@ async function handleRegister(e) {
   const username = document.getElementById('reg-username').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
+  const new_cards_per_day = parseInt(document.getElementById('reg-new-cards').value, 10);
   try {
-    const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password }) });
+    const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, new_cards_per_day }) });
     onAuthSuccess(data);
   } catch (err) {
     document.getElementById('reg-error').textContent = err.message;
@@ -157,6 +160,30 @@ function onAuthSuccess(data) {
   localStorage.setItem('user', JSON.stringify(data.user));
   renderNav();
   showView('dashboard');
+}
+
+// --- Settings ---
+async function loadSettings() {
+  const { user } = await api('/auth/me');
+  document.getElementById('settings-new-cards').value = user.new_cards_per_day;
+  document.getElementById('settings-success').textContent = '';
+  document.getElementById('settings-error').textContent = '';
+}
+
+async function handleSaveSettings(e) {
+  e.preventDefault();
+  const new_cards_per_day = parseInt(document.getElementById('settings-new-cards').value, 10);
+  const successEl = document.getElementById('settings-success');
+  const errorEl = document.getElementById('settings-error');
+  successEl.textContent = '';
+  errorEl.textContent = '';
+  try {
+    await api('/auth/me/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day }) });
+    successEl.textContent = 'Settings saved!';
+  } catch (err) {
+    errorEl.textContent = err.message;
+  }
+  return false;
 }
 
 // --- Dashboard ---

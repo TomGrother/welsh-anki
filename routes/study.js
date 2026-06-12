@@ -181,7 +181,8 @@ router.get('/queue', (req, res) => {
   const reviewParams = deckId ? [req.user.id, deckId, limit] : [req.user.id, limit];
   const reviewCards = db.prepare(reviewSql).all(...reviewParams);
 
-  const DAILY_NEW_CARD_LIMIT = 20;
+  const { new_cards_per_day } = db.prepare('SELECT new_cards_per_day FROM users WHERE id = ?').get(req.user.id);
+  const DAILY_NEW_CARD_LIMIT = new_cards_per_day || 10;
 
   let newCards = [];
   if (deckId) {

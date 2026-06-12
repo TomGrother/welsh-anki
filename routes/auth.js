@@ -13,12 +13,20 @@ function isValidPassword(password) {
 const router = express.Router();
 
 router.post('/register', (req, res) => {
-  const { username, email, password } = req.body || {};
+  const { username, email, password, new_cards_per_day } = req.body || {};
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email and password are required' });
   }
   if (!isValidPassword(password)) {
     return res.status(400).json({ error: PASSWORD_RULES });
+  }
+  let newCardsPerDay = 10;
+  if (new_cards_per_day !== undefined) {
+    const value = parseInt(new_cards_per_day, 10);
+    if (!Number.isInteger(value) || value < 1 || value > 100) {
+      return res.status(400).json({ error: 'new_cards_per_day must be an integer between 1 and 100' });
+    }
+    newCardsPerDay = value;
   }
 
   const existing = db.prepare('SELECT id FROM users WHERE username = ? OR email = ?').get(username, email);
@@ -27,8 +35,8 @@ router.post('/register', (req, res) => {
   const hash = bcrypt.hashSync(password, 10);
   const isFirstUser = db.prepare('SELECT COUNT(*) AS c FROM users').get().c === 0;
   const result = db.prepare(
-    'INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)'
-  ).run(username, email, hash, isFirstUser ? 1 : 0);
+    'INSERT INTO users (username, email, password_hash, is_admin, new_cards_per_day) VALUES (?, ?, ?, ?, ?)'
+  ).run(username, email, hash, isFirstUser ? 1 : 0, newCardsPerDay);
 
   const token = jwt.sign({ id: result.lastInsertRowid, username, is_admin: isFirstUser ? 1 : 0 }, SECRET, { expiresIn: '30d' });
   res.json({ token, user: { id: result.lastInsertRowid, username, is_admin: isFirstUser } });
@@ -51,6 +59,17 @@ router.get('/me', requireAuth, (req, res) => {
   const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: { ...user, is_admin: !!user.is_admin } });
+});
+
+// Update study preferences (e.g. how many new cards to introduce per day).
+router.put('/me/settings', requireAuth, (req, res) => {
+  const { new_cards_per_day } = req.body || {};
+  const value = parseInt(new_cards_per_day, 10);
+  if (!Number.isInteger(value) || value < 1 || value > 100) {
+    return res.status(400).json({ error: 'new_cards_per_day must be an integer between 1 and 100' });
+  }
+  db.prepare('UPDATE users SET new_cards_per_day = ? WHERE id = ?').run(value, req.user.id);
+  res.json({ new_cards_per_day: value });
 });
 
 // Request a password reset. Always responds with a generic success message so

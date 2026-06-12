@@ -248,6 +248,14 @@
         <label>Password</label>
         <input type="password" id="reg-password" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$" title="At least 8 characters, including an uppercase letter, a lowercase letter, a number and a symbol">
         <p class="muted" style="margin-top:-0.5rem">At least 8 characters, with an uppercase letter, lowercase letter, number and symbol.</p>
+        <label>How many new words per day?</label>
+        <select id="reg-new-cards">
+          <option value="5">5 — Relaxed pace</option>
+          <option value="10" selected>10 — Steady pace (recommended)</option>
+          <option value="20">20 — Brisk pace</option>
+          <option value="40">40 — Intensive</option>
+        </select>
+        <p class="muted" style="margin-top:-0.5rem">This controls how many new flashcards are introduced each day. Fewer new words means fewer reviews piling up later — you can change this anytime in Settings.</p>
         <div class="error-msg" id="reg-error"></div>
         <button class="btn" type="submit">Register</button>
       </form>
@@ -342,6 +350,27 @@
         <thead><tr><th>#</th><th>Name</th><th>Streak</th><th>Best Streak</th><th>Words Learned</th><th>Reviews</th></tr></thead>
         <tbody></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="view-settings" class="hidden">
+    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="card-panel" style="margin-top:1rem">
+      <h3 style="margin-bottom:1rem">⚙️ Study Settings</h3>
+      <form onsubmit="return handleSaveSettings(event)">
+        <label>How many new words per day?</label>
+        <select id="settings-new-cards">
+          <option value="5">5 — Relaxed pace</option>
+          <option value="10">10 — Steady pace (recommended)</option>
+          <option value="20">20 — Brisk pace</option>
+          <option value="40">40 — Intensive</option>
+        </select>
+        <p class="muted" style="margin-top:-0.5rem">This controls how many new flashcards are introduced each day. A lower number keeps your future reviews more manageable.</p>
+        <p class="error-msg" id="settings-error"></p>
+        <p class="success-msg" id="settings-success"></p>
+        <button class="btn" type="submit">Save</button>
+      </form>
     </div>
   </section>
 
