@@ -160,6 +160,14 @@ nav { display: flex; gap: 0.6rem; align-items: center; }
   .review-buttons button { padding: 0.8rem 0.4rem; font-size: 0.85rem; }
   .stat-box { padding: 0.85rem 0.4rem; }
   .stat-box .value { font-size: 1.5rem; }
+  .hero-logo { width: 130px; height: 130px; margin: 0.5rem auto; }
+  .icon-btn { width: 2.75rem; height: 2.75rem; font-size: 1.15rem; }
+  .badge-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.6rem; }
+  .modal-box { padding: 1.25rem; }
+  .heatmap-cell { width: 10px; height: 10px; }
+  .bar-chart, .heatmap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem; }
+  select { background-position: right 0.6rem center; }
+  button, .btn { min-height: 44px; }
 }
 
 nav button, .btn {
