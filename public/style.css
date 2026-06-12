@@ -186,6 +186,17 @@ nav button:active, .btn:active { transform: translateY(0); }
 .btn-grey { background: #94a3b8; box-shadow: 0 4px 14px -4px rgba(148, 163, 184, 0.45); }
 .btn-danger { background: var(--welsh-red); box-shadow: 0 4px 14px -4px rgba(229, 62, 62, 0.45); }
 
+/* Small round icon buttons (deck list actions: print, edit, delete) */
+.icon-btn {
+  width: 2.4rem; height: 2.4rem; padding: 0; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; font-size: 1.05rem; line-height: 1;
+}
+.icon-btn.btn-outline { color: var(--muted); }
+.icon-btn.btn-outline:hover { color: var(--welsh-green-dark); border-color: var(--welsh-green); background: var(--bg); }
+.icon-btn.btn-danger { box-shadow: none; background: transparent; color: var(--welsh-red); border: 1.5px solid var(--border); }
+.icon-btn.btn-danger:hover { background: rgba(229, 62, 62, 0.08); border-color: var(--welsh-red); transform: translateY(-2px); }
+
 main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 
 .hidden { display: none !important; }

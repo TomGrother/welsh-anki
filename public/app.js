@@ -231,9 +231,9 @@ function renderDeckList() {
               </div>
               <div class="flex-row">
                 ${d.due_cards > 0 ? `<span class="due-badge">${d.due_cards} due</span>` : ''}
-                <button class="btn-outline" onclick="printCheatsheet(${d.id})" title="Print a cheatsheet for this topic">🖨️</button>
-                ${d.is_own ? `<button class="btn-outline" onclick="openMyDeck(${d.id})" title="Manage words">✏️</button>
-                  <button class="btn-danger" onclick="deleteMyDeck(${d.id})" title="Delete this deck">🗑️</button>` : ''}
+                <button class="btn-outline icon-btn" onclick="printCheatsheet(${d.id})" title="Print a cheatsheet for this topic">🖨️</button>
+                ${d.is_own ? `<button class="btn-outline icon-btn" onclick="openMyDeck(${d.id})" title="Manage words">✏️</button>
+                  <button class="btn-danger icon-btn" onclick="deleteMyDeck(${d.id})" title="Delete this deck">🗑️</button>` : ''}
                 ${d.total_cards === 0
                   ? `<button class="btn" disabled title="Add some words first">Study</button>`
                   : d.completed
