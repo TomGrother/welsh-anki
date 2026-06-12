@@ -9,10 +9,6 @@
       <stop offset="55%" stop-color="#e53e3e"/>
       <stop offset="100%" stop-color="#a82424"/>
     </linearGradient>
-    <linearGradient id="jaw" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffb347"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
-    </linearGradient>
     <linearGradient id="horn" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#00e08a"/>
       <stop offset="100%" stop-color="#00824a"/>
@@ -21,46 +17,44 @@
 
   <circle cx="100" cy="100" r="100" fill="url(#bg)"/>
 
-  <!-- back horn -->
-  <path d="M122 46 C140 26 168 22 182 30 C166 36 152 50 144 70 Z" fill="url(#horn)"/>
-  <!-- front horn -->
-  <path d="M96 36 C104 16 128 8 146 14 C134 24 124 40 120 58 Z" fill="url(#horn)"/>
+  <!-- neck -->
+  <path d="M30 178 C26 150 36 122 58 110 L88 96 L96 116 L68 134 C54 144 48 162 52 178 Z" fill="url(#scale)"/>
 
-  <!-- neck / head shape -->
-  <path d="M40 168
-           C28 140 32 104 60 80
-           C84 60 122 56 150 70
-           C172 81 182 104 176 124
-           C172 138 158 146 144 144
-           L150 160
-           L132 152
-           C120 162 100 166 84 162
-           C66 158 50 150 40 168 Z"
+  <!-- frill spikes along neck -->
+  <path d="M58 110 L46 92 L70 100 Z" fill="url(#horn)"/>
+  <path d="M72 102 L62 84 L86 92 Z" fill="url(#horn)"/>
+  <path d="M88 96 L80 78 L102 86 Z" fill="url(#horn)"/>
+
+  <!-- head / snout, facing right -->
+  <path d="M86 92
+           C84 70 100 52 126 50
+           C150 48 172 60 182 80
+           C188 92 186 104 176 110
+           L186 118 L170 122
+           L172 134 L156 128
+           C146 138 128 142 112 136
+           C96 130 86 114 86 92 Z"
         fill="url(#scale)"/>
 
-  <!-- jaw / snout -->
-  <path d="M150 70 C172 81 182 104 176 124 C172 138 158 146 144 144 L150 122 C156 106 152 86 134 76 Z" fill="#c53030"/>
+  <!-- upper horn -->
+  <path d="M126 50 C132 30 154 18 174 22 C162 32 150 46 144 64 Z" fill="url(#horn)"/>
 
-  <!-- lower jaw -->
-  <path d="M118 130 C134 124 150 130 156 144 C146 156 128 160 114 152 Z" fill="url(#jaw)"/>
+  <!-- jaw line -->
+  <path d="M112 136 C124 132 140 128 156 128 L154 116 C140 118 122 120 110 124 Z" fill="#a82424"/>
 
   <!-- teeth -->
-  <path d="M124 136 L128 146 L132 136 Z" fill="#fff"/>
-  <path d="M138 134 L142 145 L146 134 Z" fill="#fff"/>
-
-  <!-- spikes along back -->
-  <path d="M58 84 L48 68 L70 78 Z" fill="url(#horn)"/>
-  <path d="M78 70 L70 52 L92 64 Z" fill="url(#horn)"/>
+  <path d="M150 126 L154 138 L158 126 Z" fill="#fff"/>
+  <path d="M164 122 L168 134 L172 122 Z" fill="#fff"/>
 
   <!-- eye -->
-  <circle cx="138" cy="92" r="9" fill="#fff7e8"/>
-  <circle cx="141" cy="92" r="4.5" fill="#1a2029"/>
-  <circle cx="139.5" cy="90" r="1.6" fill="#fff"/>
+  <circle cx="148" cy="78" r="9" fill="#fff7e8"/>
+  <circle cx="151" cy="78" r="4.5" fill="#1a2029"/>
+  <circle cx="149.5" cy="76" r="1.6" fill="#fff"/>
 
   <!-- nostril -->
-  <circle cx="172" cy="112" r="3" fill="#7a1f1f"/>
+  <circle cx="180" cy="86" r="3" fill="#7a1f1f"/>
 
   <!-- flame breath -->
-  <path d="M16 174 C32 164 50 162 66 170 C52 180 32 184 14 180 C10 178 10 176 16 174 Z" fill="#ffb347"/>
-  <path d="M10 168 C24 160 38 160 50 166 C38 174 22 176 8 172 C5 170 5 169 10 168 Z" fill="#ffd95e"/>
+  <path d="M170 134 C182 142 188 156 184 172 C172 164 162 152 160 138 Z" fill="#ffb347"/>
+  <path d="M174 138 C182 146 186 156 184 168 C176 162 168 152 166 142 Z" fill="#ffd95e"/>
 </svg>
