@@ -24,7 +24,13 @@ function layout({ title, description, canonical, body, jsonLd }) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${SITE_URL}/og-image.png">
+<meta property="og:locale" content="en_GB">
 <meta property="og:site_name" content="Dragon Lingo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(title)}">
+<meta name="twitter:description" content="${escapeHtml(description)}">
+<meta name="twitter:image" content="${SITE_URL}/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>">
 <link rel="stylesheet" href="/style.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
@@ -59,15 +65,16 @@ ${body}
 
 // Sitemap including the homepage and static info pages.
 router.get('/sitemap.xml', (req, res) => {
+  const lastmod = new Date().toISOString().slice(0, 10);
   const urls = [
-    `${SITE_URL}/`,
-    `${SITE_URL}/about`,
-    `${SITE_URL}/how-it-works`,
-    `${SITE_URL}/faq`,
+    { loc: `${SITE_URL}/`, priority: '1.0', changefreq: 'weekly' },
+    { loc: `${SITE_URL}/about`, priority: '0.8', changefreq: 'monthly' },
+    { loc: `${SITE_URL}/how-it-works`, priority: '0.8', changefreq: 'monthly' },
+    { loc: `${SITE_URL}/faq`, priority: '0.8', changefreq: 'monthly' },
   ];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(u => `  <url><loc>${u}</loc></url>`).join('\n')}
+${urls.map(u => `  <url><loc>${u.loc}</loc><lastmod>${lastmod}</lastmod><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')}
 </urlset>`;
   res.type('application/xml').send(xml);
 });
