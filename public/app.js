@@ -5,7 +5,8 @@ let state = {
   queue: [],
   queueIndex: 0,
   flipped: false,
-  decks: []
+  decks: [],
+  typedMode: localStorage.getItem('typedMode') === '1'
 };
 
 function api(path, opts = {}) {
@@ -229,6 +230,7 @@ async function startStudy(deckId, reviewAll) {
   state.queue = cards;
   state.queueIndex = 0;
   state.lastDeckId = deckId || cards[cards.length - 1].deck_id;
+  document.getElementById('typed-mode-toggle').checked = state.typedMode;
   showView('study');
   renderCard();
 }
@@ -244,6 +246,7 @@ async function startRandomStudy() {
   state.queue = cards;
   state.queueIndex = 0;
   state.lastDeckId = cards[cards.length - 1].deck_id;
+  document.getElementById('typed-mode-toggle').checked = state.typedMode;
   showView('study');
   renderCard();
 }
@@ -259,9 +262,6 @@ function continueStudy() {
 function renderCard() {
   const card = state.queue[state.queueIndex];
   state.flipped = false;
-  document.getElementById('card-front').textContent = card.welsh;
-  document.getElementById('card-back').textContent = card.english;
-  document.getElementById('card-back').classList.add('hidden');
   const ex = document.getElementById('card-example');
   if (card.example_welsh) {
     ex.innerHTML = `${escapeHtml(card.example_welsh)}<br>${escapeHtml(card.example_english || '')}`;
@@ -269,20 +269,83 @@ function renderCard() {
     ex.innerHTML = '';
   }
   ex.classList.add('hidden');
-  document.getElementById('card-hint').classList.remove('hidden');
   document.getElementById('review-buttons').classList.add('hidden');
+
+  const typedForm = document.getElementById('typed-answer-form');
+  const typedResult = document.getElementById('typed-result');
+  typedResult.classList.add('hidden');
+  typedResult.textContent = '';
+
+  if (state.typedMode) {
+    document.getElementById('card-front').textContent = card.english;
+    document.getElementById('card-back').textContent = card.welsh;
+    document.getElementById('card-back').classList.add('hidden');
+    document.getElementById('card-hint').classList.add('hidden');
+    document.getElementById('card-audio-btn').classList.add('hidden');
+    document.getElementById('typed-answer-input').value = '';
+    typedForm.classList.remove('hidden');
+    setTimeout(() => document.getElementById('typed-answer-input').focus(), 50);
+  } else {
+    document.getElementById('card-front').textContent = card.welsh;
+    document.getElementById('card-back').textContent = card.english;
+    document.getElementById('card-back').classList.add('hidden');
+    document.getElementById('card-hint').classList.remove('hidden');
+    document.getElementById('card-audio-btn').classList.remove('hidden');
+    typedForm.classList.add('hidden');
+  }
 
   document.getElementById('study-counter').textContent = `${state.queueIndex + 1} / ${state.queue.length}`;
   document.getElementById('study-progress').style.width = `${(state.queueIndex / state.queue.length) * 100}%`;
 }
 
 function flipCard() {
-  if (state.flipped) return;
+  if (state.typedMode || state.flipped) return;
   state.flipped = true;
   document.getElementById('card-back').classList.remove('hidden');
   document.getElementById('card-example').classList.remove('hidden');
   document.getElementById('card-hint').classList.add('hidden');
   document.getElementById('review-buttons').classList.remove('hidden');
+}
+
+function normalizeAnswer(str) {
+  return str.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function checkTypedAnswer(e) {
+  e.preventDefault();
+  if (state.flipped) return false;
+  const card = state.queue[state.queueIndex];
+  const given = document.getElementById('typed-answer-input').value;
+  const correct = normalizeAnswer(given) === normalizeAnswer(card.welsh);
+
+  state.flipped = true;
+  document.getElementById('typed-answer-form').classList.add('hidden');
+  document.getElementById('card-back').classList.remove('hidden');
+  document.getElementById('card-example').classList.remove('hidden');
+  document.getElementById('card-audio-btn').classList.remove('hidden');
+
+  const result = document.getElementById('typed-result');
+  result.classList.remove('hidden');
+  result.textContent = correct ? '✅ Correct!' : `❌ Not quite — correct answer: ${card.welsh}`;
+  result.style.color = correct ? 'var(--welsh-green-dark)' : 'var(--welsh-red)';
+
+  document.getElementById('review-buttons').classList.remove('hidden');
+  return false;
+}
+
+function toggleTypedMode() {
+  state.typedMode = document.getElementById('typed-mode-toggle').checked;
+  localStorage.setItem('typedMode', state.typedMode ? '1' : '0');
+  if (state.queue.length) renderCard();
+}
+
+function playCardAudio() {
+  const card = state.queue[state.queueIndex];
+  if (!card || !window.speechSynthesis) return;
+  const utterance = new SpeechSynthesisUtterance(card.welsh);
+  utterance.lang = 'cy-GB';
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
 }
 
 async function submitReview(quality) {

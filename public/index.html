@@ -192,15 +192,27 @@
 
   <!-- STUDY -->
   <section id="view-study" class="hidden">
-    <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+    <div class="flex-row" style="justify-content:space-between">
+      <button class="btn btn-secondary" onclick="showView('dashboard')">← Back to Dashboard</button>
+      <label class="flex-row" style="font-weight:700;font-size:0.85rem;cursor:pointer">
+        <input type="checkbox" id="typed-mode-toggle" style="width:auto" onchange="toggleTypedMode()">
+        Typed answer mode
+      </label>
+    </div>
     <div class="card-panel" style="margin-top:1rem">
       <div class="progress-bar-track"><div class="progress-bar-fill" id="study-progress" style="width:0%"></div></div>
       <p class="muted" id="study-counter">0 / 0</p>
       <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <button class="btn-outline audio-btn" id="card-audio-btn" onclick="event.stopPropagation();playCardAudio()" title="Listen">🔊</button>
         <div class="word" id="card-front">—</div>
         <div class="sub hidden" id="card-back"></div>
         <div class="example hidden" id="card-example"></div>
         <div class="hint" id="card-hint">Tap card to reveal answer</div>
+        <form class="typed-answer hidden" id="typed-answer-form" onsubmit="return checkTypedAnswer(event)" onclick="event.stopPropagation()">
+          <input type="text" id="typed-answer-input" placeholder="Type the Welsh word..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <button class="btn" type="submit">Check</button>
+        </form>
+        <div class="typed-result hidden" id="typed-result"></div>
       </div>
       <div class="review-buttons hidden" id="review-buttons">
         <button class="btn-again" onclick="submitReview(0)">Again</button>

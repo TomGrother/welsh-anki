@@ -373,6 +373,19 @@ main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 .flashcard .example { margin-top: 1.1rem; font-style: italic; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
 .flashcard .hint { margin-top: 1.75rem; color: #b0b8c4; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; }
 
+.audio-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 42px; height: 42px; min-width: 42px; padding: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  z-index: 1; background: var(--surface);
+}
+.typed-answer {
+  position: relative; z-index: 1; display: flex; gap: 0.6rem; margin-top: 1.5rem;
+  max-width: 360px; width: 100%;
+}
+.typed-answer input { text-align: center; }
+.typed-result { margin-top: 1.25rem; font-weight: 700; font-size: 1.05rem; }
+
 .review-buttons {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem;
 }
