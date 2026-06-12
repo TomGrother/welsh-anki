@@ -2,7 +2,7 @@ const API = '/api';
 let state = {
   token: localStorage.getItem('token') || null,
   user: JSON.parse(localStorage.getItem('user') || 'null'),
-  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{}'),
+  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{"Beginner":true,"Intermediate":true,"Advanced":true}'),
   queue: [],
   queueIndex: 0,
   flipped: false,
