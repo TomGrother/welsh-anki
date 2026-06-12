@@ -223,7 +223,7 @@ router.get('/stats', (req, res) => {
     SELECT
       (SELECT COUNT(*) FROM cards) AS total_cards,
       (SELECT COUNT(*) FROM user_cards WHERE user_id = ?) AS started_cards,
-      (SELECT COUNT(*) FROM user_cards WHERE user_id = ? AND repetitions >= 2) AS learned_cards,
+      (SELECT COUNT(*) FROM user_cards WHERE user_id = ? AND repetitions >= 1) AS learned_cards,
       (SELECT COUNT(*) FROM user_cards WHERE user_id = ? AND due_date <= datetime('now')) AS due_now,
       (SELECT COUNT(*) FROM review_log WHERE user_id = ?) AS total_reviews
   `).get(req.user.id, req.user.id, req.user.id, req.user.id);
