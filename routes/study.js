@@ -391,6 +391,22 @@ router.get('/history', (req, res) => {
   res.json({ days, quality });
 });
 
+// All "learned" words (reviewed correctly at least twice), most recently
+// reviewed first, for the progress page.
+router.get('/learned-words', (req, res) => {
+  const words = db.prepare(`
+    SELECT c.welsh, c.english, c.notes, d.name AS deck_name, d.level,
+      uc.repetitions, uc.ease, uc.last_reviewed
+    FROM user_cards uc
+    JOIN cards c ON c.id = uc.card_id
+    JOIN decks d ON d.id = c.deck_id
+    WHERE uc.user_id = ? AND uc.repetitions >= 2
+    ORDER BY uc.last_reviewed DESC
+  `).all(req.user.id);
+
+  res.json({ words });
+});
+
 // Compute progress stats used to evaluate achievements.
 function getAchievementStats(userId) {
   const user = db.prepare('SELECT longest_streak FROM users WHERE id = ?').get(userId);

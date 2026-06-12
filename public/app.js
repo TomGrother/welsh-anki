@@ -436,6 +436,30 @@ async function loadProgress() {
       </div>
     `;
   }).join('');
+
+  const { words } = await api('/study/learned-words');
+  state.learnedWords = words;
+  renderLearnedWords();
+}
+
+function renderLearnedWords() {
+  const words = state.learnedWords || [];
+  const search = (document.getElementById('learned-search').value || '').trim().toLowerCase();
+  const filtered = search
+    ? words.filter(w => w.welsh.toLowerCase().includes(search) || w.english.toLowerCase().includes(search))
+    : words;
+
+  document.getElementById('learned-count').textContent = `(${words.length})`;
+  document.getElementById('learned-empty').style.display = words.length === 0 ? 'block' : 'none';
+  document.getElementById('learned-words-table').style.display = words.length === 0 ? 'none' : '';
+
+  document.getElementById('learned-words-body').innerHTML = filtered.map(w => `
+    <tr>
+      <td>${escapeHtml(w.welsh)}</td>
+      <td>${escapeHtml(w.english)}</td>
+      <td>${escapeHtml(w.deck_name)}</td>
+    </tr>
+  `).join('');
 }
 
 // Renders a GitHub-style activity heatmap: weeks as columns, days (Sun-Sat) as rows.

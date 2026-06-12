@@ -336,6 +336,19 @@
       <h3 style="margin-bottom:1rem">Answer Quality (All Time)</h3>
       <div class="quality-bars" id="chart-quality"></div>
     </div>
+    <div class="card-panel">
+      <div class="flex-row" style="justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h3 style="margin:0">📖 Words You've Learned <span class="muted" id="learned-count"></span></h3>
+        <input type="search" id="learned-search" placeholder="Search words..." oninput="renderLearnedWords()" style="max-width:220px">
+      </div>
+      <div style="max-height:420px;overflow-y:auto">
+        <table id="learned-words-table">
+          <thead><tr><th>Welsh</th><th>English</th><th>Topic</th></tr></thead>
+          <tbody id="learned-words-body"></tbody>
+        </table>
+      </div>
+      <p class="muted" id="learned-empty" style="display:none;margin-top:1rem">Keep studying — words you've answered correctly a couple of times will show up here!</p>
+    </div>
   </section>
 
   <!-- ACHIEVEMENTS -->
