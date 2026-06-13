@@ -144,7 +144,7 @@ if (!userColumns.includes('email_reminders')) {
 } else {
   // Was previously on by default for everyone - switch existing users back to opt-in.
   const reminderDefault = db.prepare("SELECT dflt_value FROM pragma_table_info('users') WHERE name = 'email_reminders'").get();
-  if (reminderDefault && reminderDefault.dflt_value === '1') {
+  if (reminderDefault && String(reminderDefault.dflt_value) === '1') {
     db.exec("ALTER TABLE users RENAME COLUMN email_reminders TO email_reminders_old");
     db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 0");
     db.exec("UPDATE users SET email_reminders = 0");
