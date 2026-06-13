@@ -1027,6 +1027,14 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+function showVerifyResult(message, isError) {
+  const el = document.getElementById('verify-result');
+  if (!el) return;
+  el.textContent = message;
+  el.style.color = isError ? '#dc2626' : '#16a34a';
+  el.classList.remove('hidden');
+}
+
 // --- Init ---
 renderNav();
 const resetToken = new URLSearchParams(window.location.search).get('reset');
@@ -1035,16 +1043,14 @@ if (resetToken) {
   state.resetToken = resetToken;
   showView('reset');
 } else if (verifyToken) {
+  window.history.replaceState({}, '', '/');
+  showView(state.token && state.user ? 'dashboard' : 'home');
   api('/auth/verify-email', { method: 'POST', body: JSON.stringify({ token: verifyToken }) })
     .then(() => {
-      alert('Your email has been verified. Thanks!');
-      window.history.replaceState({}, '', '/');
-      showView(state.token && state.user ? 'dashboard' : 'home');
+      showVerifyResult('Your email has been verified. Thanks! You can now log in.', false);
     })
     .catch(err => {
-      alert('Error verifying email: ' + err.message);
-      window.history.replaceState({}, '', '/');
-      showView(state.token && state.user ? 'dashboard' : 'home');
+      showVerifyResult('Error verifying email: ' + err.message, true);
     });
 } else if (state.token && state.user) {
   showView('dashboard');
