@@ -138,8 +138,18 @@ if (!userColumns.includes('email_verified')) {
 }
 
 // Migration: add 'email_reminders' opt-in and 'last_reminder_sent' tracking columns.
+// Opt-in: off by default, users must explicitly enable in settings.
 if (!userColumns.includes('email_reminders')) {
-  db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 1");
+  db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 0");
+} else {
+  // Was previously on by default for everyone - switch existing users back to opt-in.
+  const reminderDefault = db.prepare("SELECT dflt_value FROM pragma_table_info('users') WHERE name = 'email_reminders'").get();
+  if (reminderDefault && reminderDefault.dflt_value === '1') {
+    db.exec("ALTER TABLE users RENAME COLUMN email_reminders TO email_reminders_old");
+    db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 0");
+    db.exec("UPDATE users SET email_reminders = 0");
+    db.exec("ALTER TABLE users DROP COLUMN email_reminders_old");
+  }
 }
 if (!userColumns.includes('last_reminder_sent')) {
   db.exec("ALTER TABLE users ADD COLUMN last_reminder_sent TEXT");
