@@ -1,8 +1,11 @@
 const API = '/api';
+function safeJsonParse(value, fallback) {
+  try { return JSON.parse(value); } catch { return fallback; }
+}
 let state = {
   token: localStorage.getItem('token') || null,
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
-  collapsedLevels: JSON.parse(localStorage.getItem('collapsedLevels') || '{"Beginner":true,"Intermediate":true,"Advanced":true,"Fluent":true}'),
+  user: safeJsonParse(localStorage.getItem('user'), null),
+  collapsedLevels: safeJsonParse(localStorage.getItem('collapsedLevels'), {"Beginner":true,"Intermediate":true,"Advanced":true,"Fluent":true}),
   queue: [],
   queueIndex: 0,
   flipped: false,
