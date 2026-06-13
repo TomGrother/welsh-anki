@@ -1,28 +1,9 @@
 const express = require('express');
 const db = require('../db');
 const { requireAuth, requireAdmin } = require('../middleware/auth');
-const { sendEmail, reminderEmail } = require('../email');
 
 const router = express.Router();
 router.use(requireAuth, requireAdmin);
-
-// One-off: send the reminder email template to every verified user, regardless
-// of whether they actually have cards due, so they can see how it looks.
-router.post('/test-reminder-email', async (req, res) => {
-  const users = db.prepare('SELECT username, email FROM users WHERE email_verified = 1').all();
-  for (const user of users) {
-    try {
-      await sendEmail({
-        to: user.email,
-        subject: `Test: Your Welsh words are waiting! - Dragon Lingo`,
-        html: reminderEmail({ username: user.username, dueCount: 5 }),
-      });
-    } catch (err) {
-      console.error(`[test-reminder-email] failed for ${user.email}:`, err);
-    }
-  }
-  res.json({ ok: true, sent: users.length });
-});
 
 // --- Decks ---
 router.get('/decks', (req, res) => {
