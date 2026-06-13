@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { SECRET, requireAuth } = require('../middleware/auth');
+const { sendEmail } = require('../email');
 
 const PASSWORD_RULES = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol';
 function isValidPassword(password) {
@@ -107,8 +108,8 @@ router.put('/me/settings', requireAuth, (req, res) => {
 });
 
 // Request a password reset. Always responds with a generic success message so
-// existing emails can't be enumerated. Generates a one-hour token; until an
-// email provider is configured, the reset link is logged to the server console.
+// existing emails can't be enumerated. Generates a one-hour token and emails
+// the reset link via Resend.
 router.post('/forgot-password', (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email is required' });
@@ -122,7 +123,15 @@ router.post('/forgot-password', (req, res) => {
     `).run(user.id, token);
 
     const resetUrl = `${req.protocol}://${req.get('host')}/?reset=${token}`;
-    console.log(`Password reset requested for ${email}: ${resetUrl}`);
+    sendEmail({
+      to: email,
+      subject: 'Reset your Dragon Lingo password',
+      html: `
+        <p>Someone requested a password reset for your Dragon Lingo account.</p>
+        <p><a href="${resetUrl}">Click here to reset your password</a></p>
+        <p>This link expires in 1 hour. If you didn't request this, you can safely ignore this email.</p>
+      `,
+    }).catch(err => console.error('[forgot-password] failed to send email:', err));
   }
 
   res.json({ ok: true, message: 'If an account exists for that email, a reset link has been generated.' });
