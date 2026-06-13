@@ -80,6 +80,23 @@ router.post('/register', authLimiter, (req, res) => {
   sendVerificationEmail(req, result.lastInsertRowid, email)
     .catch(err => console.error('[register] failed to send verification email:', err));
 
+  if (process.env.ADMIN_NOTIFICATION_EMAIL) {
+    sendEmail({
+      to: process.env.ADMIN_NOTIFICATION_EMAIL,
+      subject: 'New Dragon Lingo signup',
+      html: emailLayout({
+        title: 'New signup',
+        preheader: `${username} just signed up.`,
+        bodyHtml: `
+          <p style="margin:0 0 8px;">A new user has signed up for Dragon Lingo:</p>
+          <p style="margin:0 0 4px;"><strong>Username:</strong> ${username}</p>
+          <p style="margin:0 0 4px;"><strong>Email:</strong> ${email}</p>
+          <p style="margin:0;"><strong>Level:</strong> ${userLevel}</p>
+        `,
+      }),
+    }).catch(err => console.error('[register] failed to send admin notification:', err));
+  }
+
   res.json({ needs_verification: true, message: 'Please check your email and click the confirmation link to activate your account.' });
 });
 

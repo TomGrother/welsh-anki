@@ -5,14 +5,6 @@ const { requireAuth, requireAdmin } = require('../middleware/auth');
 const router = express.Router();
 router.use(requireAuth, requireAdmin);
 
-// Temporary debug endpoint to verify which migrations have run on this deployment.
-router.get('/debug-migrations', (req, res) => {
-  const migrations = db.prepare('SELECT * FROM migrations').all();
-  const userCols = db.prepare("PRAGMA table_info(users)").all().map(c => ({ name: c.name, dflt: c.dflt_value }));
-  const users = db.prepare('SELECT id, username, email_reminders FROM users').all();
-  res.json({ migrations, userCols, users, version: '581dd76' });
-});
-
 // --- Decks ---
 router.get('/decks', (req, res) => {
   const decks = db.prepare(`

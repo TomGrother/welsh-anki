@@ -1024,10 +1024,28 @@ async function loadAdminUsers() {
       <td>${escapeHtml(u.email)}</td>
       <td>${u.current_streak}</td>
       <td>${u.longest_streak}</td>
+      <td>${u.cards_studied}</td>
+      <td>${u.reviews_last_7_days}</td>
+      <td>${u.total_reviews}</td>
+      <td>${u.last_active ? new Date(u.last_active + 'Z').toLocaleDateString() : '-'}</td>
       <td>${u.is_admin ? 'Yes' : 'No'}</td>
-      <td>${u.is_admin ? '' : `<button class="btn-danger icon-btn" onclick="deleteAdminUser(${u.id}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="Delete user">🗑️</button>`}</td>
+      <td>
+        <button class="btn-secondary icon-btn" onclick="toggleAdminUser(${u.id}, ${u.is_admin ? 'false' : 'true'}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="${u.is_admin ? 'Remove admin' : 'Make admin'}">${u.is_admin ? '⬇️' : '⬆️'}</button>
+        ${u.is_admin ? '' : `<button class="btn-danger icon-btn" onclick="deleteAdminUser(${u.id}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="Delete user">🗑️</button>`}
+      </td>
     </tr>
   `).join('');
+}
+
+async function toggleAdminUser(id, makeAdmin, username) {
+  const verb = makeAdmin ? 'promote' : 'demote';
+  if (!confirm(`Are you sure you want to ${verb} "${username}" ${makeAdmin ? 'to' : 'from'} administrator?`)) return;
+  try {
+    await api(`/admin/users/${id}/admin`, { method: 'PUT', body: JSON.stringify({ is_admin: makeAdmin }) });
+    await loadAdminUsers();
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 }
 
 async function resendVerification() {
