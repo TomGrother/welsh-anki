@@ -9,7 +9,8 @@ router.use(requireAuth, requireAdmin);
 router.get('/debug-migrations', (req, res) => {
   const migrations = db.prepare('SELECT * FROM migrations').all();
   const userCols = db.prepare("PRAGMA table_info(users)").all().map(c => ({ name: c.name, dflt: c.dflt_value }));
-  res.json({ migrations, userCols, version: 'e949f8b' });
+  const users = db.prepare('SELECT id, username, email_reminders FROM users').all();
+  res.json({ migrations, userCols, users, version: '581dd76' });
 });
 
 // --- Decks ---
