@@ -172,21 +172,23 @@ router.post('/login', authLimiter, (req, res) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, email_verified, email_reminders, created_at FROM users WHERE id = ?').get(req.user.id);
+  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, email_verified, email_reminders, reminder_hour, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: { ...user, is_admin: !!user.is_admin } });
 });
 
 // Update study preferences (e.g. how many new cards to introduce per day).
 router.put('/me/settings', requireAuth, (req, res) => {
-  const { new_cards_per_day, email_reminders } = req.body || {};
+  const { new_cards_per_day, email_reminders, reminder_hour } = req.body || {};
   const value = parseInt(new_cards_per_day, 10);
   if (!Number.isInteger(value) || value < 1 || value > 100) {
     return res.status(400).json({ error: 'new_cards_per_day must be an integer between 1 and 100' });
   }
   const reminders = email_reminders ? 1 : 0;
-  db.prepare('UPDATE users SET new_cards_per_day = ?, email_reminders = ? WHERE id = ?').run(value, reminders, req.user.id);
-  res.json({ new_cards_per_day: value, email_reminders: reminders });
+  let hour = parseInt(reminder_hour, 10);
+  if (!Number.isInteger(hour) || hour < 0 || hour > 23) hour = 17;
+  db.prepare('UPDATE users SET new_cards_per_day = ?, email_reminders = ?, reminder_hour = ? WHERE id = ?').run(value, reminders, hour, req.user.id);
+  res.json({ new_cards_per_day: value, email_reminders: reminders, reminder_hour: hour });
 });
 
 // Request a password reset. Always responds with a generic success message so

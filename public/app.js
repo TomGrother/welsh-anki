@@ -188,10 +188,28 @@ function onAuthSuccess(data) {
 }
 
 // --- Settings ---
+function populateReminderHourOptions() {
+  const select = document.getElementById('settings-reminder-hour');
+  if (select.options.length) return;
+  for (let h = 0; h < 24; h++) {
+    const period = h < 12 ? 'AM' : 'PM';
+    const displayHour = h % 12 === 0 ? 12 : h % 12;
+    const opt = document.createElement('option');
+    opt.value = h;
+    opt.textContent = `${displayHour}:00 ${period}`;
+    select.appendChild(opt);
+  }
+}
+
 async function loadSettings() {
   const { user } = await api('/auth/me');
   document.getElementById('settings-new-cards').value = user.new_cards_per_day;
   document.getElementById('settings-email-reminders').checked = !!user.email_reminders;
+  populateReminderHourOptions();
+  const offsetHours = new Date().getTimezoneOffset() / 60;
+  const utcHour = user.reminder_hour ?? 17;
+  const localHour = ((utcHour - offsetHours) % 24 + 24) % 24;
+  document.getElementById('settings-reminder-hour').value = Math.round(localHour);
   document.getElementById('settings-success').textContent = '';
   document.getElementById('settings-error').textContent = '';
 }
@@ -200,12 +218,15 @@ async function handleSaveSettings(e) {
   e.preventDefault();
   const new_cards_per_day = parseInt(document.getElementById('settings-new-cards').value, 10);
   const email_reminders = document.getElementById('settings-email-reminders').checked;
+  const localHour = parseInt(document.getElementById('settings-reminder-hour').value, 10);
+  const offsetHours = new Date().getTimezoneOffset() / 60;
+  const reminder_hour = Math.round(((localHour + offsetHours) % 24 + 24) % 24);
   const successEl = document.getElementById('settings-success');
   const errorEl = document.getElementById('settings-error');
   successEl.textContent = '';
   errorEl.textContent = '';
   try {
-    await api('/auth/me/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day, email_reminders }) });
+    await api('/auth/me/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day, email_reminders, reminder_hour }) });
     successEl.textContent = 'Settings saved!';
   } catch (err) {
     errorEl.textContent = err.message;

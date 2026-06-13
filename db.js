@@ -145,4 +145,9 @@ if (!userColumns.includes('last_reminder_sent')) {
   db.exec("ALTER TABLE users ADD COLUMN last_reminder_sent TEXT");
 }
 
+// Hour of day (0-23, UTC) at which the daily reminder email should be sent.
+if (!userColumns.includes('reminder_hour')) {
+  db.exec("ALTER TABLE users ADD COLUMN reminder_hour INTEGER NOT NULL DEFAULT 17");
+}
+
 module.exports = db;
