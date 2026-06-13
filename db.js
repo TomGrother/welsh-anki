@@ -141,15 +141,6 @@ if (!userColumns.includes('email_verified')) {
 // Opt-in: off by default, users must explicitly enable in settings.
 if (!userColumns.includes('email_reminders')) {
   db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 0");
-} else {
-  // Was previously on by default for everyone - switch existing users back to opt-in.
-  const reminderDefault = db.prepare("SELECT dflt_value FROM pragma_table_info('users') WHERE name = 'email_reminders'").get();
-  if (reminderDefault && String(reminderDefault.dflt_value) === '1') {
-    db.exec("ALTER TABLE users RENAME COLUMN email_reminders TO email_reminders_old");
-    db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 0");
-    db.exec("UPDATE users SET email_reminders = 0");
-    db.exec("ALTER TABLE users DROP COLUMN email_reminders_old");
-  }
 }
 if (!userColumns.includes('last_reminder_sent')) {
   db.exec("ALTER TABLE users ADD COLUMN last_reminder_sent TEXT");
@@ -159,5 +150,25 @@ if (!userColumns.includes('last_reminder_sent')) {
 if (!userColumns.includes('reminder_hour')) {
   db.exec("ALTER TABLE users ADD COLUMN reminder_hour INTEGER NOT NULL DEFAULT 17");
 }
+
+// One-off data migrations, tracked by name so each runs at most once.
+db.exec(`
+CREATE TABLE IF NOT EXISTS migrations (
+  name TEXT PRIMARY KEY,
+  run_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+`);
+function runOnce(name, fn) {
+  const done = db.prepare('SELECT 1 FROM migrations WHERE name = ?').get(name);
+  if (done) return;
+  fn();
+  db.prepare('INSERT INTO migrations (name) VALUES (?)').run(name);
+}
+
+// Reminder emails are now opt-in; previously every user defaulted to them
+// being on, so switch everyone back to off until they explicitly enable it.
+runOnce('email_reminders_opt_in', () => {
+  db.exec("UPDATE users SET email_reminders = 0");
+});
 
 module.exports = db;
