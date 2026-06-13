@@ -5,6 +5,10 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { SECRET, requireAuth } = require('../middleware/auth');
 const { sendEmail } = require('../email');
+const { rateLimit } = require('../middleware/rateLimit');
+
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: 'Too many attempts. Please try again in 15 minutes.' });
+const emailLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: 'Too many requests. Please try again in an hour.' });
 
 const PASSWORD_RULES = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol';
 function isValidPassword(password) {
@@ -15,7 +19,7 @@ const router = express.Router();
 
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
 
-router.post('/register', (req, res) => {
+router.post('/register', authLimiter, (req, res) => {
   const { username, email, password, new_cards_per_day, level } = req.body || {};
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email and password are required' });
@@ -129,7 +133,7 @@ router.post('/resend-verification', requireAuth, (req, res) => {
 // Resend the verification email for an account that can't log in yet
 // (email/username not verified). Always responds generically so accounts
 // can't be enumerated.
-router.post('/resend-verification-public', (req, res) => {
+router.post('/resend-verification-public', emailLimiter, (req, res) => {
   const { username } = req.body || {};
   if (!username) return res.status(400).json({ error: 'Username or email is required' });
 
@@ -142,7 +146,7 @@ router.post('/resend-verification-public', (req, res) => {
   res.json({ ok: true, message: 'If an unverified account exists, a confirmation email has been sent.' });
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', authLimiter, (req, res) => {
   const { username, password } = req.body || {};
   if (!username || !password) return res.status(400).json({ error: 'Username and password are required' });
 
@@ -178,7 +182,7 @@ router.put('/me/settings', requireAuth, (req, res) => {
 // Request a password reset. Always responds with a generic success message so
 // existing emails can't be enumerated. Generates a one-hour token and emails
 // the reset link via Resend.
-router.post('/forgot-password', (req, res) => {
+router.post('/forgot-password', emailLimiter, (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
@@ -206,7 +210,7 @@ router.post('/forgot-password', (req, res) => {
 });
 
 // Complete a password reset using a token from /forgot-password.
-router.post('/reset-password', (req, res) => {
+router.post('/reset-password', authLimiter, (req, res) => {
   const { token, password } = req.body || {};
   if (!token || !password) return res.status(400).json({ error: 'Token and password are required' });
   if (!isValidPassword(password)) {
