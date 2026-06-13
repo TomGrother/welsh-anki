@@ -303,11 +303,29 @@ router.post('/review', (req, res) => {
   }
 
   const updated = sm2(userCard, quality);
+
+  // First-ever review of a card normally schedules it for tomorrow. If a user
+  // completes many decks in one sitting, that dumps all those cards into
+  // tomorrow's Due Now at once. Spread first-time reviews out at the user's
+  // own "new words per day" pace so the review load stays manageable.
+  let extraDays = 0;
+  const isFirstReview = !userCard.first_seen && updated.repetitions === 1;
+  if (isFirstReview) {
+    const { new_cards_per_day } = db.prepare('SELECT new_cards_per_day FROM users WHERE id = ?').get(req.user.id);
+    const pace = new_cards_per_day || 10;
+    const { count: introducedToday } = db.prepare(`
+      SELECT COUNT(*) AS count FROM user_cards
+      WHERE user_id = ? AND date(first_seen) = date('now')
+    `).get(req.user.id);
+    extraDays = Math.floor(introducedToday / pace);
+  }
+
+  const totalIntervalDays = updated.interval_days + extraDays;
   const dueDate = quality < 3
     ? `datetime('now')`
-    : updated.interval_days >= 1
-      ? `datetime(date('now', '+${updated.interval_days} days'))`
-      : `datetime('now', '+${updated.interval_days} days')`;
+    : totalIntervalDays >= 1
+      ? `datetime(date('now', '+${totalIntervalDays} days'))`
+      : `datetime('now', '+${totalIntervalDays} days')`;
 
   db.prepare(`
     INSERT INTO user_cards (user_id, card_id, ease, interval_days, repetitions, due_date, last_reviewed, first_seen)
