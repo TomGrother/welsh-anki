@@ -76,8 +76,7 @@ router.post('/register', (req, res) => {
   sendVerificationEmail(req, result.lastInsertRowid, email)
     .catch(err => console.error('[register] failed to send verification email:', err));
 
-  const token = jwt.sign({ id: result.lastInsertRowid, username, is_admin: isFirstUser ? 1 : 0 }, SECRET, { expiresIn: '30d' });
-  res.json({ token, user: { id: result.lastInsertRowid, username, is_admin: isFirstUser } });
+  res.json({ needs_verification: true, message: 'Please check your email and click the confirmation link to activate your account.' });
 });
 
 function sendVerificationEmail(req, userId, email) {
@@ -127,6 +126,22 @@ router.post('/resend-verification', requireAuth, (req, res) => {
   res.json({ ok: true, message: 'Verification email sent.' });
 });
 
+// Resend the verification email for an account that can't log in yet
+// (email/username not verified). Always responds generically so accounts
+// can't be enumerated.
+router.post('/resend-verification-public', (req, res) => {
+  const { username } = req.body || {};
+  if (!username) return res.status(400).json({ error: 'Username or email is required' });
+
+  const user = db.prepare('SELECT id, email, email_verified FROM users WHERE username = ? OR email = ?').get(username, username);
+  if (user && !user.email_verified) {
+    sendVerificationEmail(req, user.id, user.email)
+      .catch(err => console.error('[resend-verification-public] failed to send email:', err));
+  }
+
+  res.json({ ok: true, message: 'If an unverified account exists, a confirmation email has been sent.' });
+});
+
 router.post('/login', (req, res) => {
   const { username, password } = req.body || {};
   if (!username || !password) return res.status(400).json({ error: 'Username and password are required' });
@@ -134,6 +149,9 @@ router.post('/login', (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE username = ? OR email = ?').get(username, username);
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  if (!user.email_verified) {
+    return res.status(403).json({ error: 'Please verify your email address before logging in. Check your inbox for the confirmation link.', needs_verification: true });
   }
 
   const token = jwt.sign({ id: user.id, username: user.username, is_admin: user.is_admin }, SECRET, { expiresIn: '30d' });

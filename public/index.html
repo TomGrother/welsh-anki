@@ -203,6 +203,7 @@
         <label>Password</label>
         <input type="password" id="login-password" required>
         <div class="error-msg" id="login-error"></div>
+        <p id="login-resend" class="hidden"><a href="#" onclick="resendVerificationPublic();return false">Resend confirmation email</a></p>
         <button class="btn" type="submit">Log In</button>
       </form>
       <p style="text-align:center;margin-top:1rem">No account? <a href="#" onclick="showView('register')">Register</a></p>
@@ -259,7 +260,7 @@
           <option value="Advanced">Advanced — I'm fairly confident</option>
           <option value="Fluent">Fluent — I speak Welsh well</option>
         </select>
-        <p class="muted" style="margin-top:-0.5rem">If you already know some Welsh, choosing a higher level unlocks earlier topics automatically and marks them as learned, so you won't be stuck repeating the basics.</p>
+        <p class="muted" style="margin-top:-0.5rem">If you choose anything other than Beginner, every deck at the easier difficulty levels will automatically be marked as complete and unlocked — so for example, choosing Advanced marks all Beginner and Intermediate decks as done, and you'll start with Advanced decks and reviews.</p>
         <label>How many new words per day?</label>
         <select id="reg-new-cards">
           <option value="5">5 — Relaxed pace</option>

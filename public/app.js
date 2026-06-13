@@ -16,7 +16,11 @@ function api(path, opts = {}) {
   if (opts.body) headers['Content-Type'] = 'application/json';
   return fetch(API + path, { ...opts, headers }).then(async r => {
     const data = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(data.error || 'Request failed');
+    if (!r.ok) {
+      const err = new Error(data.error || 'Request failed');
+      err.data = data;
+      throw err;
+    }
     return data;
   });
 }
@@ -100,11 +104,14 @@ async function handleRegister(e) {
   const password = document.getElementById('reg-password').value;
   const new_cards_per_day = parseInt(document.getElementById('reg-new-cards').value, 10);
   const level = document.getElementById('reg-level').value;
+  const errorEl = document.getElementById('reg-error');
+  errorEl.textContent = '';
   try {
     const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, new_cards_per_day, level }) });
-    onAuthSuccess(data);
+    alert(data.message || 'Please check your email and click the confirmation link to activate your account.');
+    showView('login');
   } catch (err) {
-    document.getElementById('reg-error').textContent = err.message;
+    errorEl.textContent = err.message;
   }
   return false;
 }
@@ -146,13 +153,27 @@ async function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
+  document.getElementById('login-resend').classList.add('hidden');
   try {
     const data = await api('/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
     onAuthSuccess(data);
   } catch (err) {
     document.getElementById('login-error').textContent = err.message;
+    if (err.data && err.data.needs_verification) {
+      state.unverifiedUsername = username;
+      document.getElementById('login-resend').classList.remove('hidden');
+    }
   }
   return false;
+}
+
+async function resendVerificationPublic() {
+  try {
+    const { message } = await api('/auth/resend-verification-public', { method: 'POST', body: JSON.stringify({ username: state.unverifiedUsername }) });
+    alert(message);
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 }
 
 function onAuthSuccess(data) {
