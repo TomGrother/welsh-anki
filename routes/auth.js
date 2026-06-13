@@ -49,7 +49,7 @@ router.post('/register', authLimiter, (req, res) => {
   const hash = bcrypt.hashSync(password, 10);
   const isFirstUser = db.prepare('SELECT COUNT(*) AS c FROM users').get().c === 0;
   const result = db.prepare(
-    'INSERT INTO users (username, email, password_hash, is_admin, new_cards_per_day, active_level) VALUES (?, ?, ?, ?, ?, ?)'
+    'INSERT INTO users (username, email, password_hash, is_admin, new_cards_per_day, active_level, email_reminders) VALUES (?, ?, ?, ?, ?, ?, 0)'
   ).run(username, email, hash, isFirstUser ? 1 : 0, newCardsPerDay, userLevel);
 
   // If the user already knows some Welsh, mark every deck below their
