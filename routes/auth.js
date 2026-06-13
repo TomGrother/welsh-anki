@@ -73,8 +73,58 @@ router.post('/register', (req, res) => {
     }
   }
 
+  sendVerificationEmail(req, result.lastInsertRowid, email)
+    .catch(err => console.error('[register] failed to send verification email:', err));
+
   const token = jwt.sign({ id: result.lastInsertRowid, username, is_admin: isFirstUser ? 1 : 0 }, SECRET, { expiresIn: '30d' });
   res.json({ token, user: { id: result.lastInsertRowid, username, is_admin: isFirstUser } });
+});
+
+function sendVerificationEmail(req, userId, email) {
+  const token = crypto.randomBytes(32).toString('hex');
+  db.prepare(`
+    INSERT INTO email_verifications (user_id, token, expires_at)
+    VALUES (?, ?, datetime('now', '+24 hours'))
+  `).run(userId, token);
+
+  const verifyUrl = `${req.protocol}://${req.get('host')}/?verify=${token}`;
+  return sendEmail({
+    to: email,
+    subject: 'Confirm your Dragon Lingo account',
+    html: `
+      <p>Welcome to Dragon Lingo! Please confirm your email address to activate your account.</p>
+      <p><a href="${verifyUrl}">Click here to verify your email</a></p>
+      <p>This link expires in 24 hours.</p>
+    `,
+  });
+}
+
+// Confirm an email address using the token from the verification email.
+router.post('/verify-email', (req, res) => {
+  const { token } = req.body || {};
+  if (!token) return res.status(400).json({ error: 'Token is required' });
+
+  const verification = db.prepare(`
+    SELECT * FROM email_verifications WHERE token = ? AND used = 0 AND expires_at > datetime('now')
+  `).get(token);
+  if (!verification) return res.status(400).json({ error: 'Invalid or expired verification link' });
+
+  db.prepare('UPDATE users SET email_verified = 1 WHERE id = ?').run(verification.user_id);
+  db.prepare('UPDATE email_verifications SET used = 1 WHERE id = ?').run(verification.id);
+
+  res.json({ ok: true });
+});
+
+// Resend the verification email to the logged-in user.
+router.post('/resend-verification', requireAuth, (req, res) => {
+  const user = db.prepare('SELECT email, email_verified FROM users WHERE id = ?').get(req.user.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  if (user.email_verified) return res.json({ ok: true, message: 'Your email is already verified.' });
+
+  sendVerificationEmail(req, req.user.id, user.email)
+    .catch(err => console.error('[resend-verification] failed to send email:', err));
+
+  res.json({ ok: true, message: 'Verification email sent.' });
 });
 
 router.post('/login', (req, res) => {
@@ -91,7 +141,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, created_at FROM users WHERE id = ?').get(req.user.id);
+  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, email_verified, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: { ...user, is_admin: !!user.is_admin } });
 });

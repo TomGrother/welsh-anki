@@ -94,6 +94,15 @@ CREATE TABLE IF NOT EXISTS password_resets (
   used INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS email_verifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token TEXT UNIQUE NOT NULL,
+  expires_at TEXT NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 `);
 
 // Migration: add 'level' column to decks if upgrading from an older schema
@@ -118,6 +127,14 @@ if (!userColumns.includes('new_cards_per_day')) {
 }
 if (!userColumns.includes('active_level')) {
   db.exec("ALTER TABLE users ADD COLUMN active_level TEXT NOT NULL DEFAULT 'Beginner'");
+}
+
+// Migration: add 'email_verified' column to users if upgrading. Existing
+// users are grandfathered in as verified; new registrations default to 0
+// and must confirm via the link emailed to them.
+if (!userColumns.includes('email_verified')) {
+  db.exec("ALTER TABLE users ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0");
+  db.exec("UPDATE users SET email_verified = 1");
 }
 
 module.exports = db;

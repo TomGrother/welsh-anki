@@ -278,6 +278,9 @@
   <!-- DASHBOARD -->
   <section id="view-dashboard" class="hidden">
     <h2 style="margin-bottom:1rem">Croeso, <span id="dash-username"></span>! <span class="beta-sticker">Beta</span></h2>
+    <div id="verify-banner" class="card-panel hidden" style="background:#fef3c7;color:#92400e;margin-bottom:1rem">
+      <p style="margin:0">📧 Please verify your email address to keep your account secure. <a href="#" onclick="resendVerification();return false">Resend verification email</a></p>
+    </div>
     <div class="stats-grid">
       <div class="stat-box streak"><div class="value" id="stat-streak">0</div><div class="label">Day Streak 🔥</div></div>
       <div class="stat-box"><div class="value" id="stat-longest">0</div><div class="label">Longest Streak</div></div>

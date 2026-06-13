@@ -191,6 +191,9 @@ async function handleSaveSettings(e) {
 async function loadDashboard() {
   document.getElementById('dash-username').textContent = state.user.username;
   try {
+    const { user } = await api('/auth/me');
+    document.getElementById('verify-banner').classList.toggle('hidden', !!user.email_verified);
+
     const stats = await api('/study/stats');
     document.getElementById('stat-streak').textContent = stats.current_streak;
     document.getElementById('stat-longest').textContent = stats.longest_streak;
@@ -980,6 +983,15 @@ async function loadAdminUsers() {
   `).join('');
 }
 
+async function resendVerification() {
+  try {
+    const { message } = await api('/auth/resend-verification', { method: 'POST' });
+    alert(message);
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+}
+
 async function deleteAdminUser(id, username) {
   if (!confirm(`Delete user "${username}"? This permanently removes their account, progress and any decks they created.`)) return;
   try {
@@ -997,9 +1009,22 @@ function escapeHtml(str) {
 // --- Init ---
 renderNav();
 const resetToken = new URLSearchParams(window.location.search).get('reset');
+const verifyToken = new URLSearchParams(window.location.search).get('verify');
 if (resetToken) {
   state.resetToken = resetToken;
   showView('reset');
+} else if (verifyToken) {
+  api('/auth/verify-email', { method: 'POST', body: JSON.stringify({ token: verifyToken }) })
+    .then(() => {
+      alert('Your email has been verified. Thanks!');
+      window.history.replaceState({}, '', '/');
+      showView(state.token && state.user ? 'dashboard' : 'home');
+    })
+    .catch(err => {
+      alert('Error verifying email: ' + err.message);
+      window.history.replaceState({}, '', '/');
+      showView(state.token && state.user ? 'dashboard' : 'home');
+    });
 } else if (state.token && state.user) {
   showView('dashboard');
 } else {
