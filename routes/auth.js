@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { SECRET, requireAuth } = require('../middleware/auth');
-const { sendEmail } = require('../email');
+const { sendEmail, emailLayout } = require('../email');
 const { rateLimit } = require('../middleware/rateLimit');
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: 'Too many attempts. Please try again in 15 minutes.' });
@@ -94,11 +94,20 @@ function sendVerificationEmail(req, userId, email) {
   return sendEmail({
     to: email,
     subject: 'Confirm your Dragon Lingo account',
-    html: `
-      <p>Welcome to Dragon Lingo! Please confirm your email address to activate your account.</p>
-      <p><a href="${verifyUrl}">Click here to verify your email</a></p>
-      <p>This link expires in 24 hours.</p>
-    `,
+    html: emailLayout({
+      title: 'Confirm your Dragon Lingo account',
+      preheader: 'Please confirm your email address to activate your account.',
+      bodyHtml: `
+        <p style="margin:0 0 16px;">Welcome to Dragon Lingo! 🐉</p>
+        <p style="margin:0 0 24px;">Please confirm your email address to activate your account and start learning Welsh.</p>
+        <div style="text-align:center;">
+          <a href="${verifyUrl}" style="display:inline-block;background:#00a656;color:#ffffff;text-decoration:none;font-weight:600;padding:12px 28px;border-radius:10px;">
+            Verify Email
+          </a>
+        </div>
+        <p style="margin:24px 0 0;color:#718096;font-size:13px;">This link expires in 24 hours.</p>
+      `,
+    }),
   });
 }
 
@@ -163,20 +172,21 @@ router.post('/login', authLimiter, (req, res) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, email_verified, created_at FROM users WHERE id = ?').get(req.user.id);
+  const user = db.prepare('SELECT id, username, email, is_admin, current_streak, longest_streak, last_study_date, new_cards_per_day, active_level, email_verified, email_reminders, created_at FROM users WHERE id = ?').get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ user: { ...user, is_admin: !!user.is_admin } });
 });
 
 // Update study preferences (e.g. how many new cards to introduce per day).
 router.put('/me/settings', requireAuth, (req, res) => {
-  const { new_cards_per_day } = req.body || {};
+  const { new_cards_per_day, email_reminders } = req.body || {};
   const value = parseInt(new_cards_per_day, 10);
   if (!Number.isInteger(value) || value < 1 || value > 100) {
     return res.status(400).json({ error: 'new_cards_per_day must be an integer between 1 and 100' });
   }
-  db.prepare('UPDATE users SET new_cards_per_day = ? WHERE id = ?').run(value, req.user.id);
-  res.json({ new_cards_per_day: value });
+  const reminders = email_reminders ? 1 : 0;
+  db.prepare('UPDATE users SET new_cards_per_day = ?, email_reminders = ? WHERE id = ?').run(value, reminders, req.user.id);
+  res.json({ new_cards_per_day: value, email_reminders: reminders });
 });
 
 // Request a password reset. Always responds with a generic success message so
@@ -198,11 +208,19 @@ router.post('/forgot-password', emailLimiter, (req, res) => {
     sendEmail({
       to: email,
       subject: 'Reset your Dragon Lingo password',
-      html: `
-        <p>Someone requested a password reset for your Dragon Lingo account.</p>
-        <p><a href="${resetUrl}">Click here to reset your password</a></p>
-        <p>This link expires in 1 hour. If you didn't request this, you can safely ignore this email.</p>
-      `,
+      html: emailLayout({
+        title: 'Reset your Dragon Lingo password',
+        preheader: 'Click the link to choose a new password.',
+        bodyHtml: `
+          <p style="margin:0 0 16px;">Someone requested a password reset for your Dragon Lingo account.</p>
+          <div style="text-align:center;margin-bottom:16px;">
+            <a href="${resetUrl}" style="display:inline-block;background:#00a656;color:#ffffff;text-decoration:none;font-weight:600;padding:12px 28px;border-radius:10px;">
+              Reset Password
+            </a>
+          </div>
+          <p style="margin:0;color:#718096;font-size:13px;">This link expires in 1 hour. If you didn't request this, you can safely ignore this email.</p>
+        `,
+      }),
     }).catch(err => console.error('[forgot-password] failed to send email:', err));
   }
 

@@ -137,4 +137,12 @@ if (!userColumns.includes('email_verified')) {
   db.exec("UPDATE users SET email_verified = 1");
 }
 
+// Migration: add 'email_reminders' opt-in and 'last_reminder_sent' tracking columns.
+if (!userColumns.includes('email_reminders')) {
+  db.exec("ALTER TABLE users ADD COLUMN email_reminders INTEGER NOT NULL DEFAULT 1");
+}
+if (!userColumns.includes('last_reminder_sent')) {
+  db.exec("ALTER TABLE users ADD COLUMN last_reminder_sent TEXT");
+}
+
 module.exports = db;

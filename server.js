@@ -9,6 +9,7 @@ const studyRoutes = require('./routes/study');
 const adminRoutes = require('./routes/admin');
 const pagesRoutes = require('./routes/pages');
 const socialRoutes = require('./routes/social');
+const { startReminderScheduler } = require('./reminders');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,8 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+startReminderScheduler();
 
 app.listen(PORT, () => {
   console.log(`Dragon Lingo server running on http://localhost:${PORT}`);

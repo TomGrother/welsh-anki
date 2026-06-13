@@ -191,6 +191,7 @@ function onAuthSuccess(data) {
 async function loadSettings() {
   const { user } = await api('/auth/me');
   document.getElementById('settings-new-cards').value = user.new_cards_per_day;
+  document.getElementById('settings-email-reminders').checked = !!user.email_reminders;
   document.getElementById('settings-success').textContent = '';
   document.getElementById('settings-error').textContent = '';
 }
@@ -198,12 +199,13 @@ async function loadSettings() {
 async function handleSaveSettings(e) {
   e.preventDefault();
   const new_cards_per_day = parseInt(document.getElementById('settings-new-cards').value, 10);
+  const email_reminders = document.getElementById('settings-email-reminders').checked;
   const successEl = document.getElementById('settings-success');
   const errorEl = document.getElementById('settings-error');
   successEl.textContent = '';
   errorEl.textContent = '';
   try {
-    await api('/auth/me/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day }) });
+    await api('/auth/me/settings', { method: 'PUT', body: JSON.stringify({ new_cards_per_day, email_reminders }) });
     successEl.textContent = 'Settings saved!';
   } catch (err) {
     errorEl.textContent = err.message;
