@@ -975,8 +975,19 @@ async function loadAdminUsers() {
       <td>${u.current_streak}</td>
       <td>${u.longest_streak}</td>
       <td>${u.is_admin ? 'Yes' : 'No'}</td>
+      <td>${u.is_admin ? '' : `<button class="btn-danger icon-btn" onclick="deleteAdminUser(${u.id}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="Delete user">🗑️</button>`}</td>
     </tr>
   `).join('');
+}
+
+async function deleteAdminUser(id, username) {
+  if (!confirm(`Delete user "${username}"? This permanently removes their account, progress and any decks they created.`)) return;
+  try {
+    await api(`/admin/users/${id}`, { method: 'DELETE' });
+    await loadAdminUsers();
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 }
 
 function escapeHtml(str) {

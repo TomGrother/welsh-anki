@@ -115,6 +115,31 @@ router.get('/users', (req, res) => {
   res.json({ users });
 });
 
+router.delete('/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+  if (userId === req.user.id) return res.status(400).json({ error: 'You cannot delete your own account' });
+
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const run = db.transaction(() => {
+    db.prepare('DELETE FROM user_cards WHERE user_id = ?').run(userId);
+    db.prepare('DELETE FROM review_log WHERE user_id = ?').run(userId);
+    db.prepare('DELETE FROM user_achievements WHERE user_id = ?').run(userId);
+    db.prepare('DELETE FROM password_resets WHERE user_id = ?').run(userId);
+    db.prepare('DELETE FROM friendships WHERE user_id = ? OR friend_id = ?').run(userId, userId);
+    const ownDecks = db.prepare('SELECT id FROM decks WHERE owner_id = ?').all(userId);
+    for (const d of ownDecks) {
+      db.prepare('DELETE FROM cards WHERE deck_id = ?').run(d.id);
+    }
+    db.prepare('DELETE FROM decks WHERE owner_id = ?').run(userId);
+    db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+  });
+  run();
+
+  res.json({ ok: true });
+});
+
 // Diagnostic: per-deck progress for a given user, including which cards
 // (if any) in a deck have never been introduced to that user.
 router.get('/users/:id/deck-progress', (req, res) => {
