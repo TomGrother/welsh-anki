@@ -171,4 +171,11 @@ runOnce('email_reminders_opt_in', () => {
   db.exec("UPDATE users SET email_reminders = 0");
 });
 
+// Cards reviewed before due dates were aligned to midnight have a
+// time-of-day component, so they trickle into "due now" throughout the day
+// instead of all at once. Round any future due date to midnight of its day.
+runOnce('align_due_dates_to_midnight', () => {
+  db.exec("UPDATE user_cards SET due_date = datetime(date(due_date)) WHERE due_date > datetime('now')");
+});
+
 module.exports = db;
