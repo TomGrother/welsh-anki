@@ -4,15 +4,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const { SECRET, requireAuth } = require('../middleware/auth');
-const { sendEmail, emailLayout } = require('../email');
+const { sendEmail, emailLayout, escapeHtml } = require('../email');
 const { rateLimit } = require('../middleware/rateLimit');
+
+const SITE_URL = process.env.SITE_URL || 'https://dragon-lingo.com';
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: 'Too many attempts. Please try again in 15 minutes.' });
 const emailLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: 'Too many requests. Please try again in an hour.' });
 
 const PASSWORD_RULES = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol';
 function isValidPassword(password) {
-  return password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password);
+  return typeof password === 'string' && password.length >= 8 && password.length <= 100 &&
+    /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password);
 }
 
 const router = express.Router();
@@ -20,9 +23,16 @@ const router = express.Router();
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced', 'Fluent'];
 
 router.post('/register', authLimiter, (req, res) => {
-  const { username, email, password, new_cards_per_day, level } = req.body || {};
+  const { username, password, new_cards_per_day, level } = req.body || {};
+  const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email and password are required' });
+  }
+  if (typeof username !== 'string' || !/^[A-Za-z0-9_.-]{3,20}$/.test(username)) {
+    return res.status(400).json({ error: 'Username must be 3-20 characters, using only letters, numbers, dots, dashes or underscores' });
+  }
+  if (email.length > 254 || !/^\S+@\S+\.\S+$/.test(email)) {
+    return res.status(400).json({ error: 'A valid email address is required' });
   }
   if (!isValidPassword(password)) {
     return res.status(400).json({ error: PASSWORD_RULES });
@@ -43,7 +53,7 @@ router.post('/register', authLimiter, (req, res) => {
     userLevel = level;
   }
 
-  const existing = db.prepare('SELECT id FROM users WHERE username = ? OR email = ?').get(username, email);
+  const existing = db.prepare('SELECT id FROM users WHERE username = ? COLLATE NOCASE OR email = ? COLLATE NOCASE').get(username, email);
   if (existing) return res.status(409).json({ error: 'Username or email already in use' });
 
   const hash = bcrypt.hashSync(password, 10);
@@ -66,18 +76,23 @@ router.post('/register', authLimiter, (req, res) => {
         SELECT id FROM cards WHERE deck_id IN (${earlierDecks.map(() => '?').join(',')})
       `).all(...earlierDecks.map(d => d.id));
 
+      // Spread the pre-completed cards' first reviews across future days
+      // (at 3× the user's daily new-word pace, starting 6 days out) instead
+      // of dumping hundreds of reviews onto one day. Due dates align to
+      // midnight so reviews arrive as a single daily batch.
       const insertUserCard = db.prepare(`
         INSERT INTO user_cards (user_id, card_id, ease, interval_days, repetitions, due_date, last_reviewed, first_seen)
-        VALUES (?, ?, 2.5, 6, 2, datetime('now', '+6 days'), datetime('now'), datetime('now'))
+        VALUES (?, ?, 2.5, 6, 2, datetime(date('now', '+' || ? || ' days')), datetime('now'), datetime('now'))
       `);
+      const reviewsPerDay = newCardsPerDay * 3;
       const run = db.transaction((rows) => {
-        for (const c of rows) insertUserCard.run(result.lastInsertRowid, c.id);
+        rows.forEach((c, i) => insertUserCard.run(result.lastInsertRowid, c.id, 6 + Math.floor(i / reviewsPerDay)));
       });
       run(cards);
     }
   }
 
-  sendVerificationEmail(req, result.lastInsertRowid, email)
+  sendVerificationEmail(result.lastInsertRowid, email)
     .catch(err => console.error('[register] failed to send verification email:', err));
 
   if (process.env.ADMIN_NOTIFICATION_EMAIL) {
@@ -89,9 +104,9 @@ router.post('/register', authLimiter, (req, res) => {
         preheader: `${username} just signed up.`,
         bodyHtml: `
           <p style="margin:0 0 8px;">A new user has signed up for Dragon Lingo:</p>
-          <p style="margin:0 0 4px;"><strong>Username:</strong> ${username}</p>
-          <p style="margin:0 0 4px;"><strong>Email:</strong> ${email}</p>
-          <p style="margin:0;"><strong>Level:</strong> ${userLevel}</p>
+          <p style="margin:0 0 4px;"><strong>Username:</strong> ${escapeHtml(username)}</p>
+          <p style="margin:0 0 4px;"><strong>Email:</strong> ${escapeHtml(email)}</p>
+          <p style="margin:0;"><strong>Level:</strong> ${escapeHtml(userLevel)}</p>
         `,
       }),
     }).catch(err => console.error('[register] failed to send admin notification:', err));
@@ -100,14 +115,16 @@ router.post('/register', authLimiter, (req, res) => {
   res.json({ needs_verification: true, message: 'Please check your email and click the confirmation link to activate your account.' });
 });
 
-function sendVerificationEmail(req, userId, email) {
+function sendVerificationEmail(userId, email) {
   const token = crypto.randomBytes(32).toString('hex');
   db.prepare(`
     INSERT INTO email_verifications (user_id, token, expires_at)
     VALUES (?, ?, datetime('now', '+24 hours'))
   `).run(userId, token);
 
-  const verifyUrl = `${req.protocol}://${req.get('host')}/?verify=${token}`;
+  // Always build the link from SITE_URL, never the request's Host header —
+  // otherwise a forged Host header turns our own emails into phishing links.
+  const verifyUrl = `${SITE_URL}/?verify=${token}`;
   return sendEmail({
     to: email,
     subject: 'Confirm your Dragon Lingo account',
@@ -150,7 +167,7 @@ router.post('/resend-verification', requireAuth, (req, res) => {
   if (!user) return res.status(404).json({ error: 'User not found' });
   if (user.email_verified) return res.json({ ok: true, message: 'Your email is already verified.' });
 
-  sendVerificationEmail(req, req.user.id, user.email)
+  sendVerificationEmail(req.user.id, user.email)
     .catch(err => console.error('[resend-verification] failed to send email:', err));
 
   res.json({ ok: true, message: 'Verification email sent.' });
@@ -163,9 +180,9 @@ router.post('/resend-verification-public', emailLimiter, (req, res) => {
   const { username } = req.body || {};
   if (!username) return res.status(400).json({ error: 'Username or email is required' });
 
-  const user = db.prepare('SELECT id, email, email_verified FROM users WHERE username = ? OR email = ?').get(username, username);
+  const user = db.prepare('SELECT id, email, email_verified FROM users WHERE username = ? COLLATE NOCASE OR email = ? COLLATE NOCASE').get(username, username);
   if (user && !user.email_verified) {
-    sendVerificationEmail(req, user.id, user.email)
+    sendVerificationEmail(user.id, user.email)
       .catch(err => console.error('[resend-verification-public] failed to send email:', err));
   }
 
@@ -176,7 +193,7 @@ router.post('/login', authLimiter, (req, res) => {
   const { username, password } = req.body || {};
   if (!username || !password) return res.status(400).json({ error: 'Username and password are required' });
 
-  const user = db.prepare('SELECT * FROM users WHERE username = ? OR email = ?').get(username, username);
+  const user = db.prepare('SELECT * FROM users WHERE username = ? COLLATE NOCASE OR email = ? COLLATE NOCASE').get(username, username);
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -215,7 +232,7 @@ router.post('/forgot-password', emailLimiter, (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
-  const user = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  const user = db.prepare('SELECT id FROM users WHERE email = ? COLLATE NOCASE').get(email);
   if (user) {
     const token = crypto.randomBytes(32).toString('hex');
     db.prepare(`
@@ -223,7 +240,7 @@ router.post('/forgot-password', emailLimiter, (req, res) => {
       VALUES (?, ?, datetime('now', '+1 hour'))
     `).run(user.id, token);
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/?reset=${token}`;
+    const resetUrl = `${SITE_URL}/?reset=${token}`;
     sendEmail({
       to: email,
       subject: 'Reset your Dragon Lingo password',

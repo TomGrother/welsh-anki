@@ -512,6 +512,9 @@ th, td { text-align: left; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(
 th { color: var(--muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.06em; font-weight: 700; }
 tr:hover td { background: var(--bg); }
 
+/* Keyboard hint only makes sense with a physical keyboard. */
+@media (hover: none) { .keyboard-hint { display: none; } }
+
 .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .users-table { min-width: 760px; }
 .users-table th, .users-table td { padding: 0.6rem 0.5rem; font-size: 0.85rem; white-space: nowrap; }

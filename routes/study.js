@@ -368,6 +368,11 @@ function updateStreak(userId) {
 // Overall progress stats for the dashboard.
 router.get('/stats', (req, res) => {
   const user = db.prepare('SELECT current_streak, longest_streak, last_study_date FROM users WHERE id = ?').get(req.user.id);
+
+  // The stored streak only updates when the user reviews a card, so it goes
+  // stale if they stop studying — report 0 once a day has been missed.
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  if (user.last_study_date && user.last_study_date < yesterday) user.current_streak = 0;
   const totals = db.prepare(`
     SELECT
       (SELECT COUNT(*) FROM cards) AS total_cards,

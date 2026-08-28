@@ -101,7 +101,8 @@ router.get('/leaderboard', (req, res) => {
   const placeholders = ids.map(() => '?').join(',');
 
   const rows = db.prepare(`
-    SELECT u.id, u.username, u.current_streak, u.longest_streak,
+    SELECT u.id, u.username, u.longest_streak,
+      CASE WHEN u.last_study_date >= date('now', '-1 day') THEN u.current_streak ELSE 0 END AS current_streak,
       (SELECT COUNT(*) FROM user_cards WHERE user_id = u.id AND repetitions >= 2) AS learned_cards,
       (SELECT COUNT(*) FROM review_log WHERE user_id = u.id) AS total_reviews
     FROM users u

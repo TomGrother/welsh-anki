@@ -68,6 +68,8 @@ CREATE TABLE IF NOT EXISTS review_log (
 
 CREATE INDEX IF NOT EXISTS idx_user_cards_due ON user_cards(user_id, due_date);
 CREATE INDEX IF NOT EXISTS idx_cards_deck ON cards(deck_id);
+CREATE INDEX IF NOT EXISTS idx_review_log_user ON review_log(user_id, reviewed_at);
+CREATE INDEX IF NOT EXISTS idx_friendships_friend ON friendships(friend_id);
 
 CREATE TABLE IF NOT EXISTS user_achievements (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

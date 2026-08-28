@@ -32,7 +32,7 @@ function renderNav() {
   const nav = document.getElementById('nav');
   if (state.user) {
     nav.innerHTML = `
-      <span style="margin-right:0.5rem">${state.user.username}</span>
+      <span style="margin-right:0.5rem">${escapeHtml(state.user.username)}</span>
       <button class="btn-outline" onclick="showView('achievements')">🏆 Achievements</button>
       <button class="btn-outline" onclick="showView('friends')">👥 Friends</button>
       <button class="btn-outline" onclick="showView('settings')">⚙️ Settings</button>
@@ -111,8 +111,8 @@ async function handleRegister(e) {
   errorEl.textContent = '';
   try {
     const data = await api('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password, new_cards_per_day, level }) });
-    alert(data.message || 'Please check your email and click the confirmation link to activate your account.');
     showView('login');
+    document.getElementById('login-info').textContent = data.message || 'Please check your email and click the confirmation link to activate your account.';
   } catch (err) {
     errorEl.textContent = err.message;
   }
@@ -157,6 +157,8 @@ async function handleLogin(e) {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
   document.getElementById('login-resend').classList.add('hidden');
+  document.getElementById('login-info').textContent = '';
+  document.getElementById('login-error').textContent = '';
   try {
     const data = await api('/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
     onAuthSuccess(data);
@@ -238,16 +240,11 @@ async function handleSaveSettings(e) {
 async function loadDashboard() {
   document.getElementById('dash-username').textContent = state.user.username;
   try {
-    const { user } = await api('/auth/me');
-    document.getElementById('verify-banner').classList.toggle('hidden', !!user.email_verified);
-
-    const stats = await api('/study/stats');
+    const [stats, { decks }] = await Promise.all([api('/study/stats'), api('/study/decks')]);
     document.getElementById('stat-streak').textContent = stats.current_streak;
     document.getElementById('stat-longest').textContent = stats.longest_streak;
     document.getElementById('stat-due').textContent = stats.due_now;
     document.getElementById('stat-learned').textContent = stats.learned_cards;
-
-    const { decks } = await api('/study/decks');
     state.decks = decks;
     renderDeckList();
   } catch (err) {
@@ -618,7 +615,7 @@ async function _startStudy(deckId, reviewAll) {
   }
   state.queue = cards;
   state.queueIndex = 0;
-  state.lastDeckId = deckId || cards[cards.length - 1].deck_id;
+  state.lastDeckId = deckId || null;
   syncTypedModeToggle();
   showView('study');
   renderCard();
@@ -638,7 +635,7 @@ async function _startRandomStudy() {
   }
   state.queue = cards;
   state.queueIndex = 0;
-  state.lastDeckId = cards[cards.length - 1].deck_id;
+  state.lastDeckId = null;
   syncTypedModeToggle();
   showView('study');
   renderCard();
@@ -658,17 +655,39 @@ async function _startHardStudy() {
   }
   state.queue = cards;
   state.queueIndex = 0;
-  state.lastDeckId = cards[cards.length - 1].deck_id;
+  state.lastDeckId = null;
   syncTypedModeToggle();
   showView('study');
   renderCard();
 }
 
 function continueStudy() {
+  // Skip the typed-mode prompt — the user already chose for this sitting.
   if (state.lastDeckId) {
-    startStudy(state.lastDeckId);
+    _startStudy(state.lastDeckId);
   } else {
-    showView('dashboard');
+    _startStudy();
+  }
+}
+
+// Called when the user finishes their queue. For general review sessions
+// (capped at 20 cards), offer to keep going if more cards are still due.
+async function finishSession() {
+  document.getElementById('study-progress').style.width = '100%';
+  showView('complete');
+  const note = document.getElementById('complete-note');
+  const continueBtn = document.getElementById('btn-continue-study');
+  note.textContent = '';
+  continueBtn.classList.add('hidden');
+  if (!state.lastDeckId) {
+    try {
+      const stats = await api('/study/stats');
+      if (stats.due_now > 0) {
+        note.textContent = `${stats.due_now} more card${stats.due_now === 1 ? '' : 's'} still due for review.`;
+        continueBtn.textContent = 'Keep Reviewing';
+        continueBtn.classList.remove('hidden');
+      }
+    } catch {}
   }
 }
 
@@ -763,23 +782,28 @@ function toggleTypedMode() {
 }
 
 async function submitReview(quality) {
-  const card = state.queue[state.queueIndex];
-  await api('/study/review', { method: 'POST', body: JSON.stringify({ card_id: card.id, quality }) });
-  if (quality === 0) {
-    if (state.queue.length > 1) {
-      state.queue.splice(state.queueIndex, 1);
-      state.queue.push(card);
+  if (state.reviewing) return; // guard against double-click / double-keypress
+  state.reviewing = true;
+  try {
+    const card = state.queue[state.queueIndex];
+    await api('/study/review', { method: 'POST', body: JSON.stringify({ card_id: card.id, quality }) });
+    if (quality === 0) {
+      if (state.queue.length > 1) {
+        state.queue.splice(state.queueIndex, 1);
+        state.queue.push(card);
+      }
+      if (state.queueIndex >= state.queue.length) state.queueIndex = 0;
+      renderCard();
+      return;
     }
-    if (state.queueIndex >= state.queue.length) state.queueIndex = 0;
-    renderCard();
-    return;
-  }
-  state.queueIndex++;
-  if (state.queueIndex >= state.queue.length) {
-    document.getElementById('study-progress').style.width = '100%';
-    showView('complete');
-  } else {
-    renderCard();
+    state.queueIndex++;
+    if (state.queueIndex >= state.queue.length) {
+      await finishSession();
+    } else {
+      renderCard();
+    }
+  } finally {
+    state.reviewing = false;
   }
 }
 
@@ -866,12 +890,19 @@ async function friendSearch() {
   const resultsEl = document.getElementById('friend-search-results');
   if (!q) { resultsEl.innerHTML = ''; return; }
   const { users } = await api('/social/search?q=' + encodeURIComponent(q));
-  resultsEl.innerHTML = users.map(u => `
+  // Never interpolate usernames into onclick strings — look them up by index.
+  state.friendResults = users;
+  resultsEl.innerHTML = users.map((u, i) => `
     <div class="friend-item">
       <span>${escapeHtml(u.username)}</span>
-      <button class="btn" onclick="sendFriendRequest('${escapeHtml(u.username)}')">Add Friend</button>
+      <button class="btn" onclick="sendFriendRequestIdx(${i})">Add Friend</button>
     </div>
   `).join('') || '<p class="muted">No users found.</p>';
+}
+
+function sendFriendRequestIdx(i) {
+  const u = (state.friendResults || [])[i];
+  if (u) sendFriendRequest(u.username);
 }
 
 async function sendFriendRequest(username) {
@@ -1018,7 +1049,8 @@ async function adminImport(e) {
 
 async function loadAdminUsers() {
   const { users } = await api('/admin/users');
-  document.querySelector('#users-table tbody').innerHTML = users.map(u => `
+  state.adminUsers = users;
+  document.querySelector('#users-table tbody').innerHTML = users.map((u, i) => `
     <tr>
       <td>${escapeHtml(u.username)}</td>
       <td>${escapeHtml(u.email)}</td>
@@ -1030,37 +1062,33 @@ async function loadAdminUsers() {
       <td>${u.last_active ? new Date(u.last_active + 'Z').toLocaleDateString() : '-'}</td>
       <td>${u.is_admin ? 'Yes' : 'No'}</td>
       <td>
-        <button class="btn-secondary icon-btn" onclick="toggleAdminUser(${u.id}, ${u.is_admin ? 'false' : 'true'}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="${u.is_admin ? 'Remove admin' : 'Make admin'}">${u.is_admin ? '⬇️' : '⬆️'}</button>
-        ${u.is_admin ? '' : `<button class="btn-danger icon-btn" onclick="deleteAdminUser(${u.id}, '${escapeHtml(u.username).replace(/'/g, "\\'")}')" title="Delete user">🗑️</button>`}
+        <button class="btn-secondary icon-btn" onclick="toggleAdminUserIdx(${i})" title="${u.is_admin ? 'Remove admin' : 'Make admin'}">${u.is_admin ? '⬇️' : '⬆️'}</button>
+        ${u.is_admin ? '' : `<button class="btn-danger icon-btn" onclick="deleteAdminUserIdx(${i})" title="Delete user">🗑️</button>`}
       </td>
     </tr>
   `).join('');
 }
 
-async function toggleAdminUser(id, makeAdmin, username) {
+async function toggleAdminUserIdx(i) {
+  const u = (state.adminUsers || [])[i];
+  if (!u) return;
+  const makeAdmin = !u.is_admin;
   const verb = makeAdmin ? 'promote' : 'demote';
-  if (!confirm(`Are you sure you want to ${verb} "${username}" ${makeAdmin ? 'to' : 'from'} administrator?`)) return;
+  if (!confirm(`Are you sure you want to ${verb} "${u.username}" ${makeAdmin ? 'to' : 'from'} administrator?`)) return;
   try {
-    await api(`/admin/users/${id}/admin`, { method: 'PUT', body: JSON.stringify({ is_admin: makeAdmin }) });
+    await api(`/admin/users/${u.id}/admin`, { method: 'PUT', body: JSON.stringify({ is_admin: makeAdmin }) });
     await loadAdminUsers();
   } catch (err) {
     alert('Error: ' + err.message);
   }
 }
 
-async function resendVerification() {
+async function deleteAdminUserIdx(i) {
+  const u = (state.adminUsers || [])[i];
+  if (!u) return;
+  if (!confirm(`Delete user "${u.username}"? This permanently removes their account, progress and any decks they created.`)) return;
   try {
-    const { message } = await api('/auth/resend-verification', { method: 'POST' });
-    alert(message);
-  } catch (err) {
-    alert('Error: ' + err.message);
-  }
-}
-
-async function deleteAdminUser(id, username) {
-  if (!confirm(`Delete user "${username}"? This permanently removes their account, progress and any decks they created.`)) return;
-  try {
-    await api(`/admin/users/${id}`, { method: 'DELETE' });
+    await api(`/admin/users/${u.id}`, { method: 'DELETE' });
     await loadAdminUsers();
   } catch (err) {
     alert('Error: ' + err.message);
@@ -1079,10 +1107,29 @@ function showVerifyResult(message, isError) {
   el.classList.remove('hidden');
 }
 
+// Keyboard shortcuts while studying: Space/Enter flips the card,
+// 1-4 rates it (Again / Hard / Good / Easy) once the answer is showing.
+document.addEventListener('keydown', e => {
+  if (document.getElementById('view-study').classList.contains('hidden')) return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (!document.getElementById('typed-mode-modal').classList.contains('hidden')) return;
+  if ((e.key === ' ' || e.key === 'Enter') && !state.flipped) {
+    e.preventDefault();
+    flipCard();
+    return;
+  }
+  if (!state.flipped || document.getElementById('review-buttons').classList.contains('hidden')) return;
+  const map = { '1': 0, '2': 3, '3': 4, '4': 5 };
+  if (map[e.key] !== undefined) submitReview(map[e.key]);
+});
+
 // --- Init ---
 renderNav();
-const resetToken = new URLSearchParams(window.location.search).get('reset');
-const verifyToken = new URLSearchParams(window.location.search).get('verify');
+const urlParams = new URLSearchParams(window.location.search);
+const resetToken = urlParams.get('reset');
+const verifyToken = urlParams.get('verify');
+const viewParam = urlParams.get('view');
+const DEEP_LINK_VIEWS = ['dashboard', 'settings', 'progress', 'achievements', 'friends'];
 if (resetToken) {
   state.resetToken = resetToken;
   showView('reset');
@@ -1096,6 +1143,10 @@ if (resetToken) {
     .catch(err => {
       showVerifyResult('Error verifying email: ' + err.message, true);
     });
+} else if (viewParam && DEEP_LINK_VIEWS.includes(viewParam)) {
+  // Deep links from emails, e.g. /?view=settings or /?view=dashboard.
+  window.history.replaceState({}, '', '/');
+  showView(state.token && state.user ? viewParam : 'login');
 } else if (state.token && state.user) {
   showView('dashboard');
 } else {

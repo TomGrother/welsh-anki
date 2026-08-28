@@ -27,6 +27,10 @@ async function sendEmail({ to, subject, html }) {
 
 const SITE_URL = process.env.SITE_URL || 'https://dragon-lingo.com';
 
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // Wraps inner HTML in Dragon Lingo's branded email layout (logo, colours, footer).
 function emailLayout({ title, preheader, bodyHtml }) {
   return `
@@ -74,7 +78,7 @@ function reminderEmail({ username, dueCount }) {
     title: 'Your Welsh words are waiting!',
     preheader: `You have ${dueCount} word${dueCount === 1 ? '' : 's'} due for review today.`,
     bodyHtml: `
-      <p style="margin:0 0 16px;">Bore da, ${username}! 👋</p>
+      <p style="margin:0 0 16px;">Bore da, ${escapeHtml(username)}! 👋</p>
       <p style="margin:0 0 16px;">
         You have <strong style="color:#e53e3e;">${dueCount} word${dueCount === 1 ? '' : 's'}</strong>
         due for review on Dragon Lingo today.
@@ -91,4 +95,4 @@ function reminderEmail({ username, dueCount }) {
   });
 }
 
-module.exports = { sendEmail, emailLayout, reminderEmail };
+module.exports = { sendEmail, emailLayout, reminderEmail, escapeHtml };

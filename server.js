@@ -26,6 +26,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
 });
 
@@ -47,6 +48,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 
 app.get('*', (req, res) => {
+  // Anything with a file extension that made it past express.static doesn't
+  // exist — return a real 404 instead of soft-404ing with the app shell.
+  if (path.extname(req.path)) return res.status(404).type('text').send('Not found');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

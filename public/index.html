@@ -198,6 +198,7 @@
   <section id="view-login" class="hidden">
     <div class="card-panel">
       <h2>Log In</h2><br>
+      <div class="success-msg" id="login-info"></div>
       <form onsubmit="return handleLogin(event)">
         <label>Username or Email</label>
         <input type="text" id="login-username" required>
@@ -248,7 +249,7 @@
       <h2>Create Account</h2><br>
       <form onsubmit="return handleRegister(event)">
         <label>Username</label>
-        <input type="text" id="reg-username" required>
+        <input type="text" id="reg-username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_.\-]{3,20}" title="3-20 characters: letters, numbers, dots, dashes or underscores">
         <label>Email</label>
         <input type="email" id="reg-email" required>
         <label>Password</label>
@@ -280,9 +281,6 @@
   <!-- DASHBOARD -->
   <section id="view-dashboard" class="hidden">
     <h2 style="margin-bottom:1rem">Croeso, <span id="dash-username"></span>! <span class="beta-sticker">Beta</span></h2>
-    <div id="verify-banner" class="card-panel hidden" style="background:#fef3c7;color:#92400e;margin-bottom:1rem">
-      <p style="margin:0">📧 Please verify your email address to keep your account secure. <a href="#" onclick="resendVerification();return false">Resend verification email</a></p>
-    </div>
     <div class="stats-grid">
       <div class="stat-box streak"><div class="value" id="stat-streak">0</div><div class="label">Day Streak 🔥</div></div>
       <div class="stat-box"><div class="value" id="stat-longest">0</div><div class="label">Longest Streak</div></div>
@@ -498,6 +496,7 @@
         <button class="btn-good" onclick="submitReview(4)">Good</button>
         <button class="btn-easy" onclick="submitReview(5)">Easy</button>
       </div>
+      <p class="muted keyboard-hint" style="text-align:center;margin-top:0.75rem">⌨️ Space to flip · 1&#8211;4 to rate</p>
     </div>
   </section>
 
