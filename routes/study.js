@@ -10,60 +10,29 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 router.use(requireAuth);
 
-// --- Text-to-speech (Welsh pronunciation audio) ---
-// Uses Azure Speech's Welsh neural voices. Generated MP3s are cached on disk
-// (the Railway volume) keyed by voice+text, so each word is synthesised once
-// ever. Without AZURE_SPEECH_KEY set, /tts returns 503 and the UI hides the
-// listen button.
-const AZURE_SPEECH_KEY = process.env.AZURE_SPEECH_KEY;
-const AZURE_SPEECH_REGION = process.env.AZURE_SPEECH_REGION || 'uksouth';
-const TTS_VOICE = process.env.AZURE_SPEECH_VOICE || 'cy-GB-NiaNeural';
-const ttsDir = path.join(process.env.DATA_DIR || path.join(__dirname, '..'), 'tts');
-
-function escapeXml(str) {
-  return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
-}
+// --- Pronunciation audio (Welsh TTS) ---
+// MP3s are pre-generated offline with Piper TTS (Bangor University's open
+// cy_GB-gwryw_gogleddol voice) and committed to the repo's audio/ directory,
+// keyed by sha1(voice|welsh text). See data/generate_audio.md for how to
+// regenerate after adding new cards. No external TTS service is involved.
+const TTS_VOICE_ID = 'cy_GB-gwryw_gogleddol-medium';
+const audioDir = path.join(__dirname, '..', 'audio');
+const audioAvailable = fs.existsSync(audioDir);
 
 router.get('/tts-status', (req, res) => {
-  res.json({ available: !!AZURE_SPEECH_KEY });
+  res.json({ available: audioAvailable });
 });
 
-router.get('/tts/:cardId', async (req, res) => {
-  if (!AZURE_SPEECH_KEY) return res.status(503).json({ error: 'Audio is not configured' });
+router.get('/tts/:cardId', (req, res) => {
   const card = db.prepare('SELECT welsh FROM cards WHERE id = ?').get(req.params.cardId);
   if (!card) return res.status(404).json({ error: 'Card not found' });
 
-  const hash = crypto.createHash('sha1').update(`${TTS_VOICE}|${card.welsh}`).digest('hex');
-  const file = path.join(ttsDir, `${hash}.mp3`);
-
-  if (!fs.existsSync(file)) {
-    const ssml = `<speak version='1.0' xml:lang='cy-GB'><voice name='${TTS_VOICE}'><prosody rate='-10%'>${escapeXml(card.welsh)}</prosody></voice></speak>`;
-    try {
-      const resp = await fetch(`https://${AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`, {
-        method: 'POST',
-        headers: {
-          'Ocp-Apim-Subscription-Key': AZURE_SPEECH_KEY,
-          'Content-Type': 'application/ssml+xml',
-          'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
-          'User-Agent': 'dragon-lingo',
-        },
-        body: ssml,
-      });
-      if (!resp.ok) {
-        console.error(`[tts] Azure TTS failed (${resp.status}):`, await resp.text().catch(() => ''));
-        return res.status(502).json({ error: 'Audio generation failed' });
-      }
-      const buf = Buffer.from(await resp.arrayBuffer());
-      fs.mkdirSync(ttsDir, { recursive: true });
-      fs.writeFileSync(file, buf);
-    } catch (err) {
-      console.error('[tts] request error:', err);
-      return res.status(502).json({ error: 'Audio generation failed' });
-    }
-  }
+  const hash = crypto.createHash('sha1').update(`${TTS_VOICE_ID}|${card.welsh}`).digest('hex');
+  const file = path.join(audioDir, `${hash}.mp3`);
+  if (!fs.existsSync(file)) return res.status(404).json({ error: 'No audio for this card' });
 
   res.setHeader('Cache-Control', 'private, max-age=31536000, immutable');
-  res.type('audio/mpeg').send(fs.readFileSync(file));
+  res.type('audio/mpeg').sendFile(file);
 });
 
 // Global decks unlock sequentially in level order. Returns the ordered list

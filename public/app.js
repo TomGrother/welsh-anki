@@ -612,8 +612,15 @@ async function playCardAudio(e) {
   btn.disabled = true;
   try {
     let url = audioCache[card.id];
+    if (url === 'none') return;
     if (!url) {
       const r = await fetch(`${API}/study/tts/${card.id}`, { headers: { 'Authorization': `Bearer ${state.token}` } });
+      if (r.status === 404) {
+        // No audio for this card (e.g. personal-deck words) — hide the button.
+        audioCache[card.id] = 'none';
+        btn.classList.add('hidden');
+        return;
+      }
       if (!r.ok) throw new Error('audio failed');
       url = URL.createObjectURL(await r.blob());
       audioCache[card.id] = url;
