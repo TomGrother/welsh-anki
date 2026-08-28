@@ -515,6 +515,9 @@ tr:hover td { background: var(--bg); }
 /* Keyboard hint only makes sense with a physical keyboard. */
 @media (hover: none) { .keyboard-hint { display: none; } }
 
+.audio-btn { margin: 0.6rem auto 0; font-size: 0.9rem; padding: 0.45rem 1.1rem; border-radius: 999px; }
+.audio-btn:disabled { opacity: 0.6; }
+
 .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .users-table { min-width: 760px; }
 .users-table th, .users-table td { padding: 0.6rem 0.5rem; font-size: 0.85rem; white-space: nowrap; }

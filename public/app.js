@@ -580,6 +580,59 @@ function welshPronunciation(text) {
 // --- Study ---
 let pendingStudyAction = null;
 
+// --- Pronunciation audio ---
+// Fetches server-generated Welsh TTS audio (cached as a blob per card).
+// If the server has no TTS configured, the listen button stays hidden.
+const audioCache = {};
+
+async function ensureTtsStatus() {
+  if (state.ttsAvailable !== undefined) return;
+  try {
+    const { available } = await api('/study/tts-status');
+    state.ttsAvailable = available;
+  } catch {
+    state.ttsAvailable = false;
+  }
+  syncAudioButton();
+}
+
+function syncAudioButton() {
+  const btn = document.getElementById('card-audio');
+  // Visible whenever TTS works and the Welsh side is showing: always in
+  // normal mode (Welsh is the front), only after answering in typed mode.
+  const welshShowing = !state.typedMode || state.flipped;
+  btn.classList.toggle('hidden', !state.ttsAvailable || !welshShowing);
+}
+
+async function playCardAudio(e) {
+  e.stopPropagation(); // don't flip the card
+  const card = state.queue[state.queueIndex];
+  if (!card) return;
+  const btn = document.getElementById('card-audio');
+  btn.disabled = true;
+  try {
+    let url = audioCache[card.id];
+    if (!url) {
+      const r = await fetch(`${API}/study/tts/${card.id}`, { headers: { 'Authorization': `Bearer ${state.token}` } });
+      if (!r.ok) throw new Error('audio failed');
+      url = URL.createObjectURL(await r.blob());
+      audioCache[card.id] = url;
+    }
+    await new Audio(url).play();
+  } catch {
+    // Best-effort fallback: a browser Welsh voice, if one exists (rare).
+    const voice = window.speechSynthesis && speechSynthesis.getVoices().find(v => (v.lang || '').toLowerCase().startsWith('cy'));
+    if (voice) {
+      const u = new SpeechSynthesisUtterance(card.welsh);
+      u.voice = voice;
+      u.lang = 'cy-GB';
+      speechSynthesis.speak(u);
+    }
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function promptTypedMode(action) {
   pendingStudyAction = action;
   document.getElementById('typed-mode-modal').classList.remove('hidden');
@@ -731,6 +784,9 @@ function renderCard() {
 
   document.getElementById('study-counter').textContent = `${state.queueIndex + 1} / ${state.queue.length}`;
   document.getElementById('study-progress').style.width = `${(state.queueIndex / state.queue.length) * 100}%`;
+
+  ensureTtsStatus();
+  syncAudioButton();
 }
 
 function flipCard() {
@@ -740,6 +796,7 @@ function flipCard() {
   document.getElementById('card-example').classList.remove('hidden');
   document.getElementById('card-hint').classList.add('hidden');
   document.getElementById('review-buttons').classList.remove('hidden');
+  syncAudioButton();
 }
 
 function normalizeAnswer(str) {
@@ -765,6 +822,7 @@ function checkTypedAnswer(e) {
   result.style.color = correct ? 'var(--welsh-green-dark)' : 'var(--welsh-red)';
 
   document.getElementById('review-buttons').classList.remove('hidden');
+  syncAudioButton();
   return false;
 }
 
